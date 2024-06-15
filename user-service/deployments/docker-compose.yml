@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+    mysql:
+        image: mysql:8.3.0
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: user
+        ports:
+            - "3309:3306"
+
+    redis:
+        image: redis:7.2.4
+        restart: always
+        ports:
+            - "6379:6379"

@@ -1,0 +1,92 @@
+syntax = "proto3";
+
+package user.v1;
+
+import "google/api/annotations.proto";
+
+message Account {
+    uint64 id = 1;
+    string email = 2;
+    string name = 3;
+    string picture = 4;
+    string user_id = 5;
+    string password = 6;
+    string created_at = 99;
+    string updated_at = 100;
+}
+
+message CreateSessionRequest {
+    string user_id = 1;
+    string password = 2;
+}
+
+message CreateSessionResponse {
+    string user_id = 1;
+    string token = 2;
+}
+
+message CreateAccountRequest { Account account = 1; }
+
+message CreateAccountResponse { Account account = 1; }
+
+message UpdateAccountRequest {
+    Account account = 1; // must pass id, can only modify name, picture, role
+                         // TO DO: support modify email
+}
+
+message UpdateAccountResponse { Account account = 1; }
+
+message GetAccountRequest { string userId = 1; }
+
+message GetAccountResponse { Account account = 1; }
+
+message AccountSession {
+    string token = 1;
+    uint64 expiry_time_ms = 2; // TIMESTAMP_MS
+    uint64 account_id = 3;
+}
+
+
+message DeleteSessionRequest {}
+
+message DeleteSessionResponse {}
+
+message GetSessionRequest { string token = 1; }
+
+message GetSessionResponse {
+    bool is_valid = 1;
+    string token = 2;
+}
+
+service AccountService {
+    rpc CreateAccount(CreateAccountRequest) returns (CreateAccountResponse) {
+        option (google.api.http) = {
+			post: "/api/v1/account"
+		};
+    }
+
+    rpc GetAccount(GetAccountRequest) returns (GetAccountResponse) {
+        option (google.api.http) = {
+			get: "/api/v1/account/{userId}"
+		};
+    }
+
+    rpc CreateSession(CreateSessionRequest) returns (CreateSessionResponse) {
+        option (google.api.http) = {
+			post: "/api/v1/login"
+            body: "*"
+		};
+    }
+
+    rpc GetSession(GetSessionRequest) returns (GetSessionResponse) {
+        option (google.api.http) = {
+			get: "/api/v1/session"
+		};
+    }
+
+    rpc DeleteSession(DeleteSessionRequest) returns (DeleteSessionResponse) {
+        option (google.api.http) = {
+			delete: "/api/v1/logout"
+		};
+    }
+}

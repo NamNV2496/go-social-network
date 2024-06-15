@@ -1,0 +1,11 @@
+auth:
+  duration: 24h
+
+redis:
+  address: "127.0.0.1:6379"
+  username: ""
+  password: ""
+  databse: 0
+  ttl: 86400
+grpc:
+  user_service_address: "0.0.0.0:5600"

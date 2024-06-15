@@ -1,0 +1,8 @@
+auth:
+  duration: 24h
+gateway:
+  address: ":8080"
+grpc:
+  user_service_address: "0.0.0.0:5600"
+  post_service_address: "0.0.0.0:5601"
+  newfeeds_service_address: "0.0.0.0:5602"
