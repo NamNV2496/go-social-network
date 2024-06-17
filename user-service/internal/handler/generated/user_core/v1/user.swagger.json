@@ -119,6 +119,36 @@
         ]
       }
     },
+    "/api/v1/following": {
+      "get": {
+        "operationId": "AccountService_GetFollowing",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetFollowingResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "AccountService"
+        ]
+      }
+    },
     "/api/v1/login": {
       "post": {
         "operationId": "AccountService_CreateSession",
@@ -301,6 +331,17 @@
       "properties": {
         "account": {
           "$ref": "#/definitions/v1Account"
+        }
+      }
+    },
+    "v1GetFollowingResponse": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       }
     },

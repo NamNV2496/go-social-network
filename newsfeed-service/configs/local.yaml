@@ -3,6 +3,7 @@ kafka:
     - localhost:29092
   client_id: "sit"
 grpc:
+  user_service_address: "0.0.0.0:5600"
   post_service_address: "0.0.0.0:5601"
 
 database:

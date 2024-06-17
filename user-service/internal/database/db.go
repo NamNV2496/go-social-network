@@ -9,19 +9,22 @@ import (
 	"github.com/doug-martin/goqu/v9"
 	_ "github.com/doug-martin/goqu/v9/dialect/mysql" // Import MySQL goqu dialect
 	_ "github.com/go-sql-driver/mysql"               // Import MySQL driver
+	"github.com/namnv2496/user-service/internal/configs"
 )
 
 type Database struct {
 	*sql.DB
 }
 
-func NewDatabase() (*sql.DB, func(), error) {
+func NewDatabase(
+	dbConfig configs.Database,
+) (*sql.DB, func(), error) {
 	connectionString := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=true",
-		"root",
-		"root",
-		"localhost",
-		3309,
-		"user",
+		dbConfig.Username,
+		dbConfig.Password,
+		dbConfig.Host,
+		dbConfig.Port,
+		dbConfig.Database,
 	)
 
 	fmt.Println(connectionString)

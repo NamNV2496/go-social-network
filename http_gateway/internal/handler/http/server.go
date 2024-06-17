@@ -8,6 +8,7 @@ import (
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/namnv2496/http_gateway/internal/configs"
+	newsfeedv1 "github.com/namnv2496/http_gateway/internal/handler/generated/newsfeed_core/v1"
 	postv1 "github.com/namnv2496/http_gateway/internal/handler/generated/post_core/v1"
 	userv1 "github.com/namnv2496/http_gateway/internal/handler/generated/user_core/v1"
 	"google.golang.org/grpc"
@@ -131,6 +132,14 @@ func (s *server) runRESTServer() error {
 		ctx,
 		mux,
 		s.grpcConfig.PostServiceAddress,
+		opts,
+	)
+
+	// connect to newsfeed-service
+	err = newsfeedv1.RegisterNewsfeedServiceHandlerFromEndpoint(
+		ctx,
+		mux,
+		s.grpcConfig.NewfeedsServiceAddress,
 		opts,
 	)
 

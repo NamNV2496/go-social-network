@@ -62,6 +62,8 @@ func (m *Post) validate(all bool) error {
 
 	// no validation rules for Visible
 
+	// no validation rules for Date
+
 	if len(errors) > 0 {
 		return PostMultiError(errors)
 	}

@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package newsfeed.v1;
+
+import "google/api/annotations.proto";
+
+message NewsfeedPost {
+    string user_id = 1;
+    string content_text = 2;
+    repeated string images = 3;
+    repeated string tags = 4;
+    bool visible = 5;
+    string date = 6;
+}
+
+message GetNewsfeedRequest { string user_id = 1; }
+
+message GetNewsfeedResponse {
+    repeated NewsfeedPost posts = 1; 
+}
+
+service NewsfeedService {
+
+    rpc GetNewsfeed(GetNewsfeedRequest) returns (GetNewsfeedResponse) {
+        option (google.api.http) = {
+			get: "/api/v1/newsfeed"
+		};
+    }
+}

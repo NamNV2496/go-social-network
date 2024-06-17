@@ -79,8 +79,23 @@ func (s GrpcHandler) GetSession(
 		Token:   "",
 	}, nil
 }
+
 func (s GrpcHandler) DeleteSession(context.Context, *userv1.DeleteSessionRequest) (*userv1.DeleteSessionResponse, error) {
 
 	fmt.Println("called createAccount")
 	return nil, nil
+}
+
+func (s GrpcHandler) GetFollowing(
+	ctx context.Context,
+	req *userv1.GetFollowingRequest,
+) (*userv1.GetFollowingResponse, error) {
+
+	followings, err := s.userService.GetFollowing(ctx, req.UserId)
+	if err != nil {
+		return nil, err
+	}
+	return &userv1.GetFollowingResponse{
+		UserId: followings,
+	}, nil
 }

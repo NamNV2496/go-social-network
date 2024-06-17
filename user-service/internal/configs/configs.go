@@ -8,9 +8,10 @@ import (
 )
 
 type Config struct {
-	Auth  Auth  `yaml:"auth"`
-	Redis Redis `yaml:"redis"`
-	GRPC  GRPC  `yaml:"grpc"`
+	Auth     Auth     `yaml:"auth"`
+	Redis    Redis    `yaml:"redis"`
+	GRPC     GRPC     `yaml:"grpc"`
+	Database Database `yaml:"database"`
 }
 
 func NewConfig() (Config, error) {

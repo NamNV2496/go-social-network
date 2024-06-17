@@ -1,19 +1,29 @@
 package grpc
 
 import (
-	postv1 "github.com/namnv2496/newsfeed-service/internal/handler/generated/post_core/v1"
+	"context"
+
+	newsfeedv1 "github.com/namnv2496/newsfeed-service/internal/handler/generated/newsfeed_core/v1"
 	"github.com/namnv2496/newsfeed-service/internal/logic"
 )
 
 type GrpcHandler struct {
-	postv1.UnimplementedPostServiceServer
+	newsfeedv1.UnimplementedNewsfeedServiceServer
 	newsfeedService logic.NewsfeedService
 }
 
 func NewGrpcHander(
 	newsfeedService logic.NewsfeedService,
-) postv1.PostServiceServer {
+) newsfeedv1.NewsfeedServiceServer {
 	return &GrpcHandler{
 		newsfeedService: newsfeedService,
 	}
+}
+
+func (h GrpcHandler) GetNewsfeed(
+	ctx context.Context,
+	req *newsfeedv1.GetNewsfeedRequest,
+) (*newsfeedv1.GetNewsfeedResponse, error) {
+
+	return h.newsfeedService.GetNewsfeed(ctx, req.UserId)
 }

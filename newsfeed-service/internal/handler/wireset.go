@@ -10,4 +10,5 @@ var HandlerWireSet = wire.NewSet(
 	grpc.NewGrpcHander,
 	grpc.NewServer,
 	consumers.NewKafkaHandler,
+	grpc.NewGRPCProductClient,
 )

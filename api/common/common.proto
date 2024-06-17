@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package common;
+
+// message Post {
+//     string user_id = 1;
+//     string content_text = 2;
+//     repeated string images = 3;
+//     repeated string tags = 4;
+//     bool visible = 5;
+// }

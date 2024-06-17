@@ -157,6 +157,9 @@
         },
         "visible": {
           "type": "boolean"
+        },
+        "date": {
+          "type": "string"
         }
       }
     }

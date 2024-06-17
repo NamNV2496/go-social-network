@@ -35,9 +35,15 @@ func Initilize() (*app.App, func(), error) {
 	redis := config.Redis
 	client := cache.NewRedisClient(redis)
 	newsfeedService := logic.NewUserService(goquDatabase, consumerConsumer, client)
-	postServiceServer := grpc.NewGrpcHander(newsfeedService)
-	server := grpc.NewServer(postServiceServer)
-	consumerHandler := consumers.NewKafkaHandler(consumerConsumer, newsfeedService)
+	newsfeedServiceServer := grpc.NewGrpcHander(newsfeedService)
+	server := grpc.NewServer(newsfeedServiceServer)
+	configsGRPC := config.GRPC
+	productGRPCClient, err := grpc.NewGRPCProductClient(configsGRPC)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	consumerHandler := consumers.NewKafkaHandler(consumerConsumer, newsfeedService, productGRPCClient)
 	appApp := app.NewApp(server, consumerHandler)
 	return appApp, func() {
 		cleanup()

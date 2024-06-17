@@ -10,7 +10,9 @@ message Post {
     repeated string images = 3;
     repeated string tags = 4;
     bool visible = 5;
+    string date = 6;
 }
+
 
 message CreatePostRequest { Post post = 1; }
 

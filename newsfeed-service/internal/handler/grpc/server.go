@@ -6,7 +6,7 @@ import (
 	"net"
 
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/validator"
-	postv1 "github.com/namnv2496/newsfeed-service/internal/handler/generated/post_core/v1"
+	newsfeedv1 "github.com/namnv2496/newsfeed-service/internal/handler/generated/newsfeed_core/v1"
 
 	"google.golang.org/grpc"
 )
@@ -16,11 +16,11 @@ type Server interface {
 }
 
 type server struct {
-	handler postv1.PostServiceServer
+	handler newsfeedv1.NewsfeedServiceServer
 }
 
 func NewServer(
-	handler postv1.PostServiceServer,
+	handler newsfeedv1.NewsfeedServiceServer,
 ) Server {
 	return &server{
 		handler: handler,
@@ -43,7 +43,7 @@ func (s server) Start(ctx context.Context) error {
 		),
 	}
 	server := grpc.NewServer(opts...)
-	postv1.RegisterPostServiceServer(server, s.handler)
+	newsfeedv1.RegisterNewsfeedServiceServer(server, s.handler)
 
 	fmt.Printf("gRPC server is running on %s\n", "localhost:5602")
 	return server.Serve(listener)

@@ -13,24 +13,27 @@ import (
 	"github.com/namnv2496/user-service/internal/database"
 	"github.com/namnv2496/user-service/internal/handler/grpc"
 	"github.com/namnv2496/user-service/internal/logic"
+	"github.com/namnv2496/user-service/internal/repo"
 )
 
 // Injectors from wire.go:
 
 func Initilize() (*app.App, func(), error) {
-	db, cleanup, err := database.NewDatabase()
+	config, err := configs.NewConfig()
+	if err != nil {
+		return nil, nil, err
+	}
+	configsDatabase := config.Database
+	db, cleanup, err := database.NewDatabase(configsDatabase)
 	if err != nil {
 		return nil, nil, err
 	}
 	goquDatabase := database.InitializeGoquDB(db)
-	config, err := configs.NewConfig()
-	if err != nil {
-		cleanup()
-		return nil, nil, err
-	}
+	userRepo := repo.NewUserService(goquDatabase)
+	userUserRepo := repo.NewUserUserService(goquDatabase)
 	redis := config.Redis
 	client := cache.NewRedisClient(redis)
-	userService := logic.NewUserService(goquDatabase, client)
+	userService := logic.NewUserService(userRepo, userUserRepo, client)
 	accountServiceServer := grpc.NewGrpcHander(userService)
 	server := grpc.NewServer(accountServiceServer)
 	appApp := app.NewApp(server)

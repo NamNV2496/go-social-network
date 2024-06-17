@@ -46,7 +46,6 @@ message AccountSession {
     uint64 account_id = 3;
 }
 
-
 message DeleteSessionRequest {}
 
 message DeleteSessionResponse {}
@@ -56,6 +55,11 @@ message GetSessionRequest { string token = 1; }
 message GetSessionResponse {
     bool is_valid = 1;
     string token = 2;
+}
+
+message GetFollowingRequest { string user_id = 1; }
+message GetFollowingResponse {
+    repeated string user_id = 1;
 }
 
 service AccountService {
@@ -87,6 +91,12 @@ service AccountService {
     rpc DeleteSession(DeleteSessionRequest) returns (DeleteSessionResponse) {
         option (google.api.http) = {
 			delete: "/api/v1/logout"
+		};
+    }
+
+    rpc GetFollowing(GetFollowingRequest) returns (GetFollowingResponse) {
+        option (google.api.http) = {
+			get: "/api/v1/following"
 		};
     }
 }

@@ -7,4 +7,5 @@ var ConfigWireSet = wire.NewSet(
 	wire.FieldsOf(new(Config), "Auth"),
 	wire.FieldsOf(new(Config), "Redis"),
 	wire.FieldsOf(new(Config), "GRPC"),
+	wire.FieldsOf(new(Config), "Database"),
 )
