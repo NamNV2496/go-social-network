@@ -1,0 +1,169 @@
+{
+	"info": {
+		"_postman_id": "5a87fed8-c4af-4192-8b6a-3efa32651aca",
+		"name": "social-network",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. get-account-info",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTc4MTk5NjIsImlhdCI6MTcxNzgxODk2Miwicm9sZXMiOlsiYWRtaW4iXSwidXNlcklkIjoiYWRtaW4ifQ.yhiFyYuiGUK0lTrlbDvknG-stGP3IkMu0lbq1VBBSHQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "EPFYI_AUTH=test; Path=/; Secure; HttpOnly; Expires=Sun, 16 Jun 2024 08:19:46 GMT;",
+						"type": "default",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/account/:userId",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"account",
+						":userId"
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "namnv"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "2. login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "EPFYI_AUTH=test; Path=/; Secure; HttpOnly; Expires=Sun, 16 Jun 2024 08:19:46 GMT;",
+						"type": "default",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"userId\": \"namnv\",\r\n    \"password\": \"namnv\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "3. post new post",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"post\": {\n        \"userId\": \"namnv\",\n        \"contentText\": \"helllo this is third post\",\n        \"images\": [\n            \"image1\",\n            \"image2\"\n        ],\n        \"tags\": [\n        ],\n        \"visible\": true\n    }\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/post",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"post"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "4. get-user-newsfeed",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/newsfeed?userId=knm",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"newsfeed"
+					],
+					"query": [
+						{
+							"key": "userId",
+							"value": "knm"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

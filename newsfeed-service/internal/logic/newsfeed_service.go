@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/doug-martin/goqu/v9"
 	"github.com/namnv2496/newsfeed-service/internal/cache"
@@ -76,14 +77,21 @@ func (s newsfeedService) UpdateNewsfeed(
 func (s newsfeedService) GetNewsfeed(ctx context.Context, userId string) (*newsfeedv1.GetNewsfeedResponse, error) {
 	data, exist := s.redis.Get(ctx, userId)
 	if exist == nil {
-		var posts []newsfeedv1.NewsfeedPost
+		var posts []domain.Post
 		if err := json.Unmarshal([]byte(data.(string)), &posts); err != nil {
 			fmt.Println("error when marshal old post")
 			return nil, err
 		}
 		postPointers := make([]*newsfeedv1.NewsfeedPost, len(posts))
-		for i := range posts {
-			postPointers[i] = &posts[i]
+		for i, post := range posts {
+			postPointers[i] = &newsfeedv1.NewsfeedPost{
+				UserId:      post.User_id,
+				ContentText: post.Content_text,
+				Images:      strings.Split(post.Images, ","),
+				Tags:        strings.Split(post.Tags, ","),
+				Visible:     post.Visible,
+				Date:        post.CreatedAt.Format("2024-01-01 18:00:00"),
+			}
 		}
 		return &newsfeedv1.GetNewsfeedResponse{
 			Posts: postPointers,

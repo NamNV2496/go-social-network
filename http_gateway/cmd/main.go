@@ -19,6 +19,7 @@ func main() {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
-	server.ConnectToUserService(ctx)
+	// server.ConnectToUserService(ctx)
+	// server.ConnectToPostService(ctx)
 	server.Start("rest")
 }

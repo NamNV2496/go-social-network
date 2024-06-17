@@ -78,32 +78,6 @@
     }
   },
   "definitions": {
-    "commonPost": {
-      "type": "object",
-      "properties": {
-        "userId": {
-          "type": "string"
-        },
-        "contentText": {
-          "type": "string"
-        },
-        "images": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "tags": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "visible": {
-          "type": "boolean"
-        }
-      }
-    },
     "protobufAny": {
       "type": "object",
       "properties": {
@@ -136,7 +110,7 @@
       "type": "object",
       "properties": {
         "post": {
-          "$ref": "#/definitions/commonPost"
+          "$ref": "#/definitions/v1Post"
         }
       }
     },
@@ -156,7 +130,36 @@
           "type": "boolean"
         },
         "post": {
-          "$ref": "#/definitions/commonPost"
+          "$ref": "#/definitions/v1Post"
+        }
+      }
+    },
+    "v1Post": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "contentText": {
+          "type": "string"
+        },
+        "images": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "date": {
+          "type": "string"
         }
       }
     }

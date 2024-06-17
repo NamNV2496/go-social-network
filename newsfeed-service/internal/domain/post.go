@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"encoding/json"
 	"time"
 
 	"github.com/doug-martin/goqu/v9"
@@ -20,4 +21,21 @@ type Post struct {
 	Visible      bool      `db:"visible" goqu:"omitnil"`
 	CreatedAt    time.Time `db:"created_at" goqu:"omitnil"`
 	UpdatedAt    time.Time `db:"updated_at" goqu:"omitnil"`
+}
+
+func (p Post) MarshalJSON() ([]byte, error) {
+	type Alias Post
+	alias := Alias(p)
+
+	if alias.Content_text == "" {
+		alias.Content_text = " "
+	}
+	if alias.Images == "" {
+		alias.Images = " "
+	}
+	if alias.Tags == "" {
+		alias.Tags = " "
+	}
+
+	return json.Marshal(alias)
 }
