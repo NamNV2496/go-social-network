@@ -1,4 +1,4 @@
-# This is social netword demo by Golang
+# This is a basic social network demo by Golang.
 
 # 1. Technologies
 
