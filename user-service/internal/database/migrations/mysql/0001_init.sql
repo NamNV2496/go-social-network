@@ -22,8 +22,8 @@ CREATE TABLE IF NOT exists `user_user` (
 
 INSERT INTO `user` (id, email, `name`, picture, user_id, `password`, created_at, updated_at) VALUES
     (1,'hello@gmail.com', "nguyễn văn Nam", "namnv.png", "namnv", "$2a$10$vlcVb/AN1KbHVEWYltm4/ORdeY7xVVfK0SAEMGUQfEJLEwQoM0DDi", "2014-01-06 18:36:00", "2014-01-06 18:36:00"),
-    (2,'hello2@gmail.com', "nguyễn văn bảo", "banbq.png", "banbq", "$2a$10$ku6te0wdnR7q8VZ23MbmxOc0TpkohOUOTzRf8Icy3zhUZPIUqZQeK", "2014-01-06 18:36:00", "2014-01-06 18:36:00"),
-    (3,'hello3@gmail.com', "nguyễn mỹ khánh", "knm.png", "knm", "$2a$10$ku6te0wdnR7q8VZ23MbmxOc0TpkohOUOTzRf8Icy3zhUZPIUqZQeK", "2014-01-06 18:36:00", "2014-01-06 18:36:00");
+    (2,'hello2@gmail.com', "nguyễn văn bảo", "banbq.png", "baobq", "$2a$10$ku6te0wdnR7q8VZ23MbmxOc0TpkohOUOTzRf8Icy3zhUZPIUqZQeK", "2014-01-06 18:36:00", "2014-01-06 18:36:00"),
+    (3,'hello3@gmail.com', "nguyễn mỹ khánh", "knm.png", "knm", "$2a$10$zMDwOUVxu/e90vkgQ2yXMuj/dBS38uFSWYbaW3iuMu.wAr0rAz8Zq", "2014-01-06 18:36:00", "2014-01-06 18:36:00");
 
 INSERT INTO `user_user` (id, user_id, follower, created_at, updated_at) VALUES
     (1,'namnv', 'baobq', "2014-01-06 18:36:00", "2014-01-06 18:36:00"),

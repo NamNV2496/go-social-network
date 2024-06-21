@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Newsfeed</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #333;
+            margin: 20px 0;
+        }
+
+        #logout {
+            /* margin-bottom: 20px;
+            padding: 10px 20px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px; */
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            position: absolute; /* Added this line */
+            top: 20px;
+            right: 20px;
+        }
+
+        #logout:hover {
+            background-color: #d32f2f;
+        }
+
+        #post-form {
+            width: 80%;
+            max-width: 600px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        #post-form h2 {
+            margin: 0 0 15px;
+            color: #555;
+        }
+
+        #create-post-form textarea, #create-post-form input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        #create-post-form button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #create-post-form button:hover {
+            background-color: #45a049;
+        }
+
+        #posts-container {
+            width: 80%;
+            max-width: 600px;
+        }
+
+        .post {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .post p {
+            margin: 10px 0;
+        }
+
+        .post .images {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .post .images img {
+            max-width: 100px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>Newsfeed</h1>
+    <button id="logout" type="button">Logout</button>
+    
+    <div id="post-form">
+        <h2>Create a Post</h2>
+        <form id="create-post-form">
+            <textarea id="contentText" placeholder="What's on your mind?" rows="4" cols="50" required></textarea><br>
+            <input type="text" id="images" placeholder="Image URLs (comma-separated)"><br>
+            <button type="submit">Post</button>
+        </form>
+    </div>
+    <div id="posts-container"></div>
+    
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            loadCurrentUser()
+        })
+
+        function loadCurrentUser() {
+            const userId =  sessionStorage.getItem('userName');
+            userElement = document.getElementById('logout')
+            userElement.textContent = "Logout: " + userId
+        }
+
+        // Function to fetch and display posts
+        async function fetchAndDisplayPosts() {
+            const userId =  sessionStorage.getItem('userName');  
+            const token = sessionStorage.getItem('token');  // Get the token from session storage
+
+            if (!token) {
+                alert('Token not found in session storage');
+                window.location.href = "index.html";
+            }
+
+            const url = `http://localhost:8080/api/v1/newsfeed?userId=${userId}`;
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'accept': 'application/json',
+                    'Authorization': `Bearer ${token}`  // Add the token to the request headers
+                }
+            });
+
+            const data = await response.json();
+            displayPosts(data.posts);
+        }
+
+        // Function to display posts on the page
+        function displayPosts(posts) {
+            const container = document.getElementById('posts-container');
+            container.innerHTML = '';  // Clear any existing posts
+
+            posts.forEach(post => {
+
+                const postElement = document.createElement('div');
+                postElement.className = 'post';
+
+                const userText = document.createElement('p');
+                userText.textContent = post.userId;
+                userText.style.fontWeight = 'bold';
+                userText.style.fontSize = '28px';
+                postElement.appendChild(userText);
+
+                const contentText = document.createElement('p');
+                contentText.textContent = post.contentText;
+                postElement.appendChild(contentText);
+
+                const imagesContainer = document.createElement('div');
+                imagesContainer.className = 'images';
+                post.images.forEach(imageUrl => {
+                    const img = document.createElement('img');
+                    img.src = imageUrl;  // Assuming imageUrl is a direct URL to the image
+                    imagesContainer.appendChild(img);
+                });
+                postElement.appendChild(imagesContainer);
+
+                const date = document.createElement('p');
+                date.textContent = `Date: ${post.date}`;
+                postElement.appendChild(date);
+
+                container.appendChild(userElement);
+                container.appendChild(postElement);
+            });
+        }
+
+        // Function to handle post creation
+        async function handlePostCreation(event) {
+            event.preventDefault();
+
+            const token = sessionStorage.getItem('token');  // Get the token from session storage
+
+            if (!token) {
+                alert('Token not found in session storage');
+                window.location.href = "index.html";
+            }
+
+            const contentText = document.getElementById('contentText').value;
+            const images = document.getElementById('images').value.split(',').map(img => img.trim());
+            const userId =  sessionStorage.getItem('userName');
+
+            const postData = {
+                post: {
+                    userId,
+                    contentText,
+                    images,
+                    tags: [],
+                    visible: true
+                }
+            };
+
+            const url = 'http://localhost:8080/api/v1/post';
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`  // Add the token to the request headers
+                },
+                body: JSON.stringify(postData)
+            });
+
+            if (!response.ok) {
+                alert('Failed to create post');
+                return;
+            }
+
+            document.getElementById('create-post-form').reset();
+            fetchAndDisplayPosts();  // Refresh the posts
+        }
+
+        // Function to handle logout
+        function handleLogout() {
+            console.log("Remove token in session");
+            sessionStorage.clear();  // Clear all session storage
+            window.location.href = 'index.html'
+        }
+
+        // Fetch and display posts when the page loads
+        window.onload = fetchAndDisplayPosts;
+
+        // Add event listener to the post creation form
+        document.getElementById('create-post-form').addEventListener('submit', handlePostCreation);
+        document.getElementById('logout').addEventListener('click', handleLogout);  // Attach click event listener to the logout button
+    </script>
+</body>
+</html>
+

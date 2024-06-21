@@ -2,7 +2,6 @@ package repo
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/doug-martin/goqu/v9"
 	"github.com/namnv2496/user-service/internal/domain"
@@ -29,7 +28,7 @@ func (u userRepo) GetAccount(ctx context.Context, userId string) (domain.User, e
 		Where(
 			goqu.C(domain.TabColUserId).Eq(userId),
 		)
-	fmt.Println(query.ToSQL())
+	// fmt.Println(query.ToSQL())
 	var users []domain.User
 	err := query.Executor().ScanStructsContext(ctx, &users)
 	if err != nil {

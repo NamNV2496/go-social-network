@@ -14,5 +14,32 @@
     3. run user-service "cd user-service/" and "go run cmd/main.go"
     4. run post-service "cd post-service/" and "go run cmd/main.go"
     5. run newsfeed-service "cd newsfeed-service/" and "go run cmd/main.go"
+    5. run FE "cd web/" and "start index.html"
 
 ![flow](docs/flow.png)
+
+## User
+
+    namnv - namnv
+    knm - knm
+    baobq - baobq
+
+![alt text](docs/image4.png)
+
+Follower: 
+
+![alt text](docs/image-2.png)
+
+if `namnv` posted a post. `knm` and `baobq` will see it in their newsfeed.
+
+![alt text](docs/image-1.png)
+
+if `knm` posted a post. Only `namnv` will see it in his newsfeed `baobq` will not. Because only `namnv` follow `knm`
+if `baobq` posted a post. Only `namnv` will see it in his newsfeed `knm` will not. Because only `namnv` follow `baobq`
+
+![alt text](docs/image.png)
+
+
+Here is redis
+
+![alt text](docs/image3.png)

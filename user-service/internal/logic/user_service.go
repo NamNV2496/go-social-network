@@ -38,7 +38,7 @@ func NewUserService(
 
 func (u userService) CreateAccount(ctx context.Context, user userv1.Account) (uint64, error) {
 
-	passwordHash, _ := bcrypt.GenerateFromPassword([]byte(user.UserId), bcrypt.DefaultCost)
+	passwordHash, _ := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	fmt.Println(string(passwordHash))
 	return 1, nil
 }
@@ -51,6 +51,9 @@ func (u userService) GetAccount(ctx context.Context, userId string) (domain.User
 func (u userService) Login(ctx context.Context, userId string, password string) (string, error) {
 
 	user, err := u.userRepo.GetAccount(ctx, userId)
+	if err != nil {
+		return "", err
+	}
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 	if err != nil {
 		return "", nil

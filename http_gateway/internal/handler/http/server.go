@@ -149,5 +149,23 @@ func (s *server) runRESTServer() error {
 	}
 
 	// start server of http
-	return http.ListenAndServe(s.gatewayConfig.GatewayAddress, mux)
+	return http.ListenAndServe(s.gatewayConfig.GatewayAddress, corsHandler(mux))
+}
+
+// custom CORS handler
+func corsHandler(h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Allow all origins for simplicity, but adjust for production
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+
+		// Handle preflight requests
+		if r.Method == http.MethodOptions {
+			w.WriteHeader(http.StatusNoContent)
+			return
+		}
+
+		h.ServeHTTP(w, r)
+	})
 }

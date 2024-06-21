@@ -83,6 +83,7 @@ func (s newsfeedService) GetNewsfeed(ctx context.Context, userId string) (*newsf
 			return nil, err
 		}
 		postPointers := make([]*newsfeedv1.NewsfeedPost, len(posts))
+		reverseSlice(posts)
 		for i, post := range posts {
 			postPointers[i] = &newsfeedv1.NewsfeedPost{
 				UserId:      post.User_id,
@@ -90,7 +91,7 @@ func (s newsfeedService) GetNewsfeed(ctx context.Context, userId string) (*newsf
 				Images:      strings.Split(post.Images, ","),
 				Tags:        strings.Split(post.Tags, ","),
 				Visible:     post.Visible,
-				Date:        post.CreatedAt.Format("2024-01-01 18:00:00"),
+				Date:        post.CreatedAt.String(),
 			}
 		}
 		return &newsfeedv1.GetNewsfeedResponse{
@@ -98,4 +99,11 @@ func (s newsfeedService) GetNewsfeed(ctx context.Context, userId string) (*newsf
 		}, nil
 	}
 	return nil, nil
+}
+
+func reverseSlice(posts []domain.Post) {
+	n := len(posts)
+	for i := 0; i < n/2; i++ {
+		posts[i], posts[n-1-i] = posts[n-1-i], posts[i]
+	}
 }

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        .login-container h2 {
+            margin-top: 0;
+            text-align: center;
+        }
+        .login-container input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            box-sizing: border-box;
+        }
+        .login-container button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .login-container button:hover {
+            background-color: #45a049;
+        }
+        .error-message {
+            color: red;
+            text-align: center;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-container">
+    <h2>Login</h2>
+    <div class="error-message" id="error-message">Invalid credentials, please try again.</div>
+    <input type="text" id="userId" placeholder="User ID" required>
+    <input type="password" id="password" placeholder="Password" required>
+    <button onclick="login()">Login</button>
+</div>
+
+<script>
+    async function login() {
+        const userId = document.getElementById('userId').value;
+        const password = document.getElementById('password').value;
+        const errorMessage = document.getElementById('error-message');
+
+        const response = await fetch('http://localhost:8080/api/v1/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ userId, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            if (data.token == "") {
+                alert('Login failed!');
+                window.location.reload;
+            }
+            console.log("update token in session")
+            sessionStorage.setItem('token', data.token);
+            sessionStorage.setItem('userName', data.userId);
+            // Redirect to another page or perform additional actions
+            window.location.href = 'newsfeed.html';
+        } else {
+            errorMessage.style.display = 'block';
+        }
+    }
+</script>
+
+</body>
+</html>
