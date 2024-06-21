@@ -36,7 +36,7 @@ func NewKafkaHandler(
 }
 
 func (c consumerHandler) StartConsumerUp(ctx context.Context) error {
-	fmt.Println("Add consumer for topic: ", mq.TOPIC_POST_CONTENT)
+	fmt.Println("Listening from topic: ", mq.TOPIC_POST_CONTENT)
 	c.consumer.RegisterHandler(
 		mq.TOPIC_POST_CONTENT,
 		func(ctx context.Context, queueName string, payload []byte) error {
@@ -51,19 +51,33 @@ func (c consumerHandler) StartConsumerUp(ctx context.Context) error {
 				return err
 			}
 			// update newsfeed for taged users
+			var tags []string
 			if newPost.Tags != "" {
-				tags := strings.Split(newPost.Tags, ",")
+				tags = strings.Split(newPost.Tags, ",")
 				fmt.Println("Update for taged users: ", tags)
 				if err := c.newsfeedService.UpdateNewsfeed(ctx, tags, newPost); err != nil {
 					return err
 				}
 			}
+			var tagMap = make(map[string]bool, 0)
+			for _, tag := range tags {
+				tag = strings.Trim(tag, " ")
+				tagMap[tag] = true
+			}
 			// // update newsfeed for followings
-			if followings, err := c.userClient.GetFollowing(ctx, newPost.User_id); err != nil {
+			followings, err := c.userClient.GetFollowing(ctx, newPost.User_id)
+			var followingUpdate []string
+			if err != nil {
 				return err
 			} else {
-				fmt.Println("Update for followings: ", followings)
-				if err := c.newsfeedService.UpdateNewsfeed(ctx, followings, newPost); err != nil {
+				for _, follower := range followings {
+					if !tagMap[follower] {
+						follower = strings.Trim(follower, " ")
+						followingUpdate = append(followingUpdate, follower)
+					}
+				}
+				fmt.Println("Update for followings: ", followingUpdate)
+				if err := c.newsfeedService.UpdateNewsfeed(ctx, followingUpdate, newPost); err != nil {
 					return err
 				}
 			}

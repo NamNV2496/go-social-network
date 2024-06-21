@@ -123,16 +123,30 @@
         <h2>Create a Post</h2>
         <form id="create-post-form">
             <textarea id="contentText" placeholder="What's on your mind?" rows="4" cols="50" required></textarea><br>
-            <input type="text" id="images" placeholder="Image URLs (comma-separated)"><br>
+            <div id="image-inputs">
+                <input type="text" class="image-input" placeholder="Image URL"><br>
+            </div>
+            <button type="button" id="add-image">Add Image</button><br>
+            <input type="text" id="tags" placeholder="Tags (comma-separated)"><br>
             <button type="submit">Post</button>
         </form>
     </div>
+    
     <div id="posts-container"></div>
     
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            loadCurrentUser()
+            loadCurrentUser();
+            const addImageButton = document.getElementById('add-image');
+            addImageButton.addEventListener('click', function() {
+                const imageInputsContainer = document.getElementById('image-inputs');
+                const newInput = document.createElement('input');
+                newInput.type = 'text';
+                newInput.className = 'image-input';
+                newInput.placeholder = 'Image URL';
+                imageInputsContainer.appendChild(newInput);
+            });
         })
 
         function loadCurrentUser() {
@@ -161,6 +175,7 @@
             });
 
             const data = await response.json();
+            console.log(data.posts)
             displayPosts(data.posts);
         }
 
@@ -214,19 +229,29 @@
             }
 
             const contentText = document.getElementById('contentText').value;
-            const images = document.getElementById('images').value.split(',').map(img => img.trim());
-            const userId =  sessionStorage.getItem('userName');
+            var imageValue = document.querySelectorAll('.image-input');
+            var images;
+            if (imageValue.length > 0) {
+                images = Array.from(imageValue).map(input => input.value.trim()).filter(value => value !== '');
+            }
+            var tagValue = document.getElementById('tags').value;
+            var tags;
+            if (tagValue != null && tagValue != "") {
+                tags = tagValue.split(',').map(tag => tag.trim()); // Parse tags
+            }
+            const userId = sessionStorage.getItem('userName');
 
             const postData = {
                 post: {
                     userId,
                     contentText,
                     images,
-                    tags: [],
+                    tags,
                     visible: true
                 }
             };
 
+            console.log("postData: ", postData)
             const url = 'http://localhost:8080/api/v1/post';
             const response = await fetch(url, {
                 method: 'POST',
@@ -246,6 +271,7 @@
             document.getElementById('create-post-form').reset();
             fetchAndDisplayPosts();  // Refresh the posts
         }
+
 
         // Function to handle logout
         function handleLogout() {

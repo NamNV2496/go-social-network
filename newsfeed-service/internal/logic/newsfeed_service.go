@@ -46,6 +46,8 @@ func (s newsfeedService) UpdateNewsfeed(
 		return nil
 	}
 	for _, user := range users {
+		user = strings.ToLower(user)
+		user = strings.Trim(user, " ")
 		var jsonData []domain.Post
 		data, exist := s.redis.Get(ctx, user)
 		if exist != nil {
