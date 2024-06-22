@@ -21,14 +21,7 @@
         }
 
         #logout {
-            /* margin-bottom: 20px;
-            padding: 10px 20px;
-            background-color: #f44336;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px; */
+
             margin-bottom: 20px;
             padding: 10px 20px;
             background-color: #f44336;
@@ -118,6 +111,7 @@
 <body>
     <h1>Newsfeed</h1>
     <button id="logout" type="button">Logout</button>
+    <a href="room.html">Message</a>
     
     <div id="post-form">
         <h2>Create a Post</h2>
@@ -285,7 +279,7 @@
 
         // Add event listener to the post creation form
         document.getElementById('create-post-form').addEventListener('submit', handlePostCreation);
-        document.getElementById('logout').addEventListener('click', handleLogout);  // Attach click event listener to the logout button
+        document.getElementById('logout').addEventListener('click', handleLogout);
     </script>
 </body>
 </html>

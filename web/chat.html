@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Room</title>
+    <style>
+        /* General styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Full viewport height */
+}
+
+h1 {
+    text-align: center;
+    margin-top: 20px;
+    color: #333;
+}
+
+#chat-messages {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    width: 80%;
+    max-width: 800px;
+    height: 60vh; /* Fixed height for message area */
+    overflow-y: auto; /* Enable scrolling for overflow */
+    margin-top: 20px;
+}
+
+#message-form {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    width: 80%;
+    max-width: 800px;
+}
+
+#message-input {
+    flex: 1; /* Take remaining space */
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+#send-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#send-button:hover {
+    background-color: #45a049;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 600px) {
+    #message-form {
+        flex-direction: column;
+    }
+    
+    #message-input {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+}
+
+    </style>
+</head>
+<body>
+    <h1 id="chatroom">Chat Room</h1>
+    
+    <div id="chat-messages">
+        <!-- Chat messages will be displayed here -->
+    </div>
+    
+    <div id="message-form">
+        <input type="text" id="message-input" placeholder="Type your message...">
+        <button id="send-button" style="margin-top: 20px;">Send</button>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get roomId from query parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const roomId = urlParams.get('roomId');
+            const username = urlParams.get('username');
+            const roomName = urlParams.get('roomName');
+            console.log(`Joined room: ${roomId}`);
+
+            chatroom.textContent = roomName
+            // WebSocket connection URL
+            const wsUrl = `ws://127.0.0.1:8081/ws/${username}/joinRoom/${roomId}`;
+
+            // Create WebSocket instance
+            const socket = new WebSocket(wsUrl);
+
+            // WebSocket event: when connection is open
+            socket.onopen = function(event) {
+                console.log('WebSocket connected');
+            };
+
+            // WebSocket event: when receiving a message
+            socket.onmessage = function(event) {
+                const message = event.data;
+                receiveMessage(message);
+            };
+
+            // WebSocket event: when connection closed
+            socket.onclose = function(event) {
+                console.log('WebSocket connection closed');
+            };
+
+            function sendMessage(message) {
+                console.log(`Sending message: ${message}`);
+                socket.send(message);
+            }
+
+            // Function to handle receiving a message
+            function receiveMessage(message) {
+                console.log(`Received message: ${message}`);
+                const jsonData = JSON.parse(message);
+
+                // Display message in the chat interface
+                const messageElement = document.createElement('div');
+                messageElement.textContent = jsonData.username + ": " + jsonData.content;
+                document.getElementById('chat-messages').appendChild(messageElement);
+            }
+
+            // Handling form submission to send messages
+            const sendButton = document.getElementById('send-button');
+            const messageInput = document.getElementById('message-input');
+
+            sendButton.addEventListener('click', function() {
+                const message = messageInput.value.trim();
+                if (message !== '') {
+                    sendMessage(message);
+                    messageInput.value = ''; // Clear input after sending
+                }
+            });
+
+            // Optional: Handle form submission on Enter key press
+            messageInput.addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    sendButton.click();
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,304 @@
+
+<button id="create-room">Create Room</button>
+
+<button id="logout" type="button">Logout</button>
+
+<h1>Available Rooms</h1>
+<div id="rooms"></div>
+<div id="messages"></div>
+
+<!-- Popup/Modal for Creating a Room -->
+<div id="create-room-modal" class="modal">
+    <div class="modal-content">
+
+        <h2>Create New Room</h2>
+        <input type="text" id="room-id-input" placeholder="Enter room id">
+        <input type="text" id="room-name-input" placeholder="Enter room name">
+        <button id="submit_room">Create Room</button>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        getRooms();
+        loadCurrentUser();
+    })
+    document.getElementById('logout').addEventListener('click', handleLogout);
+
+    function handleLogout() {
+        console.log("Remove token in session");
+        sessionStorage.clear();  // Clear all session storage
+        window.location.href = 'index.html'
+    }
+    function loadCurrentUser() {
+        const userId =  sessionStorage.getItem('userName');
+        userElement = document.getElementById('logout')
+        userElement.textContent = "Logout: " + userId
+    }
+    function getRooms() {
+        const username = sessionStorage.getItem('userName');
+            // Fetch rooms from API
+        fetch('http://localhost:8081/ws/getRooms')
+            .then(response => response.json())
+            .then(data => {
+                const roomsDiv = document.getElementById('rooms');
+                roomsDiv.innerHTML = ''; // Clear previous rooms
+                
+                data.forEach(room => {
+                    const roomContainer = document.createElement('div');
+                    roomContainer.className = 'room-container'; // Optional: for styling purposes
+                    
+                    const roomName = document.createElement('span');
+                    roomName.textContent = room.name;
+                    roomName.style = "font-weight: bold; font-size: 32px"
+                    
+                    const roomInfo = document.createElement('div');
+                    roomInfo.textContent = room.last_msg;
+                    
+                    const joinButton = document.createElement('button');
+                    joinButton.className = 'join-button';
+                    joinButton.textContent = 'Join';
+                    joinButton.onclick = () => joinRoom(room.id, username, room.name);
+                    
+                    roomContainer.append(roomName);
+                    roomContainer.append(document.createElement('br'));
+                    roomContainer.append(roomInfo);
+                    roomContainer.append(joinButton);
+                    
+                    roomsDiv.append(roomContainer);
+                });
+            });
+    }
+
+    function joinRoom(roomId, username, roomName) {
+        console.log(`Joining room ${roomId} as ${username}`);
+        // Redirect to chat.html with room ID and username
+        window.location.href = `chat.html?roomId=${roomId}&username=${encodeURIComponent(username)}&roomName=${encodeURIComponent(roomName)}`;
+    }
+
+    function openCreateRoomModal() {
+        const modal = document.getElementById('create-room-modal');
+        modal.style.display = 'block';
+    }
+
+    function closeCreateRoomModal() {
+        const modal = document.getElementById('create-room-modal');
+        modal.style.display = 'none';
+    }
+    // Open create room modal on button click
+    // document.getElementById('submit_room').addEventListener('click', openCreateRoomModal);
+    document.getElementById('create-room').addEventListener('click', openCreateRoomModal);
+
+    // Close modal when close button or outside modal is clicked
+    const modal = document.getElementById('create-room-modal');
+    modal.addEventListener('click', function(event) {
+        if (event.target === modal) {
+            closeCreateRoomModal();
+        }
+    });
+
+    // Handle create room form submission
+    document.getElementById('submit_room').addEventListener('click', function() {
+        const roomName = document.getElementById('room-name-input').value.trim();
+        const roomId = document.getElementById('room-id-input').value.trim();
+        if (roomName !== '') {
+            // Call API to create room
+            fetch(`http://localhost:8081/ws/createRoom?roomId=${roomId}&roomName=${encodeURIComponent(roomName)}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.reload()
+                    } else {
+                        alert('Failed to create room. Please try again.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error creating room:', error);
+                    alert('Failed to create room. Please try again.');
+                });
+        } else {
+            alert('Please enter a room name.');
+        }
+    });
+</script>
+
+<style>
+    /* General styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Message form */
+#message-form {
+    margin-bottom: 20px;
+}
+
+
+#room-id-input {
+    padding: 10px;
+    font-size: 16px;
+    width: 200px; /* Adjust based on your button width */
+    border: 1px solid #ccc;
+    border-radius: 4px 0 0 4px;
+}
+
+#room-name-input {
+    padding: 10px;
+    font-size: 16px;
+    width:  200px; /* Adjust based on your button width */
+    border: 1px solid #ccc;
+    border-radius: 4px 0 0 4px;
+}
+
+#submit_name {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+}
+
+#create-room {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    background-color: #009940;
+    color: #fff;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+}
+
+#submit_room {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    background-color: #009940;
+    color: #fff;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+}
+
+#submit_name:hover {
+    background-color: #0056b3;
+}
+
+/* Room list */
+h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.room-container {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    margin-bottom: 10px;
+}
+
+.room-container span {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.room-info {
+    margin-top: 8px;
+    font-size: 14px;
+}
+
+.join-button {
+    padding: 8px 16px;
+    font-size: 14px;
+    border: none;
+    background-color: #28a745;
+    color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.join-button:hover {
+    background-color: #218838;
+}
+
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px;
+    border-radius: 8px;
+    position: relative;
+}
+
+.close {
+    color: #f10000;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .container {
+        padding: 10px;
+    }
+}
+#logout {
+
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    position: absolute; /* Added this line */
+    top: 20px;
+    right: 20px;
+}
+
+#logout:hover {
+    background-color: #d32f2f;
+}
+
+</style>
