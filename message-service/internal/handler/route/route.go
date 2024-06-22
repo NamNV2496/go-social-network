@@ -28,6 +28,7 @@ func InitRoute(wsHandler *wsHandler.Handler) {
 	r.POST("/ws/createRoom", wsHandler.CreateRoom)
 	r.GET("/ws/:username/joinRoom/:roomId", wsHandler.JoinRoom)
 	r.GET("/ws/getRooms", wsHandler.GetRooms)
+	r.GET("/ws/getMembers", wsHandler.GetMembers)
 }
 
 func Start(addr string) error {

@@ -4,99 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat Room</title>
-    <style>
-        /* General styles */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh; /* Full viewport height */
-}
-
-h1 {
-    text-align: center;
-    margin-top: 20px;
-    color: #333;
-}
-
-#chat-messages {
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
-    width: 80%;
-    max-width: 800px;
-    height: 60vh; /* Fixed height for message area */
-    overflow-y: auto; /* Enable scrolling for overflow */
-    margin-top: 20px;
-}
-
-#message-form {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    margin-top: 20px;
-    width: 80%;
-    max-width: 800px;
-}
-
-#message-input {
-    flex: 1; /* Take remaining space */
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-right: 10px;
-}
-
-#send-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    border: none;
-    background-color: #4CAF50;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-#send-button:hover {
-    background-color: #45a049;
-}
-
-/* Responsive adjustments */
-@media screen and (max-width: 600px) {
-    #message-form {
-        flex-direction: column;
-    }
-    
-    #message-input {
-        width: 100%;
-        margin-right: 0;
-        margin-bottom: 10px;
-    }
-}
-
-    </style>
+    <link rel="stylesheet" href="css/chat.css" type="text/css">
 </head>
 <body>
+    <button id="logout" type="button">Logout</button>
+    <a href="newsfeed.html">Home</a>
     <h1 id="chatroom">Chat Room</h1>
-    
-    <div id="chat-messages">
-        <!-- Chat messages will be displayed here -->
+
+    <div id="chat-container">
+        <div id="chat-messages">
+            <!-- Chat messages will be displayed here -->
+        </div>
+        <div id="member-list">
+            <h2>Members</h2>
+            <ul id="members">
+                <!-- Member names will be displayed here -->
+            </ul>
+        </div>
     </div>
-    
+
     <div id="message-form">
         <input type="text" id="message-input" placeholder="Type your message...">
-        <button id="send-button" style="margin-top: 20px;">Send</button>
+        <button id="send-button">Send</button>
     </div>
-    
+
     <script>
+
+        document.getElementById('logout').addEventListener('click', handleLogout);
+        document.addEventListener("DOMContentLoaded", function() {
+            loadCurrentUser();
+        })
+
+        function loadCurrentUser() {
+            const userId =  sessionStorage.getItem('userName');
+            userElement = document.getElementById('logout')
+            userElement.textContent = "Logout: " + userId
+        }
+        function handleLogout() {
+            console.log("Remove token in session");
+            sessionStorage.clear();  // Clear all session storage
+            window.location.href = 'index.html'
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             // Get roomId from query parameter
             const urlParams = new URLSearchParams(window.location.search);
@@ -105,7 +54,8 @@ h1 {
             const roomName = urlParams.get('roomName');
             console.log(`Joined room: ${roomId}`);
 
-            chatroom.textContent = roomName
+            chatroom.textContent = roomName;
+
             // WebSocket connection URL
             const wsUrl = `ws://127.0.0.1:8081/ws/${username}/joinRoom/${roomId}`;
 
@@ -135,7 +85,7 @@ h1 {
 
             // Function to handle receiving a message
             function receiveMessage(message) {
-                console.log(`Received message: ${message}`);
+                // console.log(`Received message: ${message}`);
                 const jsonData = JSON.parse(message);
 
                 // Display message in the chat interface
@@ -162,8 +112,68 @@ h1 {
                     sendButton.click();
                 }
             });
-        });
 
+            // Function to handle inbox click
+            function inbox(member) {
+                var currentUser = sessionStorage.getItem('username');
+                var members = [currentUser, member];
+                members.sort(function(a, b) {
+                    return a.toLowerCase().localeCompare(b.toLowerCase());
+                });
+                var roomName = members[0] + "," + members[1];
+                const requestBody = {
+                    "roomId": roomName,
+                    "roomName": roomName,
+                    "public": 0,
+                    "member": members
+                };
+                console.log(requestBody);
+                fetch(`http://localhost:8081/ws/createRoom`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestBody)
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            // window.location.href = "index.html";
+                            window.location.href = `chat.html?roomId=${roomName}&username=${encodeURIComponent(currentUser)}&roomName=${encodeURIComponent(roomName)}`;
+                        } else {
+                            alert('Failed to create room. Please try again.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error creating room:', error);
+                        alert('Failed to create room. Please try again.');
+                    });
+            }
+
+            // Function to fetch and display member list
+            function fetchMembers() {
+                fetch(`http://localhost:8081/ws/getMembers?username=${username}&roomId=${roomId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const members = data.member;
+                        const membersList = document.getElementById('members');
+                        membersList.innerHTML = ''; // Clear previous members
+                        members.forEach(member => {
+                            const memberItem = document.createElement('p');
+                            const memberLink = document.createElement('a');
+                            memberLink.textContent = member;
+                            memberLink.addEventListener('click', function() {
+                                inbox(member);
+                            });
+                            memberItem.appendChild(memberLink);
+                            membersList.appendChild(memberItem);
+                        });
+                    })
+                    .catch(error => console.error('Error fetching members:', error));
+            }
+
+            // Fetch members when the page loads
+            fetchMembers();
+        });
     </script>
 </body>
 </html>

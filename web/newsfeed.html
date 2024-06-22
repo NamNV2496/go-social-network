@@ -4,109 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Newsfeed</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f2f5;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        h1 {
-            color: #333;
-            margin: 20px 0;
-        }
-
-        #logout {
-
-            margin-bottom: 20px;
-            padding: 10px 20px;
-            background-color: #f44336;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            position: absolute; /* Added this line */
-            top: 20px;
-            right: 20px;
-        }
-
-        #logout:hover {
-            background-color: #d32f2f;
-        }
-
-        #post-form {
-            width: 80%;
-            max-width: 600px;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
-
-        #post-form h2 {
-            margin: 0 0 15px;
-            color: #555;
-        }
-
-        #create-post-form textarea, #create-post-form input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-
-        #create-post-form button {
-            width: 100%;
-            padding: 10px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        #create-post-form button:hover {
-            background-color: #45a049;
-        }
-
-        #posts-container {
-            width: 80%;
-            max-width: 600px;
-        }
-
-        .post {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
-
-        .post p {
-            margin: 10px 0;
-        }
-
-        .post .images {
-            display: flex;
-            flex-wrap: wrap;
-        }
-
-        .post .images img {
-            max-width: 100px;
-            margin-right: 10px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-    </style>
+    <link rel="stylesheet" href="css/newsfeed.css" type="text/css">
 </head>
 <body>
     <h1>Newsfeed</h1>
@@ -173,6 +71,43 @@
             displayPosts(data.posts);
         }
 
+        function inbox(member) {
+            var currentUser = sessionStorage.getItem('userName');
+            if (member == currentUser) {
+                return
+            }
+            var members = [currentUser, member];
+            members.sort(function(a, b) {
+                return a.toLowerCase().localeCompare(b.toLowerCase());
+            });
+            var roomName = members[0] + "," + members[1];
+            const requestBody = {
+                "roomId": roomName,
+                "roomName": roomName,
+                "public": 0,
+                "member": members
+            };
+            console.log(requestBody);
+            fetch(`http://localhost:8081/ws/createRoom`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestBody)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        // window.location.href = "index.html";
+                        window.location.href = `chat.html?roomId=${roomName}&username=${encodeURIComponent(currentUser)}&roomName=${encodeURIComponent(roomName)}`;
+                    } else {
+                        alert('Failed to create room. Please try again.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error creating room:', error);
+                    alert('Failed to create room. Please try again.');
+                });
+        }
         // Function to display posts on the page
         function displayPosts(posts) {
             const container = document.getElementById('posts-container');
@@ -184,9 +119,15 @@
                 postElement.className = 'post';
 
                 const userText = document.createElement('p');
-                userText.textContent = post.userId;
-                userText.style.fontWeight = 'bold';
-                userText.style.fontSize = '28px';
+                const userLink = document.createElement('a');
+                userLink.textContent = post.userId;
+                userLink.style.fontWeight = 'bold';
+                userLink.style.fontSize = '32px';
+                userLink.href = "#"
+                userLink.addEventListener('click', function() {
+                    inbox(post.userId);
+                });
+                userText.appendChild(userLink)
                 postElement.appendChild(userText);
 
                 const contentText = document.createElement('p');

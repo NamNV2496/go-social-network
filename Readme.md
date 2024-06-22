@@ -6,6 +6,7 @@
     2. goqu - "github.com/doug-martin/goqu/v9"
     3. kafka - "github.com/IBM/sarama"
     4. redis - "github.com/go-redis/redis/v8"
+    5. websocket - "github.com/gorilla/websocket"
 
 # 2. How to start
 
@@ -14,7 +15,8 @@
     3. run user-service "cd user-service/" and "go run cmd/main.go"
     4. run post-service "cd post-service/" and "go run cmd/main.go"
     5. run newsfeed-service "cd newsfeed-service/" and "go run cmd/main.go"
-    5. run FE "cd web/" and "start index.html"
+    6. run message-service "cd message-service/" and "go run cmd/main.go"
+    7. run FE "cd web/" and "start index.html"
 
 ![flow](docs/flow.png)
 
@@ -39,7 +41,12 @@ if `baobq` posted a post. Only `namnv` will see it in his newsfeed `knm` will no
 
 ![alt text](docs/image.png)
 
-
 Here is redis
-
 ![alt text](docs/image3.png)
+
+Create new chat room private with friend from newsfeed
+![alt text](docs/image5.png)
+
+Only 2 member of chat can see and join the chat
+![alt text](docs/image6.png)
+

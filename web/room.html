@@ -1,7 +1,15 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="css/room.css" type="text/css">
+</head>
 <button id="create-room">Create Room</button>
 
 <button id="logout" type="button">Logout</button>
+<a href="newsfeed.html">Home</a>
 
 <h1>Available Rooms</h1>
 <div id="rooms"></div>
@@ -14,6 +22,8 @@
         <h2>Create New Room</h2>
         <input type="text" id="room-id-input" placeholder="Enter room id">
         <input type="text" id="room-name-input" placeholder="Enter room name">
+        <input type="text" id="room-member-input" placeholder="Enter member names">
+        <input type="checkbox" id="room-public-input">
         <button id="submit_room">Create Room</button>
     </div>
 </div>
@@ -38,7 +48,7 @@
     function getRooms() {
         const username = sessionStorage.getItem('userName');
             // Fetch rooms from API
-        fetch('http://localhost:8081/ws/getRooms')
+        fetch(`http://localhost:8081/ws/getRooms?username=${encodeURIComponent(username)}`)
             .then(response => response.json())
             .then(data => {
                 const roomsDiv = document.getElementById('rooms');
@@ -125,180 +135,3 @@
         }
     });
 </script>
-
-<style>
-    /* General styling */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-    margin: 0;
-    padding: 0;
-}
-
-.container {
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-/* Message form */
-#message-form {
-    margin-bottom: 20px;
-}
-
-
-#room-id-input {
-    padding: 10px;
-    font-size: 16px;
-    width: 200px; /* Adjust based on your button width */
-    border: 1px solid #ccc;
-    border-radius: 4px 0 0 4px;
-}
-
-#room-name-input {
-    padding: 10px;
-    font-size: 16px;
-    width:  200px; /* Adjust based on your button width */
-    border: 1px solid #ccc;
-    border-radius: 4px 0 0 4px;
-}
-
-#submit_name {
-    padding: 10px 20px;
-    font-size: 16px;
-    border: none;
-    background-color: #007bff;
-    color: #fff;
-    border-radius: 0 4px 4px 0;
-    cursor: pointer;
-}
-
-#create-room {
-    padding: 10px 20px;
-    font-size: 16px;
-    border: none;
-    background-color: #009940;
-    color: #fff;
-    border-radius: 0 4px 4px 0;
-    cursor: pointer;
-}
-
-#submit_room {
-    padding: 10px 20px;
-    font-size: 16px;
-    border: none;
-    background-color: #009940;
-    color: #fff;
-    border-radius: 0 4px 4px 0;
-    cursor: pointer;
-}
-
-#submit_name:hover {
-    background-color: #0056b3;
-}
-
-/* Room list */
-h1 {
-    font-size: 24px;
-    margin-bottom: 10px;
-}
-
-.room-container {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    margin-bottom: 10px;
-}
-
-.room-container span {
-    font-weight: bold;
-    font-size: 20px;
-}
-
-.room-info {
-    margin-top: 8px;
-    font-size: 14px;
-}
-
-.join-button {
-    padding: 8px 16px;
-    font-size: 14px;
-    border: none;
-    background-color: #28a745;
-    color: #fff;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.join-button:hover {
-    background-color: #218838;
-}
-
-/* Modal styles */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4);
-}
-
-.modal-content {
-    background-color: #fefefe;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-    max-width: 600px;
-    border-radius: 8px;
-    position: relative;
-}
-
-.close {
-    color: #f10000;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
-}
-
-/* Responsive adjustments */
-@media (max-width: 600px) {
-    .container {
-        padding: 10px;
-    }
-}
-#logout {
-
-    margin-bottom: 20px;
-    padding: 10px 20px;
-    background-color: #f44336;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    position: absolute; /* Added this line */
-    top: 20px;
-    right: 20px;
-}
-
-#logout:hover {
-    background-color: #d32f2f;
-}
-
-</style>

@@ -1,0 +1,122 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Full viewport height */
+}
+
+h1 {
+    text-align: center;
+    margin-top: 20px;
+    color: #333;
+}
+
+#chat-container {
+    display: flex;
+    flex-direction: row;
+    width: 80%;
+    max-width: 1000px;
+    height: 60vh; /* Fixed height for message area */
+    margin-top: 20px;
+}
+
+#chat-messages {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    flex: 3;
+    overflow-y: auto; /* Enable scrolling for overflow */
+    margin-right: 10px;
+}
+
+#member-list {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    flex: 1;
+    overflow-y: auto; /* Enable scrolling for overflow */
+}
+
+#message-form {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    width: 80%;
+    max-width: 1000px;
+}
+
+#message-input {
+    flex: 1; /* Take remaining space */
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+#send-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#send-button:hover {
+    background-color: #45a049;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 600px) {
+    #message-form {
+        flex-direction: column;
+    }
+
+    #message-input {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+}
+
+/* Member list styles */
+#members a {
+    display: block;
+    padding: 5px 0;
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#members a:hover {
+    text-decoration: underline;
+}
+#logout {
+
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    position: absolute; /* Added this line */
+    top: 20px;
+    right: 20px;
+}
+
+#logout:hover {
+    background-color: #d32f2f;
+}

@@ -2,7 +2,6 @@ package logic
 
 import (
 	"fmt"
-	"time"
 )
 
 type Hub struct {
@@ -21,12 +20,14 @@ func NewHub() *Hub {
 		Name:    "Tám chuyện xuyên biên giới",
 		Clients: make(map[string]*Client),
 		LastMsg: "Room was created at 2024-06-20 10:42:22.6076085 +0700 +07 m=+45.546873001",
+		Public:  1,
 	}
 	rooms["room456"] = &Room{
 		ID:      "room456",
 		Name:    "Coding interview",
 		Clients: make(map[string]*Client),
 		LastMsg: "Room was created at 2024-06-20 10:42:22.6076085 +0700 +07 m=+45.546873001",
+		Public:  1,
 	}
 	return &Hub{
 		Rooms:      rooms,
@@ -43,8 +44,19 @@ func (h *Hub) Run() {
 			fmt.Println("Have a new member joined room: ", cl.RoomID, " with name: ", cl.Username)
 			if _, ok := h.Rooms[cl.RoomID]; ok {
 				r := h.Rooms[cl.RoomID]
+				memebers := r.Members
+				var exist bool = false
+				for _, mem := range memebers {
+					if mem == cl.Username {
+						exist = true
+					}
+				}
+				if !exist {
+					memebers = append(memebers, cl.Username)
+					r.Members = memebers
+				}
 
-				if _, ok := r.Clients[cl.ID]; !ok {
+				if client, ok := r.Clients[cl.ID]; !ok || client.Conn == nil {
 					r.Clients[cl.ID] = cl
 				}
 				for _, msg := range h.Rooms[cl.RoomID].OldMsg {
@@ -55,13 +67,13 @@ func (h *Hub) Run() {
 		case cl := <-h.Unregister:
 			if _, ok := h.Rooms[cl.RoomID]; ok {
 				if _, ok := h.Rooms[cl.RoomID].Clients[cl.ID]; ok {
-					if len(h.Rooms[cl.RoomID].Clients) != 0 {
-						h.Broadcast <- &Message{
-							Content:  cl.Username + " left the chat! at " + time.Now().String(),
-							RoomID:   cl.RoomID,
-							Username: cl.Username,
-						}
-					}
+					// if len(h.Rooms[cl.RoomID].Clients) != 0 {
+					// h.Broadcast <- &Message{
+					// 	Content:  cl.Username + " left the chat! at " + time.Now().String(),
+					// 	RoomID:   cl.RoomID,
+					// 	Username: cl.Username,
+					// }
+					// }
 
 					delete(h.Rooms[cl.RoomID].Clients, cl.ID)
 					close(cl.Message)

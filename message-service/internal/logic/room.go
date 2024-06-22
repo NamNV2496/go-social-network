@@ -5,5 +5,7 @@ type Room struct {
 	Name    string             `json:"name"`
 	Clients map[string]*Client `json:"clients"`
 	LastMsg string             `json:"last_msg"`
-	OldMsg  []*Message         `json:"last_msg"`
+	OldMsg  []*Message         `json:"old_msg"`
+	Public  int                `json:"public"`
+	Members []string           `json:"members"`
 }

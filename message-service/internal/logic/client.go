@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
 )
 
@@ -35,11 +34,10 @@ func CreateNewClient(req *gin.Context) (*Client, error) {
 
 	roomId := req.Param("roomId")
 	username := req.Param("username")
-	id := uuid.New()
 	return &Client{
 		Conn:     conn,
 		Message:  make(chan *Message),
-		ID:       id.String(),
+		ID:       username,
 		RoomID:   roomId,
 		Username: username,
 	}, nil
