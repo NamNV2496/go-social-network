@@ -28,6 +28,13 @@
     
 
     <script>
+        const current_user =  sessionStorage.getItem('userName');  
+        const token = sessionStorage.getItem('token');  // Get the token from session storage
+
+        if (!token || ! current_user) {
+            alert('Token not found in session storage');
+            window.location.href = "index.html";
+        }
         document.addEventListener("DOMContentLoaded", function() {
             loadCurrentUser();
             const addImageButton = document.getElementById('add-image');
@@ -42,22 +49,14 @@
         })
 
         function loadCurrentUser() {
-            const userId =  sessionStorage.getItem('userName');
             userElement = document.getElementById('logout')
-            userElement.textContent = "Logout: " + userId
+            userElement.textContent = "Logout: " + current_user
         }
 
         // Function to fetch and display posts
         async function fetchAndDisplayPosts() {
-            const userId =  sessionStorage.getItem('userName');  
-            const token = sessionStorage.getItem('token');  // Get the token from session storage
 
-            if (!token) {
-                alert('Token not found in session storage');
-                window.location.href = "index.html";
-            }
-
-            const url = `http://localhost:8080/api/v1/newsfeed?userId=${userId}`;
+            const url = `http://localhost:8080/api/v1/newsfeed?userId=${current_user}`;
             const response = await fetch(url, {
                 method: 'GET',
                 headers: {
@@ -71,12 +70,101 @@
             displayPosts(data.posts);
         }
 
+        // function showPopup(userId) {
+        //     const popup = document.createElement('div');
+        //     popup.className = 'popup';
+
+        //     const closeButton = document.createElement('button');
+        //     closeButton.className = 'close';
+        //     closeButton.textContent = 'Close';
+        //     closeButton.addEventListener('click', function() {
+        //         document.body.removeChild(popup);
+        //     });
+
+        //     const inboxButton = document.createElement('button');
+        //     inboxButton.className = 'inbox';
+        //     inboxButton.textContent = 'Inbox';
+        //     inboxButton.addEventListener('click', function() {
+        //         inbox(userId);
+        //         document.body.removeChild(popup);
+        //     });
+
+        //     const followButton = document.createElement('button');
+        //     followButton.className = 'follow';
+        //     followButton.textContent = 'Follow';
+        //     followButton.addEventListener('click', function() {
+        //         follow(userId);
+        //         document.body.removeChild(popup);
+        //     });
+
+        //     popup.appendChild(closeButton);
+        //     popup.appendChild(inboxButton);
+        //     popup.appendChild(followButton);
+
+        //     document.body.appendChild(popup);
+        // }
+        async function showPopup(userId) {
+            const popup = document.createElement('div');
+            popup.className = 'popup';
+
+            const closeButton = document.createElement('button');
+            closeButton.className = 'close';
+            closeButton.textContent = 'Close';
+            closeButton.addEventListener('click', function() {
+                document.body.removeChild(popup);
+            });
+
+            const inboxButton = document.createElement('button');
+            inboxButton.className = 'inbox';
+            inboxButton.textContent = 'Inbox';
+            inboxButton.addEventListener('click', function() {
+                inbox(userId);
+                document.body.removeChild(popup);
+            });
+
+            const followButton = document.createElement('button');
+            followButton.className = 'follow';
+            followButton.textContent = 'Follow';
+            followButton.style.display = 'none';  // Initially hidden
+
+            const unfollowButton = document.createElement('button');
+            unfollowButton.className = 'unfollow';
+            unfollowButton.textContent = 'Following';
+            unfollowButton.style.display = 'none';  // Initially hidden
+
+            followButton.addEventListener('click', function() {
+                follow(userId);
+                document.body.removeChild(popup);
+            });
+
+            unfollowButton.addEventListener('click', function() {
+                unfollow(userId);
+                document.body.removeChild(popup);
+            });
+
+            popup.appendChild(closeButton);
+            popup.appendChild(inboxButton);
+            popup.appendChild(followButton);
+            popup.appendChild(unfollowButton);
+
+            document.body.appendChild(popup);
+
+            // Fetch following status
+            const response = await fetch(`http://localhost:8080/api/v1/isFollowing?current_id=${current_user}&user_id=${userId}`);
+            const data = await response.json();
+
+            if (data.following) {
+                unfollowButton.style.display = 'block';
+            } else {
+                followButton.style.display = 'block';
+            }
+        }
+
         function inbox(member) {
-            var currentUser = sessionStorage.getItem('userName');
-            if (member == currentUser) {
+            if (member == current_user) {
                 return
             }
-            var members = [currentUser, member];
+            var members = [current_user, member];
             members.sort(function(a, b) {
                 return a.toLowerCase().localeCompare(b.toLowerCase());
             });
@@ -97,8 +185,7 @@
             })
                 .then(response => {
                     if (response.ok) {
-                        // window.location.href = "index.html";
-                        window.location.href = `chat.html?roomId=${roomName}&username=${encodeURIComponent(currentUser)}&roomName=${encodeURIComponent(roomName)}`;
+                        window.location.href = `chat.html?roomId=${roomName}&username=${encodeURIComponent(current_user)}&roomName=${encodeURIComponent(roomName)}`;
                     } else {
                         alert('Failed to create room. Please try again.');
                     }
@@ -108,6 +195,42 @@
                     alert('Failed to create room. Please try again.');
                 });
         }
+
+        async function follow(userId) {
+            console.log('Follow clicked for user:', userId);
+            const url = `http://localhost:8080/api/v1/following?current_id=${current_user}&user_id=${userId}`;
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+            });
+
+            if (!response.ok) {
+                alert('Failed to create post');
+                return;
+            }
+        }
+        async function unfollow(userId) {
+            console.log('Unfollow clicked for user:', userId);
+            const url = `http://localhost:8080/api/v1/following?current_id=${current_user}&user_id=${userId}`;
+            const response = await fetch(url, {
+                method: 'DELETE',
+                headers: {
+                    'accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+            });
+
+            if (!response.ok) {
+                alert('Failed to create post');
+                return;
+            }
+        }
+
         // Function to display posts on the page
         function displayPosts(posts) {
             const container = document.getElementById('posts-container');
@@ -125,7 +248,7 @@
                 userLink.style.fontSize = '32px';
                 userLink.href = "#"
                 userLink.addEventListener('click', function() {
-                    inbox(post.userId);
+                    showPopup(post.userId);
                 });
                 userText.appendChild(userLink)
                 postElement.appendChild(userText);
@@ -138,7 +261,7 @@
                 imagesContainer.className = 'images';
                 post.images.forEach(imageUrl => {
                     const img = document.createElement('img');
-                    img.src = imageUrl;  // Assuming imageUrl is a direct URL to the image
+                    img.src = imageUrl;
                     imagesContainer.appendChild(img);
                 });
                 postElement.appendChild(imagesContainer);
@@ -156,13 +279,6 @@
         async function handlePostCreation(event) {
             event.preventDefault();
 
-            const token = sessionStorage.getItem('token');  // Get the token from session storage
-
-            if (!token) {
-                alert('Token not found in session storage');
-                window.location.href = "index.html";
-            }
-
             const contentText = document.getElementById('contentText').value;
             var imageValue = document.querySelectorAll('.image-input');
             var images;
@@ -174,11 +290,10 @@
             if (tagValue != null && tagValue != "") {
                 tags = tagValue.split(',').map(tag => tag.trim()); // Parse tags
             }
-            const userId = sessionStorage.getItem('userName');
 
             const postData = {
                 post: {
-                    userId,
+                    current_user,
                     contentText,
                     images,
                     tags,

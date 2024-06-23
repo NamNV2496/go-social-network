@@ -69,23 +69,6 @@ func (s GrpcHandler) CreateSession(
 	}, nil
 }
 
-func (s GrpcHandler) GetSession(
-	ctx context.Context,
-	req *userv1.GetSessionRequest,
-) (*userv1.GetSessionResponse, error) {
-
-	return &userv1.GetSessionResponse{
-		IsValid: true,
-		Token:   "",
-	}, nil
-}
-
-func (s GrpcHandler) DeleteSession(context.Context, *userv1.DeleteSessionRequest) (*userv1.DeleteSessionResponse, error) {
-
-	fmt.Println("called createAccount")
-	return nil, nil
-}
-
 func (s GrpcHandler) GetFollowing(
 	ctx context.Context,
 	req *userv1.GetFollowingRequest,
@@ -97,5 +80,47 @@ func (s GrpcHandler) GetFollowing(
 	}
 	return &userv1.GetFollowingResponse{
 		UserId: followings,
+	}, nil
+}
+
+func (s GrpcHandler) CreateFollowing(
+	ctx context.Context,
+	req *userv1.CheckFollowingRequest,
+) (*userv1.CheckFollowingResponse, error) {
+
+	result, err := s.userService.CreateFollowing(ctx, req.CurrentId, req.UserId)
+	if err != nil {
+		return nil, err
+	}
+	return &userv1.CheckFollowingResponse{
+		Following: result,
+	}, nil
+}
+
+func (s GrpcHandler) CheckFollowing(
+	ctx context.Context,
+	req *userv1.CheckFollowingRequest,
+) (*userv1.CheckFollowingResponse, error) {
+
+	result, err := s.userService.CheckFollowing(ctx, req.CurrentId, req.UserId)
+	if err != nil {
+		return nil, err
+	}
+	return &userv1.CheckFollowingResponse{
+		Following: result,
+	}, nil
+}
+
+func (s GrpcHandler) DeleteFollowing(
+	ctx context.Context,
+	req *userv1.CheckFollowingRequest,
+) (*userv1.CheckFollowingResponse, error) {
+
+	err := s.userService.Unfollowing(ctx, req.CurrentId, req.UserId)
+	if err != nil {
+		return nil, err
+	}
+	return &userv1.CheckFollowingResponse{
+		Following: false,
 	}, nil
 }

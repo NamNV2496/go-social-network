@@ -1226,42 +1226,46 @@ var _ interface {
 	ErrorName() string
 } = AccountSessionValidationError{}
 
-// Validate checks the field values on DeleteSessionRequest with the rules
+// Validate checks the field values on CheckFollowingRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *DeleteSessionRequest) Validate() error {
+func (m *CheckFollowingRequest) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on DeleteSessionRequest with the rules
+// ValidateAll checks the field values on CheckFollowingRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// DeleteSessionRequestMultiError, or nil if none found.
-func (m *DeleteSessionRequest) ValidateAll() error {
+// CheckFollowingRequestMultiError, or nil if none found.
+func (m *CheckFollowingRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *DeleteSessionRequest) validate(all bool) error {
+func (m *CheckFollowingRequest) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
 
 	var errors []error
 
+	// no validation rules for CurrentId
+
+	// no validation rules for UserId
+
 	if len(errors) > 0 {
-		return DeleteSessionRequestMultiError(errors)
+		return CheckFollowingRequestMultiError(errors)
 	}
 
 	return nil
 }
 
-// DeleteSessionRequestMultiError is an error wrapping multiple validation
-// errors returned by DeleteSessionRequest.ValidateAll() if the designated
+// CheckFollowingRequestMultiError is an error wrapping multiple validation
+// errors returned by CheckFollowingRequest.ValidateAll() if the designated
 // constraints aren't met.
-type DeleteSessionRequestMultiError []error
+type CheckFollowingRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m DeleteSessionRequestMultiError) Error() string {
+func (m CheckFollowingRequestMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -1270,11 +1274,11 @@ func (m DeleteSessionRequestMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m DeleteSessionRequestMultiError) AllErrors() []error { return m }
+func (m CheckFollowingRequestMultiError) AllErrors() []error { return m }
 
-// DeleteSessionRequestValidationError is the validation error returned by
-// DeleteSessionRequest.Validate if the designated constraints aren't met.
-type DeleteSessionRequestValidationError struct {
+// CheckFollowingRequestValidationError is the validation error returned by
+// CheckFollowingRequest.Validate if the designated constraints aren't met.
+type CheckFollowingRequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -1282,24 +1286,24 @@ type DeleteSessionRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e DeleteSessionRequestValidationError) Field() string { return e.field }
+func (e CheckFollowingRequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e DeleteSessionRequestValidationError) Reason() string { return e.reason }
+func (e CheckFollowingRequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e DeleteSessionRequestValidationError) Cause() error { return e.cause }
+func (e CheckFollowingRequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e DeleteSessionRequestValidationError) Key() bool { return e.key }
+func (e CheckFollowingRequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e DeleteSessionRequestValidationError) ErrorName() string {
-	return "DeleteSessionRequestValidationError"
+func (e CheckFollowingRequestValidationError) ErrorName() string {
+	return "CheckFollowingRequestValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e DeleteSessionRequestValidationError) Error() string {
+func (e CheckFollowingRequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -1311,14 +1315,14 @@ func (e DeleteSessionRequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sDeleteSessionRequest.%s: %s%s",
+		"invalid %sCheckFollowingRequest.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = DeleteSessionRequestValidationError{}
+var _ error = CheckFollowingRequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -1326,44 +1330,46 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = DeleteSessionRequestValidationError{}
+} = CheckFollowingRequestValidationError{}
 
-// Validate checks the field values on DeleteSessionResponse with the rules
+// Validate checks the field values on CheckFollowingResponse with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *DeleteSessionResponse) Validate() error {
+func (m *CheckFollowingResponse) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on DeleteSessionResponse with the rules
+// ValidateAll checks the field values on CheckFollowingResponse with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// DeleteSessionResponseMultiError, or nil if none found.
-func (m *DeleteSessionResponse) ValidateAll() error {
+// CheckFollowingResponseMultiError, or nil if none found.
+func (m *CheckFollowingResponse) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *DeleteSessionResponse) validate(all bool) error {
+func (m *CheckFollowingResponse) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
 
 	var errors []error
 
+	// no validation rules for Following
+
 	if len(errors) > 0 {
-		return DeleteSessionResponseMultiError(errors)
+		return CheckFollowingResponseMultiError(errors)
 	}
 
 	return nil
 }
 
-// DeleteSessionResponseMultiError is an error wrapping multiple validation
-// errors returned by DeleteSessionResponse.ValidateAll() if the designated
+// CheckFollowingResponseMultiError is an error wrapping multiple validation
+// errors returned by CheckFollowingResponse.ValidateAll() if the designated
 // constraints aren't met.
-type DeleteSessionResponseMultiError []error
+type CheckFollowingResponseMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m DeleteSessionResponseMultiError) Error() string {
+func (m CheckFollowingResponseMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -1372,11 +1378,11 @@ func (m DeleteSessionResponseMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m DeleteSessionResponseMultiError) AllErrors() []error { return m }
+func (m CheckFollowingResponseMultiError) AllErrors() []error { return m }
 
-// DeleteSessionResponseValidationError is the validation error returned by
-// DeleteSessionResponse.Validate if the designated constraints aren't met.
-type DeleteSessionResponseValidationError struct {
+// CheckFollowingResponseValidationError is the validation error returned by
+// CheckFollowingResponse.Validate if the designated constraints aren't met.
+type CheckFollowingResponseValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -1384,24 +1390,24 @@ type DeleteSessionResponseValidationError struct {
 }
 
 // Field function returns field value.
-func (e DeleteSessionResponseValidationError) Field() string { return e.field }
+func (e CheckFollowingResponseValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e DeleteSessionResponseValidationError) Reason() string { return e.reason }
+func (e CheckFollowingResponseValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e DeleteSessionResponseValidationError) Cause() error { return e.cause }
+func (e CheckFollowingResponseValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e DeleteSessionResponseValidationError) Key() bool { return e.key }
+func (e CheckFollowingResponseValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e DeleteSessionResponseValidationError) ErrorName() string {
-	return "DeleteSessionResponseValidationError"
+func (e CheckFollowingResponseValidationError) ErrorName() string {
+	return "CheckFollowingResponseValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e DeleteSessionResponseValidationError) Error() string {
+func (e CheckFollowingResponseValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -1413,14 +1419,14 @@ func (e DeleteSessionResponseValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sDeleteSessionResponse.%s: %s%s",
+		"invalid %sCheckFollowingResponse.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = DeleteSessionResponseValidationError{}
+var _ error = CheckFollowingResponseValidationError{}
 
 var _ interface {
 	Field() string
@@ -1428,217 +1434,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = DeleteSessionResponseValidationError{}
-
-// Validate checks the field values on GetSessionRequest with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// first error encountered is returned, or nil if there are no violations.
-func (m *GetSessionRequest) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on GetSessionRequest with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// GetSessionRequestMultiError, or nil if none found.
-func (m *GetSessionRequest) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *GetSessionRequest) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Token
-
-	if len(errors) > 0 {
-		return GetSessionRequestMultiError(errors)
-	}
-
-	return nil
-}
-
-// GetSessionRequestMultiError is an error wrapping multiple validation errors
-// returned by GetSessionRequest.ValidateAll() if the designated constraints
-// aren't met.
-type GetSessionRequestMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m GetSessionRequestMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m GetSessionRequestMultiError) AllErrors() []error { return m }
-
-// GetSessionRequestValidationError is the validation error returned by
-// GetSessionRequest.Validate if the designated constraints aren't met.
-type GetSessionRequestValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e GetSessionRequestValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e GetSessionRequestValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e GetSessionRequestValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e GetSessionRequestValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e GetSessionRequestValidationError) ErrorName() string {
-	return "GetSessionRequestValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e GetSessionRequestValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sGetSessionRequest.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = GetSessionRequestValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = GetSessionRequestValidationError{}
-
-// Validate checks the field values on GetSessionResponse with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *GetSessionResponse) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on GetSessionResponse with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// GetSessionResponseMultiError, or nil if none found.
-func (m *GetSessionResponse) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *GetSessionResponse) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for IsValid
-
-	// no validation rules for Token
-
-	if len(errors) > 0 {
-		return GetSessionResponseMultiError(errors)
-	}
-
-	return nil
-}
-
-// GetSessionResponseMultiError is an error wrapping multiple validation errors
-// returned by GetSessionResponse.ValidateAll() if the designated constraints
-// aren't met.
-type GetSessionResponseMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m GetSessionResponseMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m GetSessionResponseMultiError) AllErrors() []error { return m }
-
-// GetSessionResponseValidationError is the validation error returned by
-// GetSessionResponse.Validate if the designated constraints aren't met.
-type GetSessionResponseValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e GetSessionResponseValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e GetSessionResponseValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e GetSessionResponseValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e GetSessionResponseValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e GetSessionResponseValidationError) ErrorName() string {
-	return "GetSessionResponseValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e GetSessionResponseValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sGetSessionResponse.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = GetSessionResponseValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = GetSessionResponseValidationError{}
+} = CheckFollowingResponseValidationError{}
 
 // Validate checks the field values on GetFollowingRequest with the rules
 // defined in the proto definition for this message. If any rules are

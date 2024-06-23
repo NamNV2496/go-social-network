@@ -17,6 +17,9 @@ type UserService interface {
 	CreateAccount(context.Context, userv1.Account) (uint64, error)
 	Login(context.Context, string, string) (string, error)
 	GetFollowing(context.Context, string) ([]string, error)
+	CreateFollowing(context.Context, string, string) (bool, error)
+	Unfollowing(context.Context, string, string) error
+	CheckFollowing(context.Context, string, string) (bool, error)
 }
 type userService struct {
 	userRepo     repo.UserRepo
@@ -58,7 +61,7 @@ func (u userService) Login(ctx context.Context, userId string, password string) 
 	if err != nil {
 		return "", nil
 	}
-	value, exist := u.redis.Get(ctx, userId)
+	value, exist := u.redis.Get(ctx, userId+"_token")
 	if exist == nil {
 		return value.(string), nil
 	}
@@ -66,7 +69,7 @@ func (u userService) Login(ctx context.Context, userId string, password string) 
 	if err != nil {
 		return "", err
 	}
-	u.redis.Set(ctx, userId, token)
+	u.redis.Set(ctx, userId+"_token", token)
 	return token, err
 }
 
@@ -76,4 +79,43 @@ func (u userService) GetFollowing(
 ) ([]string, error) {
 
 	return u.userUserRepo.GetFollowing(ctx, userId)
+}
+
+func (u userService) CreateFollowing(
+	ctx context.Context,
+	currentId string,
+	userId string,
+) (bool, error) {
+	fmt.Println("Add new following: ", currentId, " - ", userId)
+	err := u.userUserRepo.CreateFollowing(ctx, currentId, userId)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
+}
+
+func (u userService) CheckFollowing(
+	ctx context.Context,
+	currentId string,
+	userId string,
+) (bool, error) {
+
+	exist, err := u.userUserRepo.CheckFollowing(ctx, currentId, userId)
+	if err != nil {
+		return false, err
+	}
+	return exist, nil
+}
+
+func (u userService) Unfollowing(
+	ctx context.Context,
+	currentId string,
+	userId string,
+) error {
+
+	err := u.userUserRepo.Unfollowing(ctx, currentId, userId)
+	if err != nil {
+		return err
+	}
+	return nil
 }

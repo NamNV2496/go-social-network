@@ -32,6 +32,11 @@ Follower:
 
 ![alt text](docs/image-2.png)
 
+Check following from current_user
+
+![alt text](docs/image7.png)
+![alt text](docs/image8.png)
+
 if `namnv` posted a post. `knm` and `baobq` will see it in their newsfeed.
 
 ![alt text](docs/image-1.png)

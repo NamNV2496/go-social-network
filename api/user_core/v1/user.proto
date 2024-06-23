@@ -46,18 +46,17 @@ message AccountSession {
     uint64 account_id = 3;
 }
 
-message DeleteSessionRequest {}
+message CheckFollowingRequest {
+    string current_id = 1;
+    string user_id = 2;
+}
 
-message DeleteSessionResponse {}
-
-message GetSessionRequest { string token = 1; }
-
-message GetSessionResponse {
-    bool is_valid = 1;
-    string token = 2;
+message CheckFollowingResponse {
+    bool following = 1;
 }
 
 message GetFollowingRequest { string user_id = 1; }
+
 message GetFollowingResponse {
     repeated string user_id = 1;
 }
@@ -82,21 +81,27 @@ service AccountService {
 		};
     }
 
-    rpc GetSession(GetSessionRequest) returns (GetSessionResponse) {
-        option (google.api.http) = {
-			get: "/api/v1/session"
-		};
-    }
-
-    rpc DeleteSession(DeleteSessionRequest) returns (DeleteSessionResponse) {
-        option (google.api.http) = {
-			delete: "/api/v1/logout"
-		};
-    }
-
     rpc GetFollowing(GetFollowingRequest) returns (GetFollowingResponse) {
         option (google.api.http) = {
 			get: "/api/v1/following"
+		};
+    }
+
+    rpc CreateFollowing(CheckFollowingRequest) returns (CheckFollowingResponse) {
+        option (google.api.http) = {
+			post: "/api/v1/following"
+		};
+    }
+
+    rpc DeleteFollowing(CheckFollowingRequest) returns (CheckFollowingResponse) {
+        option (google.api.http) = {
+			delete: "/api/v1/following"
+		};
+    }
+
+    rpc CheckFollowing(CheckFollowingRequest) returns (CheckFollowingResponse) {
+        option (google.api.http) = {
+			get: "/api/v1/isFollowing"
 		};
     }
 }

@@ -7,8 +7,7 @@ import (
 )
 
 var (
-	TabNameUser  = goqu.T("user")
-	TabColUserId = "user_id"
+	TabNameUser = goqu.T("user")
 )
 
 type User struct {

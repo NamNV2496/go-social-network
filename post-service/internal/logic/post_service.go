@@ -67,7 +67,7 @@ func (u userService) Post(
 		fmt.Println("Error marshall data to send newsfeed")
 	}
 	go func() {
-		fmt.Println("Call trigger to newsFeed a post of: ", post.User_id)
+		fmt.Println("Call trigger to newsFeed a post: ", post)
 		if err := u.kafkaClient.Produce(context.Background(), mq.TOPIC_POST_CONTENT, data); err != nil {
 			return
 		}

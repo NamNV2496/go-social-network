@@ -147,6 +147,110 @@
         "tags": [
           "AccountService"
         ]
+      },
+      "delete": {
+        "operationId": "AccountService_DeleteFollowing",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CheckFollowingResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "currentId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "AccountService"
+        ]
+      },
+      "post": {
+        "operationId": "AccountService_CreateFollowing",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CheckFollowingResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "currentId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "AccountService"
+        ]
+      }
+    },
+    "/api/v1/isFollowing": {
+      "get": {
+        "operationId": "AccountService_CheckFollowing",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CheckFollowingResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "currentId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "AccountService"
+        ]
       }
     },
     "/api/v1/login": {
@@ -174,58 +278,6 @@
             "schema": {
               "$ref": "#/definitions/v1CreateSessionRequest"
             }
-          }
-        ],
-        "tags": [
-          "AccountService"
-        ]
-      }
-    },
-    "/api/v1/logout": {
-      "delete": {
-        "operationId": "AccountService_DeleteSession",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1DeleteSessionResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "tags": [
-          "AccountService"
-        ]
-      }
-    },
-    "/api/v1/session": {
-      "get": {
-        "operationId": "AccountService_GetSession",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1GetSessionResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "token",
-            "in": "query",
-            "required": false,
-            "type": "string"
           }
         ],
         "tags": [
@@ -293,6 +345,14 @@
         }
       }
     },
+    "v1CheckFollowingResponse": {
+      "type": "object",
+      "properties": {
+        "following": {
+          "type": "boolean"
+        }
+      }
+    },
     "v1CreateAccountResponse": {
       "type": "object",
       "properties": {
@@ -323,9 +383,6 @@
         }
       }
     },
-    "v1DeleteSessionResponse": {
-      "type": "object"
-    },
     "v1GetAccountResponse": {
       "type": "object",
       "properties": {
@@ -342,17 +399,6 @@
           "items": {
             "type": "string"
           }
-        }
-      }
-    },
-    "v1GetSessionResponse": {
-      "type": "object",
-      "properties": {
-        "isValid": {
-          "type": "boolean"
-        },
-        "token": {
-          "type": "string"
         }
       }
     }

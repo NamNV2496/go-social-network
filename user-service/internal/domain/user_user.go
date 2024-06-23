@@ -8,7 +8,6 @@ import (
 
 var (
 	TabNameUserUser = goqu.T("user_user")
-	TabColFollower  = "follower_id"
 )
 
 type UserUser struct {
