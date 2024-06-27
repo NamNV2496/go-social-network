@@ -1,8 +1,7 @@
 package main
 
 import (
-	"context"
-	"fmt"
+	"log"
 
 	"github.com/namnv2496/http_gateway/internal/wiring"
 )
@@ -11,15 +10,11 @@ func main() {
 
 	server, err := wiring.Initialize()
 	if err != nil {
-		panic("Cannot init server")
+		log.Fatalln("Cannot init server")
 	}
-	fmt.Println("Server is running...")
+	log.Println("Server is running...")
 
-	ctx := context.Background()
-	ctx, cancel := context.WithCancel(ctx)
-	defer cancel()
-
-	// server.ConnectToUserService(ctx)
-	// server.ConnectToPostService(ctx)
-	server.Start("rest")
+	if err := server.Start("rest"); err != nil {
+		log.Fatalln("Start server REST failed.")
+	}
 }

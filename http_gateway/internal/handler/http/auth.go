@@ -37,7 +37,7 @@ func withErrorHandler() runtime.ServeMuxOption {
 func withMetadata() runtime.ServeMuxOption {
 	return runtime.WithMetadata(func(ctx context.Context, request *http.Request) metadata.MD {
 		// Step 2 - Extend the context
-		ctx = metadata.AppendToOutgoingContext(ctx)
+		_ = metadata.AppendToOutgoingContext(ctx)
 		// Step 3 - get the basic auth params
 		username, password, ok := request.BasicAuth()
 		if !ok {

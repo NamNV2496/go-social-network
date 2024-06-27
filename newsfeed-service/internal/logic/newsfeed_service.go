@@ -3,7 +3,7 @@ package logic
 import (
 	"context"
 	"encoding/json"
-	"fmt"
+	"log"
 	"strings"
 
 	"github.com/doug-martin/goqu/v9"
@@ -51,19 +51,21 @@ func (s newsfeedService) UpdateNewsfeed(
 		var jsonData []domain.Post
 		data, exist := s.redis.Get(ctx, user)
 		if exist != nil {
-			fmt.Println("cache post is not exist. Add new! user_id: ", user)
+			log.Println("cache post is not exist. Add new! user_id: ", user)
 			jsonData = append(jsonData, newPost)
 			redis, err := json.Marshal(jsonData)
 			if err != nil {
 				return err
 			}
-			s.redis.Set(ctx, user, redis)
+			if err := s.redis.Set(ctx, user, redis); err != nil {
+				log.Fatalln("Failed to set data to redis")
+			}
 			continue
 		}
-		fmt.Println("cache post is exist! user_id: ", user)
+		log.Println("cache post is exist! user_id: ", user)
 		dataByte, _ := data.(string)
 		if err := json.Unmarshal([]byte(dataByte), &jsonData); err != nil {
-			fmt.Println("error when marshal old post")
+			log.Println("error when marshal old post")
 			return err
 		}
 		jsonData = append(jsonData, newPost)
@@ -71,7 +73,9 @@ func (s newsfeedService) UpdateNewsfeed(
 		if err != nil {
 			return err
 		}
-		s.redis.Set(ctx, user, redis)
+		if err := s.redis.Set(ctx, user, redis); err != nil {
+			log.Fatalln("Failed to set data to redis")
+		}
 	}
 	return nil
 }
@@ -81,7 +85,7 @@ func (s newsfeedService) GetNewsfeed(ctx context.Context, userId string) (*newsf
 	if exist == nil {
 		var posts []domain.Post
 		if err := json.Unmarshal([]byte(data.(string)), &posts); err != nil {
-			fmt.Println("error when marshal old post")
+			log.Println("error when marshal old post")
 			return nil, err
 		}
 		postPointers := make([]*newsfeedv1.NewsfeedPost, len(posts))

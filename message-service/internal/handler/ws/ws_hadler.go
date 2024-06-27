@@ -2,6 +2,7 @@ package wsHandler
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 
@@ -30,7 +31,7 @@ func (h *Handler) CreateRoom(c *gin.Context) {
 
 	var roomRequest CreateRoomRequest
 	if err := c.BindJSON(&roomRequest); err != nil {
-		fmt.Errorf("Invalid input")
+		log.Fatalln("Invalid input")
 		return
 	}
 
@@ -50,7 +51,7 @@ func (h *Handler) CreateRoom(c *gin.Context) {
 func (h *Handler) JoinRoom(c *gin.Context) {
 	newClient, err := logic.CreateNewClient(c)
 	if err != nil {
-		fmt.Println("Error when create new client")
+		log.Println("Error when create new client")
 		return
 	}
 	// notifyMsg := &logic.Message{

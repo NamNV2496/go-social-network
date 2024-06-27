@@ -2,7 +2,7 @@ package logic
 
 import (
 	"context"
-	"fmt"
+	"log"
 
 	"github.com/namnv2496/user-service/internal/cache"
 	"github.com/namnv2496/user-service/internal/domain"
@@ -14,7 +14,7 @@ import (
 
 type UserService interface {
 	GetAccount(context.Context, string) (domain.User, error)
-	CreateAccount(context.Context, userv1.Account) (uint64, error)
+	CreateAccount(context.Context, *userv1.Account) (uint64, error)
 	Login(context.Context, string, string) (string, error)
 	GetFollowing(context.Context, string) ([]string, error)
 	CreateFollowing(context.Context, string, string) (bool, error)
@@ -39,10 +39,10 @@ func NewUserService(
 	}
 }
 
-func (u userService) CreateAccount(ctx context.Context, user userv1.Account) (uint64, error) {
+func (u userService) CreateAccount(ctx context.Context, user *userv1.Account) (uint64, error) {
 
 	passwordHash, _ := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
-	fmt.Println(string(passwordHash))
+	log.Println(string(passwordHash))
 	return 1, nil
 }
 
@@ -69,7 +69,9 @@ func (u userService) Login(ctx context.Context, userId string, password string) 
 	if err != nil {
 		return "", err
 	}
-	u.redis.Set(ctx, userId+"_token", token)
+	if err := u.redis.Set(ctx, userId+"_token", token); err != nil {
+		log.Fatalln("Failed to save token to redis")
+	}
 	return token, err
 }
 
@@ -86,7 +88,7 @@ func (u userService) CreateFollowing(
 	currentId string,
 	userId string,
 ) (bool, error) {
-	fmt.Println("Add new following: ", currentId, " - ", userId)
+	log.Println("Add new following: ", currentId, " - ", userId)
 	err := u.userUserRepo.CreateFollowing(ctx, currentId, userId)
 	if err != nil {
 		return false, err

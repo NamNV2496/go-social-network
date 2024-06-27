@@ -2,6 +2,7 @@ package logic
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -53,7 +54,9 @@ func (c *Client) WriteMessage() {
 		if !ok {
 			return
 		}
-		c.Conn.WriteJSON(message)
+		if err := c.Conn.WriteJSON(message); err != nil {
+			log.Fatalln("Failed to write data")
+		}
 	}
 }
 

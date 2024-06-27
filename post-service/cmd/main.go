@@ -1,13 +1,19 @@
 package main
 
-import "github.com/namnv2496/post-service/internal/wiring"
+import (
+	"log"
+
+	"github.com/namnv2496/post-service/internal/wiring"
+)
 
 func main() {
 
 	app, cleanup, err := wiring.Initilize()
 	if err != nil {
-		panic("Error when start server")
+		log.Fatalln("Error when init server")
 	}
 	defer cleanup()
-	app.Start()
+	if err := app.Start(); err != nil {
+		log.Fatalln("Failed to start server")
+	}
 }

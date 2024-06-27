@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"log"
 	"os"
 	"os/signal"
 	"syscall"
@@ -33,11 +34,15 @@ func NewApp(
 func (a App) Start() error {
 
 	go func() {
-		a.consumer.StartConsumerUp(context.Background())
+		if err := a.consumer.StartConsumerUp(context.Background()); err != nil {
+			log.Fatalln("Failed to start consumer")
+		}
 	}()
 
 	go func() {
-		a.grpcServer.Start(context.Background())
+		if err := a.grpcServer.Start(context.Background()); err != nil {
+			log.Fatalln("Failed to start grpc server")
+		}
 	}()
 	BlockUntilSignal(syscall.SIGINT, syscall.SIGTERM)
 	return nil

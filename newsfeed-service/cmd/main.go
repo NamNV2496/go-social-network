@@ -1,6 +1,10 @@
 package main
 
-import "github.com/namnv2496/newsfeed-service/internal/wiring"
+import (
+	"log"
+
+	"github.com/namnv2496/newsfeed-service/internal/wiring"
+)
 
 func main() {
 
@@ -9,5 +13,7 @@ func main() {
 		panic("Error when start server")
 	}
 	defer cleanup()
-	app.Start()
+	if err := app.Start(); err != nil {
+		log.Fatalln("Failed to start server")
+	}
 }

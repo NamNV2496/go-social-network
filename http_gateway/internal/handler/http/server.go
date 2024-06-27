@@ -2,7 +2,6 @@ package http
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net/http"
 
@@ -43,7 +42,7 @@ func NewServer(
 func (s *server) ConnectToUserService(ctx context.Context) error {
 
 	orderServiceAddr := "0.0.0.0:5600"
-	conn, err := grpc.Dial(orderServiceAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.NewClient(orderServiceAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("could not connect to order service: %v", err)
 	}
@@ -54,7 +53,7 @@ func (s *server) ConnectToUserService(ctx context.Context) error {
 func (s *server) ConnectToPostService(ctx context.Context) error {
 
 	orderServiceAddr := "0.0.0.0:5601"
-	conn, err := grpc.Dial(orderServiceAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.NewClient(orderServiceAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("could not connect to order service: %v", err)
 	}
@@ -72,31 +71,7 @@ func (s *server) Start(serverType string) error {
 }
 
 func (s *server) runGRPCServer() error {
-	// interceptor := service.NewAuthInterceptor(jwtManager)
-	// serverOptions := []grpc.ServerOption{
-	// 	grpc.UnaryInterceptor(interceptor.Unary()),
-	// 	grpc.StreamInterceptor(interceptor.Stream()),
-	// }
-
-	// server := grpc.NewServer(
-	// 	grpc.ChainUnaryInterceptor(
-	// 		ErrorLogger(),
-	// 		EnsureAuthIsValid,
-	// 	),
-	// )
-	// if enableTLS {
-	// 	tlsCredentials, err := loadTLSCredentials()
-	// 	if err != nil {
-	// 		return fmt.Errorf("cannot load TLS credentials: %w", err)
-	// 	}
-
-	// 	serverOptions = append(serverOptions, grpc.Creds(tlsCredentials))
-	// }
-
-	// grpcServer := grpc.NewServer(serverOptions...)
-
-	// log.Printf("Start GRPC server at %s, TLS = %t", s.gatewayConfig.GatewayAddress, )
-	// return grpcServer.Serve(s.gatewayConfig.GatewayAddress)
+	// TODO
 	return nil
 }
 
@@ -122,7 +97,6 @@ func (s *server) runRESTServer() error {
 		s.grpcConfig.UserServiceAddress,
 		opts,
 	)
-
 	if err != nil {
 		return err
 	}
@@ -134,7 +108,9 @@ func (s *server) runRESTServer() error {
 		s.grpcConfig.PostServiceAddress,
 		opts,
 	)
-
+	if err != nil {
+		return err
+	}
 	// connect to newsfeed-service
 	err = newsfeedv1.RegisterNewsfeedServiceHandlerFromEndpoint(
 		ctx,
@@ -142,9 +118,8 @@ func (s *server) runRESTServer() error {
 		s.grpcConfig.NewfeedsServiceAddress,
 		opts,
 	)
-
 	if err != nil {
-		fmt.Println("Error: ", err)
+		log.Println("Error: ", err)
 		return err
 	}
 
