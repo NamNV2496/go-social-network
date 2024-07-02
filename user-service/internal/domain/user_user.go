@@ -13,7 +13,7 @@ var (
 type UserUser struct {
 	Id        uint64    `db:"id" goqu:"omitnil"`
 	UserId    string    `db:"user_id" goqu:"omitnil"`
-	Follower  string    `db:"follower_id" goqu:"omitnil"`
+	Follower  string    `db:"follower" goqu:"omitnil"`
 	CreatedAt time.Time `db:"created_at" goqu:"omitnil"`
 	UpdatedAt time.Time `db:"updated_at" goqu:"omitnil"`
 }

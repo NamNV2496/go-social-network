@@ -3,6 +3,7 @@ package cache
 import (
 	"context"
 	"errors"
+	"os"
 	"time"
 
 	"github.com/go-redis/redis/v8"
@@ -30,10 +31,16 @@ type redisClient struct {
 func NewRedisClient(
 	cacheConfig configs.Redis,
 ) Client {
+	var redisAddr string
+	if value := os.Getenv("REDIS_URL"); value != "" {
+		redisAddr = value
+	} else {
+		redisAddr = cacheConfig.Address
+	}
 	return &redisClient{
 		redisConfig: cacheConfig,
 		redisClient: redis.NewClient(&redis.Options{
-			Addr:     cacheConfig.Address,
+			Addr:     redisAddr,
 			Username: cacheConfig.Username,
 			Password: cacheConfig.Password,
 			DB:       cacheConfig.Database,

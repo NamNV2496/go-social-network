@@ -2,7 +2,8 @@ package producer
 
 import (
 	"context"
-	"fmt"
+	"log"
+	"os"
 
 	"github.com/IBM/sarama"
 	"github.com/namnv2496/post-service/internal/configs"
@@ -31,12 +32,19 @@ func newSaramaConfig(clientId string) *sarama.Config {
 func NewClient(
 	mqConfig configs.Kafka,
 ) Client {
+
+	kafkaBroker := os.Getenv("KAFKA_BROKER")
+	if kafkaBroker == "" {
+		kafkaBroker = mqConfig.Addresses
+	} else {
+		log.Println("KAFKA_BROKER environment variable is set: ", kafkaBroker)
+	}
 	saramaSyncProducer, err := sarama.NewSyncProducer(
-		mqConfig.Addresses,
+		[]string{kafkaBroker},
 		newSaramaConfig(mqConfig.ClientID),
 	)
 	if err != nil {
-		fmt.Println("failed to create sarama sync producer: ", err)
+		log.Panicln("failed to create sarama sync producer: ", err)
 		return nil
 	}
 

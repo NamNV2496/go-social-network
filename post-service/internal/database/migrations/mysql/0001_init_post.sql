@@ -1,9 +1,7 @@
 -- +migrate Up
 START TRANSACTION;
 
-CREATE SCHEMA IF NOT EXISTS `post`;
-
-USE `post`;
+CREATE SCHEMA IF NOT EXISTS `network`;
 
 CREATE TABLE IF NOT exists `post` (
     id int AUTO_INCREMENT NOT NULL PRIMARY KEY,

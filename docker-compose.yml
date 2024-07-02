@@ -1,0 +1,108 @@
+version: "3.8"
+
+services:
+  mysql:
+    image: mysql:8.3.0
+    environment:
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_DATABASE: network
+    ports:
+        - "3309:3306"
+
+  redis:
+    image: redis:7-alpine
+    ports:
+        - "6379:6379"
+
+  zookeeper:
+    image: "bitnami/zookeeper:3.8.4-debian-12-r8"
+    ports:
+        - "2181:2181"
+    environment:
+        - ALLOW_ANONYMOUS_LOGIN=yes
+
+  kafka:
+    image: "bitnami/kafka:3.7.1-debian-12-r0"
+    ports:
+        - "29092:29092"
+    environment:
+        - KAFKA_BROKER_ID=2
+        - KAFKA_CFG_LISTENERS=PLAINTEXT://:29092
+        - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:29092
+        - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+        - ALLOW_PLAINTEXT_LISTENER=yes
+    depends_on:
+        - zookeeper
+
+  http:
+    build:
+      context: .
+      dockerfile: http_gateway/Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - newsfeed
+      - post
+      - user
+      - message
+    environment:
+      - USER_URL=user:5600
+      - NEWSFEED_URL=newsfeed:5602
+      - POST_URL=post:5601
+    depends_on:
+      - mysql
+      - redis
+      - kafka
+
+  message:
+    build:
+      context: .
+      dockerfile: message-service/Dockerfile
+    ports:
+      - "8081:8081"
+
+  newsfeed:
+    build:
+      context: .
+      dockerfile: newsfeed-service/Dockerfile
+    ports:
+      - "5602:5602"
+    environment:
+      - DATABASE_URL=root:root@tcp(mysql:3306)/network?parseTime=true
+      - KAFKA_BROKER=kafka:29092
+      - NEWSFEED_URL=newsfeed:5602
+      - USER_URL=user:5600
+      - REDIS_URL=redis:6379
+    depends_on:
+      - mysql
+      - redis
+      - kafka
+
+  post:
+    build:
+      context: .
+      dockerfile: post-service/Dockerfile
+    ports:
+      - "5601:5601"
+    environment:
+      - DATABASE_URL=root:root@tcp(mysql:3306)/network?parseTime=true
+      - KAFKA_BROKER=kafka:29092
+      - POST_URL=post:5601
+    depends_on:
+      - mysql
+      - kafka
+      - redis
+
+  user:
+    build:
+      context: .
+      dockerfile: user-service/Dockerfile
+    ports:
+      - "5600:5600"
+    environment:
+      - DATABASE_URL=root:root@tcp(mysql:3306)/network?parseTime=true
+      - USER_URL=user:5600
+      - REDIS_URL=redis:6379
+    depends_on:
+      - mysql
+      - redis

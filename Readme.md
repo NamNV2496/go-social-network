@@ -10,6 +10,13 @@
 
 # 2. How to start
 
+## Docker
+
+    1. run `docker compose up`
+    2. Check status of services
+
+## Local
+
     1. go to "cd deployments" and run "docker-compose up"
     2. run http-gateway "cd http_gateway/" and "go run cmd/main.go"
     3. run user-service "cd user-service/" and "go run cmd/main.go"

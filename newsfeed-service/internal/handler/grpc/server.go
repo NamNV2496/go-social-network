@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net"
+	"os"
 
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/validator"
 	newsfeedv1 "github.com/namnv2496/newsfeed-service/internal/handler/generated/newsfeed_core/v1"
@@ -28,7 +29,15 @@ func NewServer(
 }
 
 func (s server) Start(ctx context.Context) error {
-	listener, err := net.Listen("tcp", "localhost:5602")
+
+	var newsfeedServiceAddr string
+	if value := os.Getenv("NEWSFEED_URL"); value != "" {
+		newsfeedServiceAddr = value
+	} else {
+		newsfeedServiceAddr = "localhost:5602"
+	}
+
+	listener, err := net.Listen("tcp", newsfeedServiceAddr)
 	if err != nil {
 		return err
 	}
@@ -45,6 +54,6 @@ func (s server) Start(ctx context.Context) error {
 	server := grpc.NewServer(opts...)
 	newsfeedv1.RegisterNewsfeedServiceServer(server, s.handler)
 
-	fmt.Printf("gRPC server is running on %s\n", "localhost:5602")
+	fmt.Printf("gRPC server is running on %s\n", newsfeedServiceAddr)
 	return server.Serve(listener)
 }

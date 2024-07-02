@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net"
+	"os"
 
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/validator"
 	postv1 "github.com/namnv2496/post-service/internal/handler/generated/post_core/v1"
@@ -28,7 +29,15 @@ func NewServer(
 }
 
 func (s server) Start(ctx context.Context) error {
-	listener, err := net.Listen("tcp", "localhost:5601")
+
+	var postServiceAddr string
+	if value := os.Getenv("POST_URL"); value != "" {
+		postServiceAddr = value
+	} else {
+		postServiceAddr = "localhost:5601"
+	}
+
+	listener, err := net.Listen("tcp", postServiceAddr)
 	if err != nil {
 		return err
 	}
@@ -45,6 +54,6 @@ func (s server) Start(ctx context.Context) error {
 	server := grpc.NewServer(opts...)
 	postv1.RegisterPostServiceServer(server, s.handler)
 
-	fmt.Printf("gRPC server is running on %s\n", "localhost:5601")
+	fmt.Printf("gRPC server is running on %s\n", postServiceAddr)
 	return server.Serve(listener)
 }

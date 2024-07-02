@@ -3,6 +3,7 @@ package consumer
 import (
 	"context"
 	"fmt"
+	"log"
 	"os"
 	"os/signal"
 
@@ -76,9 +77,16 @@ func NewConsumer(
 	configs configs.Kafka,
 ) Consumer {
 
-	saramaConsumer, err := sarama.NewConsumerGroup(configs.Addresses, configs.ClientID, newSaramaConfig(configs))
+	kafkaBroker := os.Getenv("KAFKA_BROKER")
+	if kafkaBroker == "" {
+		kafkaBroker = configs.Addresses
+	} else {
+		log.Println("KAFKA_BROKER environment variable is set: ", kafkaBroker)
+	}
+	log.Println("Create connect with: ", kafkaBroker)
+	saramaConsumer, err := sarama.NewConsumerGroup([]string{kafkaBroker}, configs.ClientID, newSaramaConfig(configs))
 	if err != nil {
-		fmt.Println("failed to create sarama consumer: ", err)
+		log.Panicln("failed to create sarama consumer: ", err)
 		return nil
 	}
 
@@ -99,7 +107,7 @@ func (c consumer) RegisterHandler(queueName string, handlerFunc HandlerFunc) {
 			[]string{queueName},
 			newConsumerHandler(handlerFunc, exitSignalChannel),
 		); err != nil {
-			fmt.Println("Fail to consume")
+			fmt.Println("Fail to consume: ", err)
 		}
 	}(queueName, handlerFunc)
 }

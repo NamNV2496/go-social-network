@@ -10,7 +10,7 @@ func main() {
 
 	app, cleanup, err := wiring.Initilize()
 	if err != nil {
-		panic("Error when start server")
+		log.Fatalln("Error when start server: ", err)
 	}
 	defer cleanup()
 	if err := app.Start(); err != nil {

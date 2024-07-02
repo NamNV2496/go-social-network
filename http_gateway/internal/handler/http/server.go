@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/namnv2496/http_gateway/internal/configs"
@@ -41,8 +42,14 @@ func NewServer(
 
 func (s *server) ConnectToUserService(ctx context.Context) error {
 
-	orderServiceAddr := "0.0.0.0:5600"
-	conn, err := grpc.NewClient(orderServiceAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	var userServiceAddr string
+	if value := os.Getenv("USER_URL"); value != "" {
+		userServiceAddr = value
+	} else {
+		userServiceAddr = "0.0.0.0:5600"
+	}
+
+	conn, err := grpc.NewClient(userServiceAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("could not connect to order service: %v", err)
 	}
@@ -52,8 +59,13 @@ func (s *server) ConnectToUserService(ctx context.Context) error {
 
 func (s *server) ConnectToPostService(ctx context.Context) error {
 
-	orderServiceAddr := "0.0.0.0:5601"
-	conn, err := grpc.NewClient(orderServiceAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	var postServiceAddr string
+	if value := os.Getenv("POST_URL"); value != "" {
+		postServiceAddr = value
+	} else {
+		postServiceAddr = "0.0.0.0:5601"
+	}
+	conn, err := grpc.NewClient(postServiceAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("could not connect to order service: %v", err)
 	}
@@ -87,6 +99,31 @@ func (s *server) runRESTServer() error {
 	)
 	// mux := runtime.NewServeMux()
 
+	var userServiceAddr string
+	if value := os.Getenv("USER_URL"); value != "" {
+		userServiceAddr = value
+	} else {
+		userServiceAddr = s.grpcConfig.UserServiceAddress
+	}
+
+	var postServiceAddr string
+	if value := os.Getenv("POST_URL"); value != "" {
+		postServiceAddr = value
+	} else {
+		postServiceAddr = s.grpcConfig.PostServiceAddress
+	}
+
+	var newsfeedServiceAddr string
+	if value := os.Getenv("NEWSFEED_URL"); value != "" {
+		newsfeedServiceAddr = value
+	} else {
+		newsfeedServiceAddr = s.grpcConfig.NewfeedsServiceAddress
+	}
+
+	log.Println("Connect to user: ", userServiceAddr)
+	log.Println("Connect to post: ", postServiceAddr)
+	log.Println("Connect to newsfeed: ", newsfeedServiceAddr)
+
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
 	var err error
 
@@ -94,7 +131,7 @@ func (s *server) runRESTServer() error {
 	err = userv1.RegisterAccountServiceHandlerFromEndpoint(
 		ctx,
 		mux,
-		s.grpcConfig.UserServiceAddress,
+		userServiceAddr,
 		opts,
 	)
 	if err != nil {
@@ -105,7 +142,7 @@ func (s *server) runRESTServer() error {
 	err = postv1.RegisterPostServiceHandlerFromEndpoint(
 		ctx,
 		mux,
-		s.grpcConfig.PostServiceAddress,
+		postServiceAddr,
 		opts,
 	)
 	if err != nil {
@@ -115,7 +152,7 @@ func (s *server) runRESTServer() error {
 	err = newsfeedv1.RegisterNewsfeedServiceHandlerFromEndpoint(
 		ctx,
 		mux,
-		s.grpcConfig.NewfeedsServiceAddress,
+		newsfeedServiceAddr,
 		opts,
 	)
 	if err != nil {

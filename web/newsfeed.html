@@ -70,39 +70,7 @@
             displayPosts(data.posts);
         }
 
-        // function showPopup(userId) {
-        //     const popup = document.createElement('div');
-        //     popup.className = 'popup';
 
-        //     const closeButton = document.createElement('button');
-        //     closeButton.className = 'close';
-        //     closeButton.textContent = 'Close';
-        //     closeButton.addEventListener('click', function() {
-        //         document.body.removeChild(popup);
-        //     });
-
-        //     const inboxButton = document.createElement('button');
-        //     inboxButton.className = 'inbox';
-        //     inboxButton.textContent = 'Inbox';
-        //     inboxButton.addEventListener('click', function() {
-        //         inbox(userId);
-        //         document.body.removeChild(popup);
-        //     });
-
-        //     const followButton = document.createElement('button');
-        //     followButton.className = 'follow';
-        //     followButton.textContent = 'Follow';
-        //     followButton.addEventListener('click', function() {
-        //         follow(userId);
-        //         document.body.removeChild(popup);
-        //     });
-
-        //     popup.appendChild(closeButton);
-        //     popup.appendChild(inboxButton);
-        //     popup.appendChild(followButton);
-
-        //     document.body.appendChild(popup);
-        // }
         async function showPopup(userId) {
             const popup = document.createElement('div');
             popup.className = 'popup';
@@ -297,9 +265,10 @@
                 tags = tagValue.split(',').map(tag => tag.trim()); // Parse tags
             }
 
+            var userId = current_user
             const postData = {
                 post: {
-                    current_user,
+                    userId,
                     contentText,
                     images,
                     tags,

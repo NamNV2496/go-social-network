@@ -1,7 +1,6 @@
 kafka:
-  addresses:
-    - localhost:29092
-  client_id: "sit"
+  addresses: 127.0.0.1:29092
+  client_id: "post"
 grpc:
   post_service_address: "0.0.0.0:5601"
 
@@ -10,4 +9,4 @@ database:
   port: 3309
   username: root
   password: root
-  database: post
+  database: network

@@ -3,6 +3,7 @@ package grpc
 import (
 	"context"
 	"fmt"
+	"os"
 
 	"github.com/namnv2496/newsfeed-service/internal/configs"
 	userv1 "github.com/namnv2496/newsfeed-service/internal/handler/generated/user_core/v1"
@@ -21,7 +22,14 @@ type productGRPCClient struct {
 func NewGRPCProductClient(
 	config configs.GRPC,
 ) (ProductGRPCClient, error) {
-	conn, err := grpc.NewClient(config.UserServiceAddress, grpc.WithTransportCredentials(insecure.NewCredentials()))
+
+	var userServiceAddr string
+	if value := os.Getenv("USER_URL"); value != "" {
+		userServiceAddr = value
+	} else {
+		userServiceAddr = config.UserServiceAddress
+	}
+	conn, err := grpc.NewClient(userServiceAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		return nil, err
 	}

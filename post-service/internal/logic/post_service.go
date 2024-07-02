@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
 	"strings"
 	"time"
 
@@ -69,6 +70,7 @@ func (u userService) Post(
 	go func() {
 		fmt.Println("Call trigger to newsFeed a post: ", post)
 		if err := u.kafkaClient.Produce(context.Background(), mq.TOPIC_POST_CONTENT, data); err != nil {
+			log.Println("Error when send data to kafka: ", err)
 			return
 		}
 	}()

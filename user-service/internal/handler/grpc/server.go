@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net"
+	"os"
 
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/validator"
 
@@ -29,7 +30,15 @@ func NewServer(
 
 // Start implements Server.
 func (s server) Start(ctx context.Context) error {
-	listener, err := net.Listen("tcp", "localhost:5600")
+
+	var userServiceAddr string
+	if value := os.Getenv("USER_URL"); value != "" {
+		userServiceAddr = value
+	} else {
+		userServiceAddr = "localhost:5600"
+	}
+
+	listener, err := net.Listen("tcp", userServiceAddr)
 	if err != nil {
 		return err
 	}
@@ -46,6 +55,6 @@ func (s server) Start(ctx context.Context) error {
 	server := grpc.NewServer(opts...)
 	userv1.RegisterAccountServiceServer(server, s.handler)
 
-	fmt.Printf("gRPC server is running on %s\n", "localhost:5600")
+	fmt.Printf("gRPC server is running on %s\n", userServiceAddr)
 	return server.Serve(listener)
 }

@@ -80,7 +80,10 @@ func (s newsfeedService) UpdateNewsfeed(
 	return nil
 }
 
-func (s newsfeedService) GetNewsfeed(ctx context.Context, userId string) (*newsfeedv1.GetNewsfeedResponse, error) {
+func (s newsfeedService) GetNewsfeed(
+	ctx context.Context,
+	userId string,
+) (*newsfeedv1.GetNewsfeedResponse, error) {
 	data, exist := s.redis.Get(ctx, userId)
 	if exist == nil {
 		var posts []domain.Post
