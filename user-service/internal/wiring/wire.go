@@ -8,6 +8,7 @@ import (
 	"github.com/namnv2496/user-service/internal/cache"
 	"github.com/namnv2496/user-service/internal/configs"
 	"github.com/namnv2496/user-service/internal/database"
+	es "github.com/namnv2496/user-service/internal/elasticsearch"
 	"github.com/namnv2496/user-service/internal/handler"
 	"github.com/namnv2496/user-service/internal/logic"
 	"github.com/namnv2496/user-service/internal/repo"
@@ -21,6 +22,7 @@ func Initilize() (*app.App, func(), error) {
 		handler.HandlerWireSet,
 		cache.CacheWireSet,
 		repo.RepoWireSet,
+		es.ESWireSet,
 		app.NewApp,
 	)
 	return nil, nil, nil

@@ -14,6 +14,6 @@ func main() {
 	}
 	defer cleanup()
 	if err := app.Start(); err != nil {
-		log.Fatalln("Failed to start server")
+		log.Fatalln("Failed to start server: ", err)
 	}
 }

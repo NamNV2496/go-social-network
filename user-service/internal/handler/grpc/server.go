@@ -35,7 +35,7 @@ func (s server) Start(ctx context.Context) error {
 	if value := os.Getenv("USER_URL"); value != "" {
 		userServiceAddr = value
 	} else {
-		userServiceAddr = "localhost:5600"
+		userServiceAddr = "localhost:5610"
 	}
 
 	listener, err := net.Listen("tcp", userServiceAddr)

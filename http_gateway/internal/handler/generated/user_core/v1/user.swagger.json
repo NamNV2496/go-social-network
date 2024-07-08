@@ -17,6 +17,34 @@
   ],
   "paths": {
     "/api/v1/account": {
+      "get": {
+        "operationId": "AccountService_FindAccount",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1FindAccountResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "AccountService"
+        ]
+      },
       "post": {
         "operationId": "AccountService_CreateAccount",
         "responses": {
@@ -35,53 +63,12 @@
         },
         "parameters": [
           {
-            "name": "account.id",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "uint64"
-          },
-          {
-            "name": "account.email",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "account.name",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "account.picture",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "account.userId",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "account.password",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "account.createdAt",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "account.updatedAt",
-            "in": "query",
-            "required": false,
-            "type": "string"
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CreateAccountRequest"
+            }
           }
         ],
         "tags": [
@@ -353,11 +340,20 @@
         }
       }
     },
-    "v1CreateAccountResponse": {
+    "v1CreateAccountRequest": {
       "type": "object",
       "properties": {
         "account": {
           "$ref": "#/definitions/v1Account"
+        }
+      }
+    },
+    "v1CreateAccountResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64"
         }
       }
     },
@@ -380,6 +376,18 @@
         },
         "token": {
           "type": "string"
+        }
+      }
+    },
+    "v1FindAccountResponse": {
+      "type": "object",
+      "properties": {
+        "account": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Account"
+          }
         }
       }
     },

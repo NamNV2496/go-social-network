@@ -27,7 +27,7 @@ message CreateSessionResponse {
 
 message CreateAccountRequest { Account account = 1; }
 
-message CreateAccountResponse { Account account = 1; }
+message CreateAccountResponse { uint64 id = 1; }
 
 message UpdateAccountRequest {
     Account account = 1; // must pass id, can only modify name, picture, role
@@ -39,6 +39,10 @@ message UpdateAccountResponse { Account account = 1; }
 message GetAccountRequest { string userId = 1; }
 
 message GetAccountResponse { Account account = 1; }
+
+message FindAccountRequest { string userId = 1; }
+
+message FindAccountResponse { repeated Account account = 1; }
 
 message AccountSession {
     string token = 1;
@@ -65,12 +69,19 @@ service AccountService {
     rpc CreateAccount(CreateAccountRequest) returns (CreateAccountResponse) {
         option (google.api.http) = {
 			post: "/api/v1/account"
+            body: "*"
 		};
     }
 
     rpc GetAccount(GetAccountRequest) returns (GetAccountResponse) {
         option (google.api.http) = {
 			get: "/api/v1/account/{userId}"
+		};
+    }
+
+    rpc FindAccount(FindAccountRequest) returns (FindAccountResponse) {
+        option (google.api.http) = {
+			get: "/api/v1/account"
 		};
     }
 

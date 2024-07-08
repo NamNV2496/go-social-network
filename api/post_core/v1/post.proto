@@ -23,8 +23,7 @@ message CreatePostResponse {
 message GetPostRequest { string user_id = 1; }
 
 message GetPostResponse {
-    bool is_valid = 1;
-    Post post = 2;
+    repeated Post post = 1;
 }
 
 service PostService {
@@ -37,7 +36,7 @@ service PostService {
 
     rpc GetPost(GetPostRequest) returns (GetPostResponse) {
         option (google.api.http) = {
-			get: "/api/v1/post"
+			get: "/api/v1/posts"
 		};
     }
 }

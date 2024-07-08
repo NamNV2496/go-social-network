@@ -46,7 +46,7 @@ func (s *server) ConnectToUserService(ctx context.Context) error {
 	if value := os.Getenv("USER_URL"); value != "" {
 		userServiceAddr = value
 	} else {
-		userServiceAddr = "0.0.0.0:5600"
+		userServiceAddr = "0.0.0.0:5610"
 	}
 
 	conn, err := grpc.NewClient(userServiceAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
@@ -63,7 +63,7 @@ func (s *server) ConnectToPostService(ctx context.Context) error {
 	if value := os.Getenv("POST_URL"); value != "" {
 		postServiceAddr = value
 	} else {
-		postServiceAddr = "0.0.0.0:5601"
+		postServiceAddr = "0.0.0.0:5611"
 	}
 	conn, err := grpc.NewClient(postServiceAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {

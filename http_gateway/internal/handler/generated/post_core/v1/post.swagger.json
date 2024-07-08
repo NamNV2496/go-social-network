@@ -17,34 +17,6 @@
   ],
   "paths": {
     "/api/v1/post": {
-      "get": {
-        "operationId": "PostService_GetPost",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1GetPostResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "PostService"
-        ]
-      },
       "post": {
         "operationId": "PostService_CreatePost",
         "responses": {
@@ -69,6 +41,36 @@
             "schema": {
               "$ref": "#/definitions/v1CreatePostRequest"
             }
+          }
+        ],
+        "tags": [
+          "PostService"
+        ]
+      }
+    },
+    "/api/v1/posts": {
+      "get": {
+        "operationId": "PostService_GetPost",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetPostResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
@@ -126,11 +128,12 @@
     "v1GetPostResponse": {
       "type": "object",
       "properties": {
-        "isValid": {
-          "type": "boolean"
-        },
         "post": {
-          "$ref": "#/definitions/v1Post"
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Post"
+          }
         }
       }
     },

@@ -4,6 +4,7 @@ go 1.22.2
 
 require (
 	github.com/doug-martin/goqu/v9 v9.19.0
+	github.com/elastic/go-elasticsearch/v7 v7.17.10
 	github.com/go-sql-driver/mysql v1.8.1
 	github.com/google/wire v0.6.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.20.0

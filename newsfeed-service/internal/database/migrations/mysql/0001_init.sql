@@ -1,5 +1,0 @@
--- +migrate Up
-
-
--- +migrate Down
-

@@ -34,7 +34,7 @@ func (s server) Start(ctx context.Context) error {
 	if value := os.Getenv("POST_URL"); value != "" {
 		postServiceAddr = value
 	} else {
-		postServiceAddr = "localhost:5601"
+		postServiceAddr = "localhost:5611"
 	}
 
 	listener, err := net.Listen("tcp", postServiceAddr)

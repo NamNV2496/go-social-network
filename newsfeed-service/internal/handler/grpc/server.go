@@ -34,7 +34,7 @@ func (s server) Start(ctx context.Context) error {
 	if value := os.Getenv("NEWSFEED_URL"); value != "" {
 		newsfeedServiceAddr = value
 	} else {
-		newsfeedServiceAddr = "localhost:5602"
+		newsfeedServiceAddr = "localhost:5612"
 	}
 
 	listener, err := net.Listen("tcp", newsfeedServiceAddr)

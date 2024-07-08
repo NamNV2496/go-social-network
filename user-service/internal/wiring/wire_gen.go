@@ -11,6 +11,7 @@ import (
 	"github.com/namnv2496/user-service/internal/cache"
 	"github.com/namnv2496/user-service/internal/configs"
 	"github.com/namnv2496/user-service/internal/database"
+	"github.com/namnv2496/user-service/internal/elasticsearch"
 	"github.com/namnv2496/user-service/internal/handler/grpc"
 	"github.com/namnv2496/user-service/internal/logic"
 	"github.com/namnv2496/user-service/internal/repo"
@@ -33,7 +34,12 @@ func Initilize() (*app.App, func(), error) {
 	userUserRepo := repo.NewUserUserService(goquDatabase)
 	redis := config.Redis
 	client := cache.NewRedisClient(redis)
-	userService := logic.NewUserService(userRepo, userUserRepo, client)
+	elasticSearchClient, err := es.NewElasticSearch()
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	userService := logic.NewUserService(userRepo, userUserRepo, client, elasticSearchClient)
 	accountServiceServer := grpc.NewGrpcHander(userService)
 	server := grpc.NewServer(accountServiceServer)
 	appApp := app.NewApp(server)

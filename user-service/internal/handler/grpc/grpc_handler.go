@@ -2,7 +2,6 @@ package grpc
 
 import (
 	"context"
-	"fmt"
 
 	userv1 "github.com/namnv2496/user-service/internal/handler/generated/user_core/v1"
 	"github.com/namnv2496/user-service/internal/logic"
@@ -26,9 +25,14 @@ func (s GrpcHandler) CreateAccount(
 	in *userv1.CreateAccountRequest,
 ) (*userv1.CreateAccountResponse, error) {
 
-	fmt.Println("called createAccount")
+	id, err := s.userService.CreateAccount(ctx, in.Account)
+	if err != nil {
+		return &userv1.CreateAccountResponse{
+			Id: 0,
+		}, err
+	}
 	return &userv1.CreateAccountResponse{
-		Account: &userv1.Account{},
+		Id: id,
 	}, nil
 }
 
@@ -36,7 +40,6 @@ func (s GrpcHandler) GetAccount(
 	ctx context.Context,
 	req *userv1.GetAccountRequest,
 ) (*userv1.GetAccountResponse, error) {
-
 	user, err := s.userService.GetAccount(ctx, req.UserId)
 	if err != nil {
 		return nil, err
@@ -44,13 +47,40 @@ func (s GrpcHandler) GetAccount(
 	return &userv1.GetAccountResponse{
 		Account: &userv1.Account{
 			Id:        user.Id,
+			UserId:    user.UserId,
+			Email:     user.Email,
+			Name:      user.Name,
+			CreatedAt: user.CreatedAt.String(),
+			UpdatedAt: user.UpdatedAt.String(),
+		},
+	}, nil
+}
+
+func (s GrpcHandler) FindAccount(
+	ctx context.Context,
+	req *userv1.FindAccountRequest,
+) (*userv1.FindAccountResponse, error) {
+	users, err := s.userService.FindAccount(ctx, req.UserId)
+	if err != nil {
+		return nil, err
+	}
+
+	res := []*userv1.Account{}
+	for _, user := range users {
+		account := userv1.Account{
+			Id:        user.Id,
 			Email:     user.Email,
 			Name:      user.Name,
 			Picture:   user.Picture,
 			UserId:    user.UserId,
 			CreatedAt: user.CreatedAt.String(),
 			UpdatedAt: user.UpdatedAt.String(),
-		},
+		}
+		res = append(res, &account)
+	}
+
+	return &userv1.FindAccountResponse{
+		Account: res,
 	}, nil
 }
 

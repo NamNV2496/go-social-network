@@ -32,5 +32,5 @@ func (h GrpcHandler) GetPost(
 	ctx context.Context,
 	req *postv1.GetPostRequest,
 ) (*postv1.GetPostResponse, error) {
-	return nil, nil
+	return h.userService.GetPost(ctx, req)
 }

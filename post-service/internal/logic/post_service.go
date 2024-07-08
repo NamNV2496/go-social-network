@@ -17,6 +17,7 @@ import (
 
 type UserService interface {
 	Post(context.Context, *postv1.CreatePostRequest) (*postv1.CreatePostResponse, error)
+	GetPost(context.Context, *postv1.GetPostRequest) (*postv1.GetPostResponse, error)
 }
 
 type userService struct {
@@ -77,5 +78,38 @@ func (u userService) Post(
 
 	return &postv1.CreatePostResponse{
 		PostId: uint64(id),
+	}, nil
+}
+
+func (u userService) GetPost(
+	ctx context.Context,
+	req *postv1.GetPostRequest,
+) (*postv1.GetPostResponse, error) {
+
+	query := u.db.
+		From(domain.TabNamePost).
+		Where(
+			goqu.C(domain.TabColUserId).Eq(req.UserId),
+		).
+		Order(goqu.I(domain.TabColCreatedAt).Desc())
+	var posts []domain.Post
+	err := query.Executor().ScanStructsContext(ctx, &posts)
+	if err != nil {
+		return nil, err
+	}
+	postRes := make([]*postv1.Post, 0)
+	for _, post := range posts {
+		element := &postv1.Post{
+			UserId:      post.User_id,
+			ContentText: post.Content_text,
+			Tags:        strings.Split(post.Tags, ","),
+			Images:      strings.Split(post.Images, ","),
+			Visible:     post.Visible,
+			Date:        post.CreatedAt.String(),
+		}
+		postRes = append(postRes, element)
+	}
+	return &postv1.GetPostResponse{
+		Post: postRes,
 	}, nil
 }

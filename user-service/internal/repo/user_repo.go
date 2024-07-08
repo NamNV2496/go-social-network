@@ -2,6 +2,7 @@ package repo
 
 import (
 	"context"
+	"log"
 
 	"github.com/doug-martin/goqu/v9"
 	"github.com/namnv2496/user-service/internal/domain"
@@ -9,6 +10,7 @@ import (
 
 type UserRepo interface {
 	GetAccount(ctx context.Context, userId string) (domain.User, error)
+	CreateAccount(ctx context.Context, user domain.User) (domain.User, error)
 }
 type userRepo struct {
 	db *goqu.Database
@@ -38,4 +40,26 @@ func (u userRepo) GetAccount(ctx context.Context, userId string) (domain.User, e
 		return users[0], nil
 	}
 	return domain.User{}, err
+}
+func (u userRepo) CreateAccount(
+	ctx context.Context,
+	user domain.User,
+) (domain.User, error) {
+	query := u.db.
+		Insert(domain.TabNameUser).
+		Rows(user)
+	_, err := query.Executor().ExecContext(ctx)
+	if err != nil {
+		return domain.User{}, err
+	}
+
+	var newUser domain.User
+	getUserQuery := u.db.From(domain.TabNameUser).Where(goqu.C(domain.TabColUserId).Eq(user.UserId))
+	_, err = getUserQuery.Executor().ScanStructContext(ctx, &newUser)
+	if err != nil {
+		return domain.User{}, err
+	}
+
+	log.Println("User: ", newUser)
+	return newUser, nil
 }

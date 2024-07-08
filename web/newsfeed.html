@@ -10,6 +10,8 @@
     <h1>Newsfeed</h1>
     <button id="logout" type="button">Logout</button>
     <a href="room.html">Message</a>
+    <button onclick="goToProfile()">My Profile</button>
+    <button onclick="goToSearch()">Search</button>
     
     <div id="post-form">
         <h2>Create a Post</h2>
@@ -26,7 +28,6 @@
     
     <div id="posts-container"></div>
     
-
     <script>
         const current_user =  sessionStorage.getItem('userName');  
         const token = sessionStorage.getItem('token');  // Get the token from session storage
@@ -48,6 +49,18 @@
             });
         })
 
+        function goToProfile() {
+            const current_user = sessionStorage.getItem('userName');
+            if (current_user) {
+                window.location.href = `wall.html?userId=${current_user}`;
+            } else {
+                // Handle the case where userName is not set in sessionStorage
+                console.error('User name not found in session storage.');
+            }
+        }
+        function goToSearch() {
+            window.location.href = `search.html`;
+        }
         function loadCurrentUser() {
             userElement = document.getElementById('logout')
             userElement.textContent = "Logout: " + current_user
@@ -81,7 +94,15 @@
             closeButton.addEventListener('click', function() {
                 document.body.removeChild(popup);
             });
-
+            // view profile button
+            const profileButton = document.createElement('button');
+            profileButton.className = 'prolie';
+            profileButton.textContent = 'Profile';
+            profileButton.addEventListener('click', function() {
+                profile(userId);
+                // document.body.removeChild(popup);
+            });
+            // inbox button
             const inboxButton = document.createElement('button');
             inboxButton.className = 'inbox';
             inboxButton.textContent = 'Inbox';
@@ -89,7 +110,7 @@
                 inbox(userId);
                 document.body.removeChild(popup);
             });
-
+            // following button
             const followButton = document.createElement('button');
             followButton.className = 'follow';
             followButton.textContent = 'Follow';
@@ -111,6 +132,7 @@
             });
 
             popup.appendChild(closeButton);
+            popup.appendChild(profileButton);
             popup.appendChild(inboxButton);
             popup.appendChild(followButton);
             popup.appendChild(unfollowButton);
@@ -126,6 +148,10 @@
             } else {
                 followButton.style.display = 'block';
             }
+        }
+
+        function profile(userId) {
+            window.location.href = `wall.html?userId=${userId}`
         }
 
         function inbox(member) {

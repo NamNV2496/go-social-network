@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Search</title>
+    <link rel="stylesheet" href="css/search.css" type="text/css">
+    <script>
+        const current_user =  sessionStorage.getItem('userName');  
+        const token = sessionStorage.getItem('token');  // Get the token from session storage
+
+        async function searchAccount() {
+            const userId = document.getElementById('userId').value;
+            const response = await fetch(`http://localhost:8080/api/v1/account?userId=${userId}`, {
+                method: 'GET',
+                headers: {
+                    // 'accept': 'application/json',
+                    'Authorization': `Bearer ${token}`  // Add the token to the request headers
+                }
+            });
+
+            const data = await response.json();
+            displayPosts(data)
+            document.getElementById('result').innerText = JSON.stringify(data, null, 2);
+        }
+
+        function displayPosts(data) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '';
+
+            if (data.account && data.account.length > 0) {
+                data.account.forEach(account => {
+                    const accountElement = document.createElement('div');
+                    accountElement.className = 'post';
+
+                    const userText = document.createElement('p');
+                    const userLink = document.createElement('a');
+                    userLink.textContent = account.userId;
+                    userLink.style.fontWeight = 'bold';
+                    userLink.style.fontSize = '32px';
+                    userLink.href = "#"
+                    userLink.addEventListener('click', function() {
+                        showPopup(account.userId);
+                    });
+
+                    const userName = document.createElement('p');
+                    userName.textContent = account.name;
+                    userName.style.fontSize = '24px';
+
+                    userText.appendChild(userLink)
+                    userText.appendChild(userName)
+                    accountElement.appendChild(userText);
+                    resultsDiv.appendChild(accountElement);
+                })
+            }
+        }
+
+        async function showPopup(userId) {
+            const popup = document.createElement('div');
+            popup.className = 'popup';
+
+            const closeButton = document.createElement('button');
+            closeButton.className = 'close';
+            closeButton.textContent = 'Close';
+            closeButton.addEventListener('click', function() {
+                document.body.removeChild(popup);
+            });
+            // view profile button
+            const profileButton = document.createElement('button');
+            profileButton.className = 'prolie';
+            profileButton.textContent = 'Profile';
+            profileButton.addEventListener('click', function() {
+                profile(userId);
+                // document.body.removeChild(popup);
+            });
+            // inbox button
+            const inboxButton = document.createElement('button');
+            inboxButton.className = 'inbox';
+            inboxButton.textContent = 'Inbox';
+            inboxButton.addEventListener('click', function() {
+                inbox(userId);
+                document.body.removeChild(popup);
+            });
+            // following button
+            const followButton = document.createElement('button');
+            followButton.className = 'follow';
+            followButton.textContent = 'Follow';
+            followButton.style.display = 'none';  // Initially hidden
+
+            const unfollowButton = document.createElement('button');
+            unfollowButton.className = 'unfollow';
+            unfollowButton.textContent = 'Following';
+            unfollowButton.style.display = 'none';  // Initially hidden
+
+            followButton.addEventListener('click', function() {
+                follow(userId);
+                document.body.removeChild(popup);
+            });
+
+            unfollowButton.addEventListener('click', function() {
+                unfollow(userId);
+                document.body.removeChild(popup);
+            });
+
+            popup.appendChild(closeButton);
+            popup.appendChild(profileButton);
+            popup.appendChild(inboxButton);
+            popup.appendChild(followButton);
+            popup.appendChild(unfollowButton);
+
+            document.body.appendChild(popup);
+
+            // Fetch following status
+            const response = await fetch(`http://localhost:8080/api/v1/isFollowing?current_id=${current_user}&user_id=${userId}`);
+            const data = await response.json();
+
+            if (data.following) {
+                unfollowButton.style.display = 'block';
+            } else {
+                followButton.style.display = 'block';
+            }
+        }
+
+        function profile(userId) {
+            window.location.href = `wall.html?userId=${userId}`
+        }
+
+        function inbox(member) {
+            if (member == current_user) {
+                return
+            }
+            var members = [current_user, member];
+            members.sort(function(a, b) {
+                return a.toLowerCase().localeCompare(b.toLowerCase());
+            });
+            var roomName = members[0] + "," + members[1];
+            const requestBody = {
+                "roomId": roomName,
+                "roomName": roomName,
+                "public": 0,
+                "member": members
+            };
+            console.log(requestBody);
+            fetch(`http://localhost:8081/ws/createRoom`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestBody)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = `chat.html?roomId=${roomName}&username=${encodeURIComponent(current_user)}&roomName=${encodeURIComponent(roomName)}`;
+                    } else {
+                        alert('Failed to create room. Please try again.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error creating room:', error);
+                    alert('Failed to create room. Please try again.');
+                });
+        }
+
+        async function follow(userId) {
+            console.log('Follow clicked for user:', userId);
+            if (current_user == userId) {
+                return
+            }
+            const url = `http://localhost:8080/api/v1/following?current_id=${current_user}&user_id=${userId}`;
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+            });
+
+            if (!response.ok) {
+                alert('Failed to create post');
+                return;
+            }
+        }
+        async function unfollow(userId) {
+            console.log('Unfollow clicked for user:', userId);
+            if (current_user == userId) {
+                return
+            }
+            const url = `http://localhost:8080/api/v1/following?current_id=${current_user}&user_id=${userId}`;
+            const response = await fetch(url, {
+                method: 'DELETE',
+                headers: {
+                    'accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+            });
+
+            if (!response.ok) {
+                alert('Failed to create post');
+                return;
+            }
+        }
+
+    </script>
+</head>
+<body>
+    <h1>Search Account</h1>
+    <input type="text" id="userId" placeholder="Enter User ID">
+    <button onclick="searchAccount()">Search</button>
+    <pre id="results"></pre>
+</body>
+</html>

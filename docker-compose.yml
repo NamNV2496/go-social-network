@@ -1,18 +1,18 @@
 version: "3.8"
 
 services:
-  mysql:
-    image: mysql:8.3.0
-    environment:
-        MYSQL_ROOT_PASSWORD: root
-        MYSQL_DATABASE: network
-    ports:
-        - "3309:3306"
+  # mysql:
+  #   image: mysql:8.3.0
+  #   environment:
+  #       MYSQL_ROOT_PASSWORD: root
+  #       MYSQL_DATABASE: network
+  #   ports:
+  #       - "3309:3306"
 
-  redis:
-    image: redis:7-alpine
-    ports:
-        - "6379:6379"
+  # redis:
+  #   image: redis:7-alpine
+  #   ports:
+  #       - "6379:6379"
 
   zookeeper:
     image: "bitnami/zookeeper:3.8.4-debian-12-r8"
@@ -28,81 +28,102 @@ services:
     environment:
         - KAFKA_BROKER_ID=2
         - KAFKA_CFG_LISTENERS=PLAINTEXT://:29092
-        - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:29092
+        - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://localhost:29092
         - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
         - ALLOW_PLAINTEXT_LISTENER=yes
     depends_on:
         - zookeeper
 
-  http:
-    build:
-      context: .
-      dockerfile: http_gateway/Dockerfile
-    ports:
-      - "8080:8080"
-    depends_on:
-      - newsfeed
-      - post
-      - user
-      - message
-    environment:
-      - USER_URL=user:5600
-      - NEWSFEED_URL=newsfeed:5602
-      - POST_URL=post:5601
-    depends_on:
-      - mysql
-      - redis
-      - kafka
+#   elasticsearch:
+#     image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+#     container_name: elasticsearch
+#     environment:
+#       - discovery.type=single-node
+#       - ES_JAVA_OPTS=-Xms512m -Xmx512m
+#       - xpack.security.enabled=true
+#       - ELASTIC_USERNAME=elastic
+#       - ELASTIC_PASSWORD=admin
+#     ports:
+#       - 9200:9200 # for REST API access
+#       # - 9300:9300 # for inter-node communication
+#     volumes:
+#       - esdata:/usr/share/elasticsearch/data
 
-  message:
-    build:
-      context: .
-      dockerfile: message-service/Dockerfile
-    ports:
-      - "8081:8081"
+# http:
+#   build:
+#     context: .
+#     dockerfile: http_gateway/Dockerfile
+#   ports:
+#     - "8080:8080"
+#   depends_on:
+#     - newsfeed
+#     - post
+#     - user
+#     - message
+#   environment:
+#     - USER_URL=user:5610
+#     - NEWSFEED_URL=newsfeed:5612
+#     - POST_URL=post:5611
+#   depends_on:
+#     - mysql
+#     - redis
+#     - kafka
 
-  newsfeed:
-    build:
-      context: .
-      dockerfile: newsfeed-service/Dockerfile
-    ports:
-      - "5602:5602"
-    environment:
-      - DATABASE_URL=root:root@tcp(mysql:3306)/network?parseTime=true
-      - KAFKA_BROKER=kafka:29092
-      - NEWSFEED_URL=newsfeed:5602
-      - USER_URL=user:5600
-      - REDIS_URL=redis:6379
-    depends_on:
-      - mysql
-      - redis
-      - kafka
+# message:
+#   build:
+#     context: .
+#     dockerfile: message-service/Dockerfile
+#   ports:
+#     - "8081:8081"
 
-  post:
-    build:
-      context: .
-      dockerfile: post-service/Dockerfile
-    ports:
-      - "5601:5601"
-    environment:
-      - DATABASE_URL=root:root@tcp(mysql:3306)/network?parseTime=true
-      - KAFKA_BROKER=kafka:29092
-      - POST_URL=post:5601
-    depends_on:
-      - mysql
-      - kafka
-      - redis
+# newsfeed:
+#   build:
+#     context: .
+#     dockerfile: newsfeed-service/Dockerfile
+#   ports:
+#     - "5612:5612"
+#   environment:
+#     - DATABASE_URL=root:root@tcp(mysql:3306)/network?parseTime=true
+#     - KAFKA_BROKER=kafka:29092
+#     - NEWSFEED_URL=newsfeed:5612
+#     - USER_URL=user:5610
+#     - REDIS_URL=redis:6379
+#   depends_on:
+#     - mysql
+#     - kafka
 
-  user:
-    build:
-      context: .
-      dockerfile: user-service/Dockerfile
-    ports:
-      - "5600:5600"
-    environment:
-      - DATABASE_URL=root:root@tcp(mysql:3306)/network?parseTime=true
-      - USER_URL=user:5600
-      - REDIS_URL=redis:6379
-    depends_on:
-      - mysql
-      - redis
+# post:
+#   build:
+#     context: .
+#     dockerfile: post-service/Dockerfile
+#   ports:
+#     - "5611:5611"
+#   environment:
+#     - DATABASE_URL=root:root@tcp(mysql:3306)/network?parseTime=true
+#     - KAFKA_BROKER=kafka:29092
+#     - POST_URL=post:5611
+#   depends_on:
+#     - mysql
+#     - kafka
+#     - redis
+
+# user:
+#   build:
+#     context: .
+#     dockerfile: user-service/Dockerfile
+#   ports:
+#     - "5610:5610"
+#   environment:
+#     - DATABASE_URL=root:root@tcp(mysql:3306)/network?parseTime=true
+#     - USER_URL=user:5610
+#     - REDIS_URL=redis:6379
+#     - ELASTIC_SEARCH_URL=http://elasticsearch:9200
+#     - ELASTICSEARCH_USERNAME=elastic
+#     - ELASTICSEARCH_PASSWORD=admin
+#   depends_on:
+#     - mysql
+#     - redis
+#     - elasticsearch
+# volumes:
+#   esdata:
+#       driver: local
