@@ -514,34 +514,7 @@ func (m *CreateAccountResponse) validate(all bool) error {
 
 	var errors []error
 
-	if all {
-		switch v := interface{}(m.GetAccount()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, CreateAccountResponseValidationError{
-					field:  "Account",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, CreateAccountResponseValidationError{
-					field:  "Account",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetAccount()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return CreateAccountResponseValidationError{
-				field:  "Account",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
+	// no validation rules for Id
 
 	if len(errors) > 0 {
 		return CreateAccountResponseMultiError(errors)
@@ -1119,6 +1092,246 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = GetAccountResponseValidationError{}
+
+// Validate checks the field values on FindAccountRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *FindAccountRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on FindAccountRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// FindAccountRequestMultiError, or nil if none found.
+func (m *FindAccountRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *FindAccountRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for UserId
+
+	if len(errors) > 0 {
+		return FindAccountRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// FindAccountRequestMultiError is an error wrapping multiple validation errors
+// returned by FindAccountRequest.ValidateAll() if the designated constraints
+// aren't met.
+type FindAccountRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m FindAccountRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m FindAccountRequestMultiError) AllErrors() []error { return m }
+
+// FindAccountRequestValidationError is the validation error returned by
+// FindAccountRequest.Validate if the designated constraints aren't met.
+type FindAccountRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e FindAccountRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e FindAccountRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e FindAccountRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e FindAccountRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e FindAccountRequestValidationError) ErrorName() string {
+	return "FindAccountRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e FindAccountRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sFindAccountRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = FindAccountRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = FindAccountRequestValidationError{}
+
+// Validate checks the field values on FindAccountResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *FindAccountResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on FindAccountResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// FindAccountResponseMultiError, or nil if none found.
+func (m *FindAccountResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *FindAccountResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	for idx, item := range m.GetAccount() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, FindAccountResponseValidationError{
+						field:  fmt.Sprintf("Account[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, FindAccountResponseValidationError{
+						field:  fmt.Sprintf("Account[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return FindAccountResponseValidationError{
+					field:  fmt.Sprintf("Account[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return FindAccountResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// FindAccountResponseMultiError is an error wrapping multiple validation
+// errors returned by FindAccountResponse.ValidateAll() if the designated
+// constraints aren't met.
+type FindAccountResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m FindAccountResponseMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m FindAccountResponseMultiError) AllErrors() []error { return m }
+
+// FindAccountResponseValidationError is the validation error returned by
+// FindAccountResponse.Validate if the designated constraints aren't met.
+type FindAccountResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e FindAccountResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e FindAccountResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e FindAccountResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e FindAccountResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e FindAccountResponseValidationError) ErrorName() string {
+	return "FindAccountResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e FindAccountResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sFindAccountResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = FindAccountResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = FindAccountResponseValidationError{}
 
 // Validate checks the field values on AccountSession with the rules defined in
 // the proto definition for this message. If any rules are violated, the first

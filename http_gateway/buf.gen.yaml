@@ -28,5 +28,6 @@ plugins:
     
   - plugin: buf.build/grpc-ecosystem/openapiv2
     out: internal/handler/generated
+    # out: ../api/swagger
     opt:
       - generate_unbound_methods=true # setup to gen swagger method

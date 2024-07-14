@@ -7,3 +7,6 @@ generate:
 	# buf generate ../api/newsfeed_core/v1/newsfeed.proto
 	buf generate ../api/
 	wire ./internal/wiring/
+
+run:
+	go run cmd/main.go

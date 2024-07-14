@@ -15,27 +15,27 @@ import (
 	"github.com/namnv2496/post-service/internal/mq/producer"
 )
 
-type UserService interface {
+type PostService interface {
 	Post(context.Context, *postv1.CreatePostRequest) (*postv1.CreatePostResponse, error)
-	GetPost(context.Context, *postv1.GetPostRequest) (*postv1.GetPostResponse, error)
+	GetPosts(context.Context, *postv1.GetPostRequest) (*postv1.GetPostResponse, error)
 }
 
-type userService struct {
+type postService struct {
 	db          *goqu.Database
 	kafkaClient producer.Client
 }
 
-func NewUserService(
+func NewPostService(
 	db *goqu.Database,
 	kafkaClient producer.Client,
-) UserService {
-	return &userService{
+) PostService {
+	return &postService{
 		db:          db,
 		kafkaClient: kafkaClient,
 	}
 }
 
-func (u userService) Post(
+func (p postService) Post(
 	ctx context.Context,
 	req *postv1.CreatePostRequest,
 ) (*postv1.CreatePostResponse, error) {
@@ -49,7 +49,7 @@ func (u userService) Post(
 		CreatedAt:    time.Now(),
 		UpdatedAt:    time.Now(),
 	}
-	query := u.db.
+	query := p.db.
 		Insert(domain.TabNamePost).
 		Rows(post)
 
@@ -64,13 +64,14 @@ func (u userService) Post(
 	}
 
 	// public to kafka
+	post.Id = uint64(id)
 	data, err := json.Marshal(post)
 	if err != nil {
 		fmt.Println("Error marshall data to send newsfeed")
 	}
 	go func() {
 		fmt.Println("Call trigger to newsFeed a post: ", post)
-		if err := u.kafkaClient.Produce(context.Background(), mq.TOPIC_POST_CONTENT, data); err != nil {
+		if err := p.kafkaClient.Produce(context.Background(), mq.TOPIC_POST_CONTENT, data); err != nil {
 			log.Println("Error when send data to kafka: ", err)
 			return
 		}
@@ -81,12 +82,12 @@ func (u userService) Post(
 	}, nil
 }
 
-func (u userService) GetPost(
+func (p postService) GetPosts(
 	ctx context.Context,
 	req *postv1.GetPostRequest,
 ) (*postv1.GetPostResponse, error) {
 
-	query := u.db.
+	query := p.db.
 		From(domain.TabNamePost).
 		Where(
 			goqu.C(domain.TabColUserId).Eq(req.UserId),
@@ -100,6 +101,7 @@ func (u userService) GetPost(
 	postRes := make([]*postv1.Post, 0)
 	for _, post := range posts {
 		element := &postv1.Post{
+			PostId:      post.Id,
 			UserId:      post.User_id,
 			ContentText: post.Content_text,
 			Tags:        strings.Split(post.Tags, ","),

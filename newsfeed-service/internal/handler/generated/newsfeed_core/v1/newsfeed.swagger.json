@@ -94,6 +94,10 @@
         "userId": {
           "type": "string"
         },
+        "postId": {
+          "type": "string",
+          "format": "uint64"
+        },
         "contentText": {
           "type": "string"
         },

@@ -1,0 +1,241 @@
+/* Popup styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+}
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+/* General styles */
+body {
+font-family: Arial, sans-serif;
+}
+
+/* Post container */
+#posts-container {
+max-width: 600px;
+margin: 0 auto;
+padding: 20px;
+background-color: #f9f9f9;
+border-radius: 8px;
+box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Individual post */
+.post {
+padding: 15px;
+margin-bottom: 20px;
+background-color: #fff;
+border: 1px solid #ddd;
+border-radius: 8px;
+}
+
+/* Comment modal */
+#commentModal {
+display: none;
+position: fixed;
+z-index: 1000;
+left: 0;
+top: 0;
+width: 100%;
+height: 100%;
+overflow: auto;
+background-color: rgba(0, 0, 0, 0.4);
+}
+
+#commentModal .modal-content {
+background-color: #fff;
+margin: 10% auto;
+padding: 20px;
+border: 1px solid #888;
+width: 80%;
+max-width: 600px;
+border-radius: 8px;
+position: relative;
+}
+
+#commentModal .close {
+color: #aaa;
+float: right;
+font-size: 28px;
+font-weight: bold;
+}
+
+#commentModal .close:hover,
+#commentModal .close:focus {
+color: black;
+text-decoration: none;
+cursor: pointer;
+}
+
+/* Comments container */
+#comments-container {
+margin-top: 20px;
+}
+
+/* Individual comment */
+.comment {
+padding: 10px;
+margin-bottom: 10px;
+background-color: #f1f1f1;
+border-radius: 8px;
+}
+
+.comment p {
+margin: 5px 0;
+}
+
+/* Sub-comments */
+.sub-comments {
+margin-left: 20px;
+border-left: 2px solid #ddd;
+padding-left: 10px;
+}
+
+.sub-comments .comment {
+background-color: #e9e9e9;
+}
+
+.sub-comments .sub-comments {
+margin-left: 20px;
+border-left: 2px solid #ccc;
+}
+
+
+
+
+/* CSS for the container */
+#posts-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5em;
+}
+
+/* CSS for each post */
+.post {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 1em;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* CSS for user link */
+.post a {
+    color: #385898;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.post a:hover {
+    text-decoration: underline;
+}
+
+/* CSS for post content */
+.post p {
+    margin: 0;
+}
+
+/* CSS for images */
+.images {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+}
+
+.images img {
+    max-width: 100px;
+    max-height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+/* CSS for the date */
+.post .date {
+    font-size: 12px;
+    color: #888;
+}
+
+/* CSS for like button and count */
+.like-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+
+.like-container a {
+    color: #385898;
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.like-container a:hover {
+    text-decoration: underline;
+}
+
+.like-container p {
+    margin: 0;
+    font-size: 16px;
+    color: #444;
+}
+
+.comment-section {
+    margin-top: 1em;
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+
+.comment-box {
+    flex: 1;
+    padding: 0.5em;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.comment-button {
+    padding: 0.5em 1em;
+    border: none;
+    background-color: #385898;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.comment-button:hover {
+    background-color: #2f4d7f;
+}
+

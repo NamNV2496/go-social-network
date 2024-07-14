@@ -5,13 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Newsfeed</title>
     <link rel="stylesheet" href="css/newsfeed.css" type="text/css">
+    <link rel="stylesheet" href="css/wall.css" type="text/css">
 </head>
 <body>
-    <h1>Newsfeed</h1>
     <button id="logout" type="button">Logout</button>
-    <a href="room.html">Message</a>
-    <button onclick="goToProfile()">My Profile</button>
-    <button onclick="goToSearch()">Search</button>
+    <div class="menu-bar">
+        <button onclick="window.location.href = 'newsfeed.html'">HOME</button>
+        <button onclick="window.location.href = 'messenger.html'">Messenger</button>
+        <button onclick="window.location.href = 'search.html'">Find friends</button>
+        <button onclick="goToProfile()">My Profile</button>
+    </div>
     
     <div id="post-form">
         <h2>Create a Post</h2>
@@ -28,6 +31,18 @@
     
     <div id="posts-container"></div>
     
+    <!-- Popup Modal -->
+    <div id="commentModal" class="modal">
+        <div class="modal-content">
+            <span class="closeComment">&times;</span>
+            <p id="post-content"></p> <!-- Element to display post content -->
+            <div id="comments-container">
+                <!-- Comments will be displayed here -->
+            </div>
+        </div>
+    </div>
+    
+        
     <script>
         const current_user =  sessionStorage.getItem('userName');  
         const token = sessionStorage.getItem('token');  // Get the token from session storage
@@ -58,9 +73,7 @@
                 console.error('User name not found in session storage.');
             }
         }
-        function goToSearch() {
-            window.location.href = `search.html`;
-        }
+
         function loadCurrentUser() {
             userElement = document.getElementById('logout')
             userElement.textContent = "Logout: " + current_user
@@ -79,8 +92,16 @@
             });
 
             const data = await response.json();
-            console.log(data.posts)
-            displayPosts(data.posts);
+            try {
+                var postIds = []
+                data.posts.forEach(post => {
+                    postIds.push(parseInt(post.postId, 10, 64))
+                });
+                const likemap = await loadLike(postIds);
+                displayPosts(data.posts, likemap);
+            } catch (error) {
+                console.error('Error in fetchDataAndDisplayPosts:', error);
+            }
         }
 
 
@@ -232,10 +253,13 @@
         }
 
         // Function to display posts on the page
-        function displayPosts(posts) {
+        function displayPosts(posts, likemap) {
             const container = document.getElementById('posts-container');
             container.innerHTML = '';  // Clear any existing posts
 
+            if (posts.length === 0) {
+                return;
+            }
             posts.forEach(post => {
 
                 const postElement = document.createElement('div');
@@ -248,6 +272,7 @@
                 userLink.style.fontSize = '32px';
                 userLink.href = "#"
                 userLink.addEventListener('click', function() {
+                    event.stopPropagation();
                     showPopup(post.userId);
                 });
                 userText.appendChild(userLink)
@@ -269,10 +294,130 @@
                 const date = document.createElement('p');
                 date.textContent = `Date: ${post.date}`;
                 postElement.appendChild(date);
+                
+                postElement.addEventListener(
+                    'click',
+                    () => showCommentPopup(post.postId, post.userId, post.contentText)
+                ); // Add event listener to show popup
 
-                container.appendChild(userElement);
+                const likeContainer = document.createElement('div');
+                likeContainer.className = 'like-container';
+
+                const likeButton = document.createElement('a');
+                likeButton.id = 'like' + post.postId;
+                likeButton.textContent = 'Like';
+                if (post.postId in likemap && likemap[post.postId][0]) {
+                    likeButton.textContent = 'Liked';
+                }
+                likeButton.addEventListener('click', function(event) {
+                    event.stopPropagation(); // Prevent the postElement click event from firing
+                    likeAction(post.postId)
+                });
+                likeContainer.appendChild(likeButton);
+                const likeCount = document.createElement('p');
+                likeCount.id = 'likeCount' + post.postId;
+                if (post.postId in likemap){
+                    likeCount.textContent = likemap[post.postId][1];
+                }
+
+                const commentButton = document.createElement('a');
+                commentButton.textContent = 'Comment';
+                likeContainer.appendChild(likeCount);
+                postElement.appendChild(commentButton);
+
+                postElement.appendChild(likeContainer);
                 container.appendChild(postElement);
             });
+        }
+
+        async function loadLike(postIds) {
+            try {
+                var postLikeMaps = {};
+                const requestBody = {
+                    "postId": postIds,
+                    "userId": current_user,
+                };
+
+                const response = await fetch(`http://localhost:8080/api/v1/like`, {
+                    method: 'PUT',
+                    headers: {
+                        'accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                const data = await response.json();
+                data.response.forEach(post => {
+                    postLikeMaps[post.postId] = [post.like, post.totalLike];
+                });
+
+                return postLikeMaps;
+            } catch (error) {
+                console.error('Error in loadLike:', error);
+                throw error;  // Rethrow the error to handle it elsewhere if needed
+            }
+        }
+
+        async function likeAction(postId) {
+
+            like = document.getElementById('like' + postId)
+            var action = "LIKE"
+            if (like.textContent == "Liked") {
+                action = "UNLIKE"
+            }
+            const requestBody = {
+                like: {
+                    "postId": parseInt(postId, 10, 64),
+                    "userId": current_user,
+                    "action": action
+                }
+            };
+            const response = await fetch(`http://localhost:8080/api/v1/like`, {
+                method: 'POST',
+                headers: {
+                    'accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(requestBody)
+            });
+
+            const data = await response.json();
+
+            likeCount = document.getElementById('likeCount' + postId)
+            if (like.textContent == "Liked") {
+                like.textContent = "Like"
+            } else {
+                like.textContent = "Liked"
+            }
+            console.log(data.response.totalLike)
+            likeCount.textContent = data.response.totalLike
+        }
+        
+        async function commentAction(postId, userId, commentLevel, parentId, comment) {
+            const requestBody = {
+                "postId": parseInt(postId, 10, 64),
+                comment: {
+                    "userId": current_user,
+                    "commentText": comment,
+                    "commentLevel": commentLevel,
+                    "commentParent": parentId,
+                } 
+            };
+            const response = await fetch(`http://localhost:8080/api/v1/comment`, {
+                method: 'POST',
+                headers: {
+                    'accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(requestBody)
+            });
+
+            const data = await response.json();
+            console.log("Click comment");
         }
 
         // Function to handle post creation
@@ -323,6 +468,139 @@
             fetchAndDisplayPosts();  // Refresh the posts
         }
 
+        // Function to show the popup and fetch comments
+        async function showCommentPopup(postId, userId, postContent) {
+            const modal = document.getElementById('commentModal');
+            const commentsContainer = document.getElementById('comments-container');
+            const postContentElement = document.getElementById('post-content');
+
+            try {
+                const response = await fetch(`http://localhost:8080/api/v1/comment?postId=${postId}&pageNumber=1&pageSize=50`, {
+                    method: 'GET',
+                    headers: {
+                        'accept': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                const data = await response.json();
+                postContentElement.textContent = `${userId}: ${postContent}`;
+                postContentElement.style.fontWeight = 'bold';
+                postContentElement.style.fontSize = '32px';
+
+
+                 // Add comment section
+                const newCommentElement = document.createElement('div');
+                newCommentElement.className = 'comment-section';
+
+                const commentBox = document.createElement('input');
+                commentBox.type = 'text';
+                commentBox.placeholder = 'Write new comment...';
+                commentBox.className = 'comment-box';
+                newCommentElement.appendChild(commentBox);
+
+                const commentButton = document.createElement('button');
+                commentButton.textContent = 'Comment';
+                commentButton.className = 'comment-button';
+                commentButton.addEventListener('click', function(event) {
+                    event.stopPropagation(); // Prevent the postElement click event from firing
+                    commentAction(postId, current_user, 0, 0, commentBox.value);
+                    commentBox.value = ''; // Clear the comment box after commenting
+                });
+                newCommentElement.appendChild(commentButton);
+                postContentElement.appendChild(newCommentElement);
+
+
+                displayComments(postId, data.comment);
+            } catch (error) {
+                console.error('Error fetching comments:', error);
+                commentsContainer.textContent = 'Failed to load comments.';
+            }
+
+            modal.style.display = 'block';
+            
+
+            function displayComments(postId, comments) {
+                commentsContainer.innerHTML = ''; // Clear previous comments
+
+                // Create a map to store comments by their ID
+                const commentMap = new Map();
+                
+                // Create a document fragment to improve performance
+                const fragment = document.createDocumentFragment();
+
+                if (comments == null) {
+                    return
+                }
+                comments.forEach(comment => {
+                    const commentElement = document.createElement('div');
+                    commentElement.className = 'comment';
+                    commentElement.id = `comment-${comment.commentId}`;
+
+                    const commentText = document.createElement('p');
+                    commentText.textContent = `${comment.userId}: ${comment.commentText}`;
+                    commentText.style.fontSize = '18px';
+                    commentElement.appendChild(commentText);
+
+                    const date = document.createElement('p');
+                    date.textContent = `${comment.date}`;
+                    date.style.fontSize = '10px';
+                    commentElement.appendChild(date);
+
+                    // Store the comment element in the map
+                    commentMap.set(comment.commentId, commentElement);
+
+                    // If the comment is a top-level comment, append it directly to the fragment
+                    if (comment.commentLevel === 0) {
+                        fragment.appendChild(commentElement);
+                        // Add comment section
+                        const replyCommentElement = document.createElement('div');
+                        replyCommentElement.className = 'comment-section';
+
+                        const commentBox = document.createElement('input');
+                        commentBox.type = 'text';
+                        commentBox.placeholder = 'Reply above comment...';
+                        commentBox.className = 'comment-box';
+                        commentBox.style.marginLeft = '20px'
+                        replyCommentElement.appendChild(commentBox);
+
+                        const commentButton = document.createElement('button');
+                        commentButton.textContent = 'Reply';
+                        commentButton.className = 'comment-button';
+                        commentButton.addEventListener('click', function(event) {
+                            event.stopPropagation(); // Prevent the postElement click event from firing
+                            commentAction(postId, current_user, 1, comment.commentId, commentBox.value);
+                            commentBox.value = ''; // Clear the comment box after commenting
+
+                            console.log("Comment for " + comment.commentId)
+                        });
+                        replyCommentElement.appendChild(commentButton);
+                        fragment.appendChild(replyCommentElement);
+                    } else {
+                        // If the comment is a sub-comment, find its parent and append it there
+                        const parentCommentElement = commentMap.get(comment.commentParent);
+                        if (parentCommentElement) {
+                            let subCommentsContainer = parentCommentElement.querySelector('.sub-comments');
+                            if (!subCommentsContainer) {
+                                subCommentsContainer = document.createElement('div');
+                                subCommentsContainer.className = 'sub-comments';
+                                parentCommentElement.appendChild(subCommentsContainer);
+                            }
+                            subCommentsContainer.appendChild(commentElement);
+                        }
+                    }
+                });
+
+                // Append the fragment to the comments container
+                commentsContainer.appendChild(fragment);
+            }
+        }
+        
+        const span = document.getElementsByClassName('closeComment')[0];
+        span.onclick = function() {
+            const modal = document.getElementById('commentModal');
+            modal.style.display = 'none';
+        }
 
         // Function to handle logout
         function handleLogout() {

@@ -16,14 +16,14 @@
     "application/json"
   ],
   "paths": {
-    "/api/v1/post": {
+    "/api/v1/comment": {
       "get": {
-        "operationId": "PostService_GetPost",
+        "operationId": "PostService_GetComment",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1GetPostResponse"
+              "$ref": "#/definitions/v1GetCommentResponse"
             }
           },
           "default": {
@@ -35,10 +35,25 @@
         },
         "parameters": [
           {
-            "name": "userId",
+            "name": "postId",
             "in": "query",
             "required": false,
-            "type": "string"
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
           }
         ],
         "tags": [
@@ -46,6 +61,103 @@
         ]
       },
       "post": {
+        "summary": "comment",
+        "operationId": "PostService_CreateComment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CreateCommentResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CreateCommentRequest"
+            }
+          }
+        ],
+        "tags": [
+          "PostService"
+        ]
+      }
+    },
+    "/api/v1/like": {
+      "post": {
+        "summary": "like",
+        "operationId": "PostService_LikeAction",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1LikeResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1LikeRequest"
+            }
+          }
+        ],
+        "tags": [
+          "PostService"
+        ]
+      },
+      "put": {
+        "operationId": "PostService_Getlike",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetLikeResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1GetLikeRequest"
+            }
+          }
+        ],
+        "tags": [
+          "PostService"
+        ]
+      }
+    },
+    "/api/v1/post": {
+      "post": {
+        "summary": "post",
         "operationId": "PostService_CreatePost",
         "responses": {
           "200": {
@@ -69,6 +181,50 @@
             "schema": {
               "$ref": "#/definitions/v1CreatePostRequest"
             }
+          }
+        ],
+        "tags": [
+          "PostService"
+        ]
+      }
+    },
+    "/api/v1/posts": {
+      "get": {
+        "operationId": "PostService_GetPost",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetPostResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
           }
         ],
         "tags": [
@@ -106,13 +262,74 @@
         }
       }
     },
+    "v1Comment": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "commentId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "commentText": {
+          "type": "string"
+        },
+        "commentLevel": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "commentParent": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "images": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "date": {
+          "type": "string"
+        }
+      }
+    },
+    "v1CreateCommentRequest": {
+      "type": "object",
+      "properties": {
+        "postId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "comment": {
+          "$ref": "#/definitions/v1Comment"
+        }
+      },
+      "title": "Comment"
+    },
+    "v1CreateCommentResponse": {
+      "type": "object",
+      "properties": {
+        "commentId": {
+          "type": "string",
+          "format": "uint64"
+        }
+      }
+    },
     "v1CreatePostRequest": {
       "type": "object",
       "properties": {
         "post": {
           "$ref": "#/definitions/v1Post"
         }
-      }
+      },
+      "title": "Post"
     },
     "v1CreatePostResponse": {
       "type": "object",
@@ -123,20 +340,123 @@
         }
       }
     },
+    "v1GetCommentResponse": {
+      "type": "object",
+      "properties": {
+        "comment": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Comment"
+          }
+        }
+      }
+    },
+    "v1GetLikeRequest": {
+      "type": "object",
+      "properties": {
+        "postId": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uint64"
+          }
+        },
+        "userId": {
+          "type": "string"
+        }
+      }
+    },
+    "v1GetLikeResponse": {
+      "type": "object",
+      "properties": {
+        "response": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1LikePostResponse"
+          }
+        }
+      }
+    },
     "v1GetPostResponse": {
       "type": "object",
       "properties": {
-        "isValid": {
-          "type": "boolean"
-        },
         "post": {
-          "$ref": "#/definitions/v1Post"
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Post"
+          }
         }
       }
+    },
+    "v1Like": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "postId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "action": {
+          "$ref": "#/definitions/v1Like_Enum"
+        },
+        "date": {
+          "type": "string"
+        }
+      }
+    },
+    "v1LikePostResponse": {
+      "type": "object",
+      "properties": {
+        "postId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "like": {
+          "type": "boolean"
+        },
+        "totalLike": {
+          "type": "string",
+          "format": "uint64"
+        }
+      }
+    },
+    "v1LikeRequest": {
+      "type": "object",
+      "properties": {
+        "like": {
+          "$ref": "#/definitions/v1Like"
+        }
+      },
+      "title": "like"
+    },
+    "v1LikeResponse": {
+      "type": "object",
+      "properties": {
+        "response": {
+          "$ref": "#/definitions/v1LikePostResponse"
+        }
+      }
+    },
+    "v1Like_Enum": {
+      "type": "string",
+      "enum": [
+        "UNLIKE",
+        "LIKE"
+      ],
+      "default": "UNLIKE"
     },
     "v1Post": {
       "type": "object",
       "properties": {
+        "postId": {
+          "type": "string",
+          "format": "uint64"
+        },
         "userId": {
           "type": "string"
         },

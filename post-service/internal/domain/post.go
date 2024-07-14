@@ -7,9 +7,7 @@ import (
 )
 
 var (
-	TabNamePost     = goqu.T("post")
-	TabColUserId    = "user_id"
-	TabColCreatedAt = "created_at"
+	TabNamePost = goqu.T("post")
 )
 
 type Post struct {

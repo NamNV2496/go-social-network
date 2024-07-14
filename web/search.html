@@ -6,26 +6,48 @@
     <title>Account Search</title>
     <link rel="stylesheet" href="css/search.css" type="text/css">
     <script>
-        const current_user =  sessionStorage.getItem('userName');  
+        const current_user = sessionStorage.getItem('userName');  
         const token = sessionStorage.getItem('token');  // Get the token from session storage
 
+        if (!token || ! current_user) {
+            alert('Token not found in session storage');
+            window.location.href = "index.html";
+        }
+        document.addEventListener("DOMContentLoaded", function() {
+            loadCurrentUser();
+            const addImageButton = document.getElementById('add-image');
+            addImageButton.addEventListener('click', function() {
+                const imageInputsContainer = document.getElementById('image-inputs');
+                const newInput = document.createElement('input');
+                newInput.type = 'text';
+                newInput.className = 'image-input';
+                newInput.placeholder = 'Image URL';
+                imageInputsContainer.appendChild(newInput);
+            });
+        })
+
+        function loadCurrentUser() {
+            userElement = document.getElementById('logout')
+            userElement.textContent = "Logout: " + current_user
+        }
+        
         async function searchAccount() {
             const userId = document.getElementById('userId').value;
             const response = await fetch(`http://localhost:8080/api/v1/account?userId=${userId}`, {
                 method: 'GET',
                 headers: {
-                    // 'accept': 'application/json',
                     'Authorization': `Bearer ${token}`  // Add the token to the request headers
                 }
             });
 
             const data = await response.json();
-            displayPosts(data)
-            document.getElementById('result').innerText = JSON.stringify(data, null, 2);
+            displaySearchUsers(data);
+            // document.getElementById('results').innerText = JSON.stringify(data, null, 2);
         }
 
-        function displayPosts(data) {
+        function displaySearchUsers(data) {
             const resultsDiv = document.getElementById('results');
+            resultsDiv.style.display = 'block';  // Make the results visible
             resultsDiv.innerHTML = '';
 
             if (data.account && data.account.length > 0) {
@@ -47,11 +69,11 @@
                     userName.textContent = account.name;
                     userName.style.fontSize = '24px';
 
-                    userText.appendChild(userLink)
-                    userText.appendChild(userName)
+                    userText.appendChild(userLink);
+                    userText.appendChild(userName);
                     accountElement.appendChild(userText);
                     resultsDiv.appendChild(accountElement);
-                })
+                });
             }
         }
 
@@ -65,15 +87,14 @@
             closeButton.addEventListener('click', function() {
                 document.body.removeChild(popup);
             });
-            // view profile button
+
             const profileButton = document.createElement('button');
-            profileButton.className = 'prolie';
+            profileButton.className = 'profile';
             profileButton.textContent = 'Profile';
             profileButton.addEventListener('click', function() {
                 profile(userId);
-                // document.body.removeChild(popup);
             });
-            // inbox button
+
             const inboxButton = document.createElement('button');
             inboxButton.className = 'inbox';
             inboxButton.textContent = 'Inbox';
@@ -81,7 +102,7 @@
                 inbox(userId);
                 document.body.removeChild(popup);
             });
-            // following button
+
             const followButton = document.createElement('button');
             followButton.className = 'follow';
             followButton.textContent = 'Follow';
@@ -122,12 +143,12 @@
         }
 
         function profile(userId) {
-            window.location.href = `wall.html?userId=${userId}`
+            window.location.href = `wall.html?userId=${userId}`;
         }
 
         function inbox(member) {
             if (member == current_user) {
-                return
+                return;
             }
             var members = [current_user, member];
             members.sort(function(a, b) {
@@ -164,7 +185,7 @@
         async function follow(userId) {
             console.log('Follow clicked for user:', userId);
             if (current_user == userId) {
-                return
+                return;
             }
             const url = `http://localhost:8080/api/v1/following?current_id=${current_user}&user_id=${userId}`;
             const response = await fetch(url, {
@@ -181,10 +202,11 @@
                 return;
             }
         }
+
         async function unfollow(userId) {
             console.log('Unfollow clicked for user:', userId);
             if (current_user == userId) {
-                return
+                return;
             }
             const url = `http://localhost:8080/api/v1/following?current_id=${current_user}&user_id=${userId}`;
             const response = await fetch(url, {
@@ -202,12 +224,34 @@
             }
         }
 
+        function goToProfile() {
+            const current_user = sessionStorage.getItem('userName');
+            if (current_user) {
+                window.location.href = `wall.html?userId=${current_user}`;
+            } else {
+                console.error('User name not found in session storage.');
+            }
+        }
+
+        document.getElementById('logout').addEventListener('click', handleLogout);
+        // Function to handle logout
+        function handleLogout() {
+            console.log("Remove token in session");
+            sessionStorage.clear();  // Clear all session storage
+            window.location.href = 'index.html'
+        }
     </script>
 </head>
 <body>
-    <h1>Search Account</h1>
+    <!-- <h1>Search Account</h1> -->
+    <button id="logout" type="button">Logout</button>
+    <div class="menu-bar">
+        <button onclick="window.location.href = 'newsfeed.html'">HOME</button>
+        <button onclick="goToProfile()">My Profile</button>
+    </div>
     <input type="text" id="userId" placeholder="Enter User ID">
     <button onclick="searchAccount()">Search</button>
-    <pre id="results"></pre>
+
+    <pre id="results" style="display: none;"></pre>
 </body>
 </html>

@@ -96,6 +96,7 @@ func (s newsfeedService) GetNewsfeed(
 		for i, post := range posts {
 			postPointers[i] = &newsfeedv1.NewsfeedPost{
 				UserId:      post.User_id,
+				PostId:      post.Id,
 				ContentText: post.Content_text,
 				Images:      strings.Split(post.Images, ","),
 				Tags:        strings.Split(post.Tags, ","),

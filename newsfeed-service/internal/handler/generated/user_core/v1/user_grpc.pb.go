@@ -21,9 +21,11 @@ const _ = grpc.SupportPackageIsVersion8
 const (
 	AccountService_CreateAccount_FullMethodName   = "/user.v1.AccountService/CreateAccount"
 	AccountService_GetAccount_FullMethodName      = "/user.v1.AccountService/GetAccount"
+	AccountService_FindAccount_FullMethodName     = "/user.v1.AccountService/FindAccount"
 	AccountService_CreateSession_FullMethodName   = "/user.v1.AccountService/CreateSession"
 	AccountService_GetFollowing_FullMethodName    = "/user.v1.AccountService/GetFollowing"
 	AccountService_CreateFollowing_FullMethodName = "/user.v1.AccountService/CreateFollowing"
+	AccountService_DeleteFollowing_FullMethodName = "/user.v1.AccountService/DeleteFollowing"
 	AccountService_CheckFollowing_FullMethodName  = "/user.v1.AccountService/CheckFollowing"
 )
 
@@ -33,9 +35,11 @@ const (
 type AccountServiceClient interface {
 	CreateAccount(ctx context.Context, in *CreateAccountRequest, opts ...grpc.CallOption) (*CreateAccountResponse, error)
 	GetAccount(ctx context.Context, in *GetAccountRequest, opts ...grpc.CallOption) (*GetAccountResponse, error)
+	FindAccount(ctx context.Context, in *FindAccountRequest, opts ...grpc.CallOption) (*FindAccountResponse, error)
 	CreateSession(ctx context.Context, in *CreateSessionRequest, opts ...grpc.CallOption) (*CreateSessionResponse, error)
 	GetFollowing(ctx context.Context, in *GetFollowingRequest, opts ...grpc.CallOption) (*GetFollowingResponse, error)
 	CreateFollowing(ctx context.Context, in *CheckFollowingRequest, opts ...grpc.CallOption) (*CheckFollowingResponse, error)
+	DeleteFollowing(ctx context.Context, in *CheckFollowingRequest, opts ...grpc.CallOption) (*CheckFollowingResponse, error)
 	CheckFollowing(ctx context.Context, in *CheckFollowingRequest, opts ...grpc.CallOption) (*CheckFollowingResponse, error)
 }
 
@@ -61,6 +65,16 @@ func (c *accountServiceClient) GetAccount(ctx context.Context, in *GetAccountReq
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetAccountResponse)
 	err := c.cc.Invoke(ctx, AccountService_GetAccount_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *accountServiceClient) FindAccount(ctx context.Context, in *FindAccountRequest, opts ...grpc.CallOption) (*FindAccountResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(FindAccountResponse)
+	err := c.cc.Invoke(ctx, AccountService_FindAccount_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -97,6 +111,16 @@ func (c *accountServiceClient) CreateFollowing(ctx context.Context, in *CheckFol
 	return out, nil
 }
 
+func (c *accountServiceClient) DeleteFollowing(ctx context.Context, in *CheckFollowingRequest, opts ...grpc.CallOption) (*CheckFollowingResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CheckFollowingResponse)
+	err := c.cc.Invoke(ctx, AccountService_DeleteFollowing_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *accountServiceClient) CheckFollowing(ctx context.Context, in *CheckFollowingRequest, opts ...grpc.CallOption) (*CheckFollowingResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(CheckFollowingResponse)
@@ -113,9 +137,11 @@ func (c *accountServiceClient) CheckFollowing(ctx context.Context, in *CheckFoll
 type AccountServiceServer interface {
 	CreateAccount(context.Context, *CreateAccountRequest) (*CreateAccountResponse, error)
 	GetAccount(context.Context, *GetAccountRequest) (*GetAccountResponse, error)
+	FindAccount(context.Context, *FindAccountRequest) (*FindAccountResponse, error)
 	CreateSession(context.Context, *CreateSessionRequest) (*CreateSessionResponse, error)
 	GetFollowing(context.Context, *GetFollowingRequest) (*GetFollowingResponse, error)
 	CreateFollowing(context.Context, *CheckFollowingRequest) (*CheckFollowingResponse, error)
+	DeleteFollowing(context.Context, *CheckFollowingRequest) (*CheckFollowingResponse, error)
 	CheckFollowing(context.Context, *CheckFollowingRequest) (*CheckFollowingResponse, error)
 	mustEmbedUnimplementedAccountServiceServer()
 }
@@ -130,6 +156,9 @@ func (UnimplementedAccountServiceServer) CreateAccount(context.Context, *CreateA
 func (UnimplementedAccountServiceServer) GetAccount(context.Context, *GetAccountRequest) (*GetAccountResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAccount not implemented")
 }
+func (UnimplementedAccountServiceServer) FindAccount(context.Context, *FindAccountRequest) (*FindAccountResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FindAccount not implemented")
+}
 func (UnimplementedAccountServiceServer) CreateSession(context.Context, *CreateSessionRequest) (*CreateSessionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateSession not implemented")
 }
@@ -138,6 +167,9 @@ func (UnimplementedAccountServiceServer) GetFollowing(context.Context, *GetFollo
 }
 func (UnimplementedAccountServiceServer) CreateFollowing(context.Context, *CheckFollowingRequest) (*CheckFollowingResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateFollowing not implemented")
+}
+func (UnimplementedAccountServiceServer) DeleteFollowing(context.Context, *CheckFollowingRequest) (*CheckFollowingResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteFollowing not implemented")
 }
 func (UnimplementedAccountServiceServer) CheckFollowing(context.Context, *CheckFollowingRequest) (*CheckFollowingResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckFollowing not implemented")
@@ -187,6 +219,24 @@ func _AccountService_GetAccount_Handler(srv interface{}, ctx context.Context, de
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AccountServiceServer).GetAccount(ctx, req.(*GetAccountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AccountService_FindAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FindAccountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServiceServer).FindAccount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AccountService_FindAccount_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServiceServer).FindAccount(ctx, req.(*FindAccountRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -245,6 +295,24 @@ func _AccountService_CreateFollowing_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AccountService_DeleteFollowing_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CheckFollowingRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServiceServer).DeleteFollowing(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AccountService_DeleteFollowing_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServiceServer).DeleteFollowing(ctx, req.(*CheckFollowingRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _AccountService_CheckFollowing_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CheckFollowingRequest)
 	if err := dec(in); err != nil {
@@ -279,6 +347,10 @@ var AccountService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _AccountService_GetAccount_Handler,
 		},
 		{
+			MethodName: "FindAccount",
+			Handler:    _AccountService_FindAccount_Handler,
+		},
+		{
 			MethodName: "CreateSession",
 			Handler:    _AccountService_CreateSession_Handler,
 		},
@@ -289,6 +361,10 @@ var AccountService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateFollowing",
 			Handler:    _AccountService_CreateFollowing_Handler,
+		},
+		{
+			MethodName: "DeleteFollowing",
+			Handler:    _AccountService_DeleteFollowing_Handler,
 		},
 		{
 			MethodName: "CheckFollowing",

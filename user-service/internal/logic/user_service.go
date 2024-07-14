@@ -160,8 +160,8 @@ func (u userService) FindAccount(
 
 		// Map to User struct
 		user := domain.User{
-			Id:     id,
-			Email:  source["email"].(string),
+			Id: id,
+			// Email:  source["email"].(string),
 			Name:   source["name"].(string),
 			UserId: source["userId"].(string),
 		}

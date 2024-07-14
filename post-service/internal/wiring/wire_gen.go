@@ -30,8 +30,10 @@ func Initilize() (*app.App, func(), error) {
 	goquDatabase := database.InitializeGoquDB(db)
 	kafka := config.Kafka
 	client := producer.NewClient(kafka)
-	userService := logic.NewUserService(goquDatabase, client)
-	postServiceServer := grpc.NewGrpcHander(userService)
+	postService := logic.NewPostService(goquDatabase, client)
+	commentService := logic.NewCommentService(goquDatabase, client)
+	likeService := logic.NewLikeService(goquDatabase, client)
+	postServiceServer := grpc.NewGrpcHander(postService, commentService, likeService)
 	server := grpc.NewServer(postServiceServer)
 	appApp := app.NewApp(server)
 	return appApp, func() {

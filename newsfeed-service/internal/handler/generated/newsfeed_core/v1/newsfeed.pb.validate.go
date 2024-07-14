@@ -59,6 +59,8 @@ func (m *NewsfeedPost) validate(all bool) error {
 
 	// no validation rules for UserId
 
+	// no validation rules for PostId
+
 	// no validation rules for ContentText
 
 	// no validation rules for Visible

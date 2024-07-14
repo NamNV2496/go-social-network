@@ -6,3 +6,6 @@ generate:
 	wire ./internal/wiring/
 wire:
 	wire ./internal/wiring/
+
+run:
+	go run cmd/main.go

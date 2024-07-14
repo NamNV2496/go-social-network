@@ -33,32 +33,56 @@
     knm - knm
     baobq - baobq
 
-![alt text](docs/image4.png)
+![alt text](docs/login.png)
 
-Follower: 
+## Follower
 
-![alt text](docs/image-2.png)
+![alt text](docs/follower.png)
 
-Check following from current_user
+# 3. Data migration
 
-![alt text](docs/image7.png)
-![alt text](docs/image8.png)
+    user-service\internal\database\migrations\mysql
+
+# 4. Demo
+
+## Newsfeed
+
+![alt text](docs/newsfeed.png)
+
+## View comment
+
+![alt text](docs/viewComment.png)
+## View followers post
 
 if `namnv` posted a post. `knm` and `baobq` will see it in their newsfeed.
 
-![alt text](docs/image-1.png)
+![alt text](docs/viewPost.png)
 
 if `knm` posted a post. Only `namnv` will see it in his newsfeed `baobq` will not. Because only `namnv` follow `knm`
 if `baobq` posted a post. Only `namnv` will see it in his newsfeed `knm` will not. Because only `namnv` follow `baobq`
 
-![alt text](docs/image.png)
+![alt text](docs/viewPost1.png)
 
 Here is redis
-![alt text](docs/image3.png)
+![alt text](docs/viewPost2.png)
 
-Create new chat room private with friend from newsfeed
-![alt text](docs/image5.png)
+## popup in newsfeed
 
-Only 2 member of chat can see and join the chat
-![alt text](docs/image6.png)
+Create new chat room private with friend from newsfeed. Only 2 member of chat can see and join the chat
+
+![alt text](docs/popup.png)
+
+
+## Your wall
+
+![alt text](docs/wall.png)
+
+![alt text](docs/wall1.png)
+
+## Search another people
+
+![alt text](docs/search.png)
+
+![alt text](docs/search1.png)
+
 

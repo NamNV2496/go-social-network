@@ -113,10 +113,34 @@ h1 {
     cursor: pointer;
     font-size: 16px;
     position: absolute; /* Added this line */
-    top: 20px;
     right: 20px;
+    top: 10px;
 }
 
 #logout:hover {
     background-color: #d32f2f;
+}
+
+.menu-bar {
+    background-color: #acacac;
+    overflow: hidden;
+    /* height: 50px; */
+}
+
+.menu-bar button {
+    float: left;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 5px 20px;
+    text-decoration: none;
+    font-size: 17px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.menu-bar button:hover {
+    background-color: #ddd;
+    color: black;
 }

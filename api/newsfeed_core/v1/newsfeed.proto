@@ -6,11 +6,12 @@ import "google/api/annotations.proto";
 
 message NewsfeedPost {
     string user_id = 1;
-    string content_text = 2;
-    repeated string images = 3;
-    repeated string tags = 4;
-    bool visible = 5;
-    string date = 6;
+    uint64 post_id = 2;
+    string content_text = 3;
+    repeated string images = 4;
+    repeated string tags = 5;
+    bool visible = 6;
+    string date = 7;
 }
 
 message GetNewsfeedRequest { string user_id = 1; }

@@ -257,6 +257,377 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "8. create new account",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTc4MTk5NjIsImlhdCI6MTcxNzgxODk2Miwicm9sZXMiOlsiYWRtaW4iXSwidXNlcklkIjoiYWRtaW4ifQ.yhiFyYuiGUK0lTrlbDvknG-stGP3IkMu0lbq1VBBSHQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "EPFYI_AUTH=test; Path=/; Secure; HttpOnly; Expires=Sun, 16 Jun 2024 08:19:46 GMT;",
+						"type": "default",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"account\": {\r\n        \"email\": \"namnv5@gmail.com\",\r\n        \"name\": \"namnv5\",\r\n        \"userId\": \"namnv5\",\r\n        \"password\": \"namnv5\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/account",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"account"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "10. /_search",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "elastic",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"query\": {\r\n    \"wildcard\": {\r\n      \"name\": {\r\n        \"value\": \"he*\"\r\n      }\r\n    }\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9200/_search",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"_search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "11. Elastic search by API",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "elastic",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"_source\": [\r\n        \"id\",\r\n        \"userId\",\r\n        \"name\",\r\n        \"email\"\r\n    ],\r\n    \"query\": {\r\n        \"bool\": {\r\n            \"should\": [\r\n                {\r\n                    \"match_phrase_prefix\": {\r\n                        \"name\": {\r\n                            \"query\": \"he\"\r\n                        }\r\n                    }\r\n                },\r\n                {\r\n                    \"match_phrase_prefix\": {\r\n                        \"userId\": {\r\n                            \"query\": \"he\"\r\n                        }\r\n                    }\r\n                }\r\n            ]\r\n        }\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9200/user/_search",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"user",
+						"_search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "12. find account with name or userId",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/account?userId=he",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"account"
+					],
+					"query": [
+						{
+							"key": "userId",
+							"value": "he"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "13. get all post an user",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"post\": {\n        \"userId\": \"namnv\",\n        \"contentText\": \"helllo this is third post\",\n        \"images\": [\n            \"image1\",\n            \"image2\"\n        ],\n        \"tags\": [\n        ],\n        \"visible\": true\n    }\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/posts?userId=namnv",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"posts"
+					],
+					"query": [
+						{
+							"key": "userId",
+							"value": "namnv"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "14. create new comment",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"postId\": 17,\n    \"comment\": {\n        \"userId\": \"namnv\",\n        \"commentText\": \"test\",\n        \"commentLevel\": 0,\n        \"commentParent\": 0,\n        \"images\": [],\n        \"tags\": []\n    }\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/comment",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"comment"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "15. get comment of a post",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjA4NTM4OTEsImlhdCI6MTcyMDg1Mzg5MSwidXNlcklkIjoibmFtbnYifQ.R5WP0sBtbYJptXhTDP7OGII6PEFJTZ6oVguQQG9Ynjc",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/comment?postId=15&pageNumber=1&pageSize=10",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"comment"
+					],
+					"query": [
+						{
+							"key": "postId",
+							"value": "15"
+						},
+						{
+							"key": "pageNumber",
+							"value": "1"
+						},
+						{
+							"key": "pageSize",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "16. get like number",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"postId\": [\r\n        10,\r\n        17\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/like",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"like"
+					],
+					"query": [
+						{
+							"key": "postId",
+							"value": "10,17",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "17. like",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjA4NTM4OTEsImlhdCI6MTcyMDg1Mzg5MSwidXNlcklkIjoibmFtbnYifQ.R5WP0sBtbYJptXhTDP7OGII6PEFJTZ6oVguQQG9Ynjc",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"like\": {\r\n        \"postId\": 17,\r\n        \"userId\": \"namnv\",\r\n        \"action\": \"UNLIKE\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/like",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"like"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }

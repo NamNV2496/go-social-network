@@ -6,11 +6,17 @@
     <title>Login Page</title>
     <link rel="stylesheet" href="css/room.css" type="text/css">
 </head>
-<button id="create-room">Create Room</button>
 
 <button id="logout" type="button">Logout</button>
-<a href="newsfeed.html">Home</a>
 
+<div class="menu-bar">
+    <button onclick="window.location.href = 'newsfeed.html'">HOME</button>
+    <button onclick="window.location.href = 'search.html'">Find friends</button>
+    <button onclick="goToProfile()">My Profile</button>
+</div>
+
+
+<button id="create-room">Create Room</button>
 <h1>Available Rooms</h1>
 <div id="rooms"></div>
 <div id="messages"></div>

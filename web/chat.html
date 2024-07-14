@@ -8,7 +8,13 @@
 </head>
 <body>
     <button id="logout" type="button">Logout</button>
-    <a href="newsfeed.html">Home</a>
+   
+    <div class="menu-bar">
+        <button onclick="window.location.href = 'newsfeed.html'">HOME</button>
+        <button onclick="window.location.href = 'search.html'">Find friends</button>
+        <button onclick="goToProfile()">My Profile</button>
+    </div>
+
     <h1 id="chatroom">Chat Room</h1>
 
     <div id="chat-container">
@@ -169,6 +175,15 @@
                         });
                     })
                     .catch(error => console.error('Error fetching members:', error));
+            }
+
+            function goToProfile() {
+                const current_user = sessionStorage.getItem('userName');
+                if (current_user) {
+                    window.location.href = `wall.html?userId=${current_user}`;
+                } else {
+                    console.error('User name not found in session storage.');
+                }
             }
 
             // Fetch members when the page loads

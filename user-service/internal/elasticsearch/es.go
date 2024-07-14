@@ -26,15 +26,26 @@ type elasticSearch struct {
 func NewElasticSearch() (ElasticSearchClient, error) {
 
 	esUrl := os.Getenv("ELASTIC_SEARCH_URL")
-	esUser := os.Getenv("ELASTIC_SEARCH_USER")
-	esPassword := os.Getenv("ELASTIC_SEARCH_PASSWORD")
+	esUser := os.Getenv("ELASTICSEARCH_USERNAME")
+	esPassword := os.Getenv("ELASTICSEARCH_PASSWORD")
 	log.Println("config ES: ", esUrl, esUser, esPassword)
-	cfg := elasticsearch7.Config{
-		Addresses: []string{
-			esUrl,
-		},
-		Username: esUser,
-		Password: esPassword,
+	var cfg elasticsearch7.Config
+	if esUrl != "" && esUser != "" && esPassword != "" {
+		cfg = elasticsearch7.Config{
+			Addresses: []string{
+				esUrl,
+			},
+			Username: esUser,
+			Password: esPassword,
+		}
+	} else {
+		cfg = elasticsearch7.Config{
+			Addresses: []string{
+				"http://localhost:9200",
+			},
+			Username: "elastic",
+			Password: "admin",
+		}
 	}
 
 	es, err := elasticsearch7.NewClient(cfg)
@@ -119,7 +130,7 @@ func (es *elasticSearch) AddDataToIndex(
 		return err
 	}
 	defer res.Body.Close()
-	fmt.Printf("New data indexed in ", indexName)
+	fmt.Println("New data indexed in ", indexName)
 	return nil
 }
 

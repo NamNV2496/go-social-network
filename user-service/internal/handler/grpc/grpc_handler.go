@@ -60,6 +60,7 @@ func (s GrpcHandler) FindAccount(
 	ctx context.Context,
 	req *userv1.FindAccountRequest,
 ) (*userv1.FindAccountResponse, error) {
+
 	users, err := s.userService.FindAccount(ctx, req.UserId)
 	if err != nil {
 		return nil, err
