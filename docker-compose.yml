@@ -60,14 +60,13 @@ services:
             - post
             - user
             - message
+            - mysql
+            - redis
+            - kafka
         environment:
             - USER_URL=user:5610
             - NEWSFEED_URL=newsfeed:5612
             - POST_URL=post:5611
-        depends_on:
-            - mysql
-            - redis
-            - kafka
 
     message:
         build:
