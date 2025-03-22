@@ -6,20 +6,18 @@ import (
 	"github.com/google/wire"
 	"github.com/namnv2496/post-service/app"
 	"github.com/namnv2496/post-service/internal/configs"
-	"github.com/namnv2496/post-service/internal/database"
-	"github.com/namnv2496/post-service/internal/handler"
-	"github.com/namnv2496/post-service/internal/logic"
-	"github.com/namnv2496/post-service/internal/mq"
+	"github.com/namnv2496/post-service/internal/controller"
+	"github.com/namnv2496/post-service/internal/repository"
+	"github.com/namnv2496/post-service/internal/service"
 )
 
-func Initilize() (*app.App, func(), error) {
+func Initilize() (*app.App, error) {
 	wire.Build(
 		configs.ConfigWireSet,
-		database.DatabaseWireSet,
-		logic.LogicWireSet,
-		handler.HandlerWireSet,
-		mq.MQWireSet,
+		repository.RepositoryWireSet,
+		service.ServiceWireSet,
+		controller.ControllerWireSet,
 		app.NewApp,
 	)
-	return nil, nil, nil
+	return nil, nil
 }

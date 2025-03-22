@@ -1,24 +1,25 @@
 package domain
 
 import (
-	"time"
-
-	"github.com/doug-martin/goqu/v9"
+	"github.com/namnv2496/post-service/internal/repository/database"
 )
 
 var (
-	TabNameComment = goqu.T("comment")
+	TabNameComment = "comment"
 )
 
 type Comment struct {
-	Id            uint64    `db:"id" goqu:"omitnil"`
-	PostId        uint64    `db:"post_id" goqu:"omitnil"`
-	UserId        string    `db:"user_id" goqu:"omitnil"`
-	CommentText   string    `db:"comment_text" goqu:"omitnil"`
-	CommentLevel  int       `db:"comment_level" goqu:"omitnil"`
-	CommentParent uint64    `db:"comment_parent" goqu:"omitnil"`
-	Images        string    `db:"images" goqu:"omitnil"`
-	Tags          string    `db:"tags" goqu:"omitnil"`
-	CreatedAt     time.Time `db:"created_at" goqu:"omitnil"`
-	UpdatedAt     time.Time `db:"updated_at" goqu:"omitnil"`
+	database.BaseEntity `gorm:"embedded"`
+	Id                  int64  `gorm:"column:id;primaryKey" json:"id"`
+	PostId              int64  `gorm:"column:post_id;not null" json:"post_id"`
+	UserId              string `gorm:"column:user_id;not null" json:"user_id"`
+	CommentText         string `gorm:"column:comment_text;type:text;not null" json:"comment_text"`
+	CommentLevel        int64  `gorm:"column:comment_level;not null" json:"comment_level"`
+	CommentParent       int64  `gorm:"column:comment_parent" json:"comment_parent"`
+	Images              string `gorm:"column:images;type:text" json:"images"`
+	Tags                string `gorm:"column:tags;type:text" json:"tags"`
+}
+
+func (_self Comment) TableName() string {
+	return TabNameComment
 }

@@ -51,7 +51,7 @@ func (stmt *mysqlStmt) CheckNamedValue(nv *driver.NamedValue) (err error) {
 
 func (stmt *mysqlStmt) Exec(args []driver.Value) (driver.Result, error) {
 	if stmt.mc.closed.Load() {
-		stmt.mc.log(ErrInvalidConn)
+		errLog.Print(ErrInvalidConn)
 		return nil, driver.ErrBadConn
 	}
 	// Send command
@@ -61,10 +61,12 @@ func (stmt *mysqlStmt) Exec(args []driver.Value) (driver.Result, error) {
 	}
 
 	mc := stmt.mc
-	handleOk := stmt.mc.clearResult()
+
+	mc.affectedRows = 0
+	mc.insertId = 0
 
 	// Read Result
-	resLen, err := handleOk.readResultSetHeaderPacket()
+	resLen, err := mc.readResultSetHeaderPacket()
 	if err != nil {
 		return nil, err
 	}
@@ -81,12 +83,14 @@ func (stmt *mysqlStmt) Exec(args []driver.Value) (driver.Result, error) {
 		}
 	}
 
-	if err := handleOk.discardResults(); err != nil {
+	if err := mc.discardResults(); err != nil {
 		return nil, err
 	}
 
-	copied := mc.result
-	return &copied, nil
+	return &mysqlResult{
+		affectedRows: int64(mc.affectedRows),
+		insertId:     int64(mc.insertId),
+	}, nil
 }
 
 func (stmt *mysqlStmt) Query(args []driver.Value) (driver.Rows, error) {
@@ -95,7 +99,7 @@ func (stmt *mysqlStmt) Query(args []driver.Value) (driver.Rows, error) {
 
 func (stmt *mysqlStmt) query(args []driver.Value) (*binaryRows, error) {
 	if stmt.mc.closed.Load() {
-		stmt.mc.log(ErrInvalidConn)
+		errLog.Print(ErrInvalidConn)
 		return nil, driver.ErrBadConn
 	}
 	// Send command
@@ -107,8 +111,7 @@ func (stmt *mysqlStmt) query(args []driver.Value) (*binaryRows, error) {
 	mc := stmt.mc
 
 	// Read Result
-	handleOk := stmt.mc.clearResult()
-	resLen, err := handleOk.readResultSetHeaderPacket()
+	resLen, err := mc.readResultSetHeaderPacket()
 	if err != nil {
 		return nil, err
 	}
@@ -141,7 +144,7 @@ type converter struct{}
 // implementation does not.  This function should be kept in sync with
 // database/sql/driver defaultConverter.ConvertValue() except for that
 // deliberate difference.
-func (c converter) ConvertValue(v any) (driver.Value, error) {
+func (c converter) ConvertValue(v interface{}) (driver.Value, error) {
 	if driver.IsValue(v) {
 		return v, nil
 	}

@@ -7,12 +7,10 @@ import (
 )
 
 func main() {
-
-	app, cleanup, err := wiring.Initilize()
+	app, err := wiring.Initilize()
 	if err != nil {
 		log.Fatalln("Error when init server: ", err)
 	}
-	defer cleanup()
 	if err := app.Start(); err != nil {
 		log.Fatalln("Failed to start server: ", err)
 	}

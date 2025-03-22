@@ -1,22 +1,47 @@
 package domain
 
 import (
-	"time"
-
-	"github.com/doug-martin/goqu/v9"
+	"github.com/namnv2496/post-service/internal/repository/database"
+	"gorm.io/gorm"
 )
 
 var (
-	TabNamePost = goqu.T("post")
+	TabNamePost = "post"
 )
 
 type Post struct {
-	Id           uint64    `db:"id" goqu:"omitnil"`
-	User_id      string    `db:"user_id" goqu:"omitnil"`
-	Content_text string    `db:"content_text" goqu:"omitnil"`
-	Images       string    `db:"images" goqu:"omitnil"`
-	Tags         string    `db:"tags" goqu:"omitnil"`
-	Visible      bool      `db:"visible" goqu:"omitnil"`
-	CreatedAt    time.Time `db:"created_at" goqu:"omitnil"`
-	UpdatedAt    time.Time `db:"updated_at" goqu:"omitnil"`
+	database.BaseEntity `gorm:"embedded"`
+	Id                  int64  `gorm:"column:id;primaryKey;autoIncrement" json:"post_id"`
+	Uuid                string `gorm:"column:uuid;type:varchar(36);not null" json:"uuid"`
+	User_id             string `gorm:"column:user_id;type:varchar(255);not null" json:"user_id"`
+	Content_text        string `gorm:"column:content_text;type:text" json:"content_text"`
+	Images              string `gorm:"column:images;type:text" json:"images"`
+	Tags                string `gorm:"column:tags;type:text" json:"tags"`
+	Visible             bool   `gorm:"column:visible;type:boolean;default:true" json:"visible"`
+}
+
+func PostByUserId(userId string) database.QueryOption {
+	return func(tx *gorm.DB) {
+		if userId != "" {
+			tx.Where("post.user_id = ?", userId)
+		}
+	}
+}
+
+func PostByUuid(uuid string) database.QueryOption {
+	return func(tx *gorm.DB) {
+		if uuid != "" {
+			tx.Where("post.uuid = ?", uuid)
+		}
+	}
+}
+
+func PostOrderById() database.QueryOption {
+	return func(tx *gorm.DB) {
+		tx.Order("id DESC")
+	}
+}
+
+func (_self Post) TableName() string {
+	return TabNamePost
 }

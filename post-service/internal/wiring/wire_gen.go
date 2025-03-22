@@ -9,34 +9,45 @@ package wiring
 import (
 	"github.com/namnv2496/post-service/app"
 	"github.com/namnv2496/post-service/internal/configs"
-	"github.com/namnv2496/post-service/internal/database"
-	"github.com/namnv2496/post-service/internal/handler/grpc"
-	"github.com/namnv2496/post-service/internal/logic"
-	"github.com/namnv2496/post-service/internal/mq/producer"
+	"github.com/namnv2496/post-service/internal/controller"
+	"github.com/namnv2496/post-service/internal/repository"
+	"github.com/namnv2496/post-service/internal/repository/database"
+	"github.com/namnv2496/post-service/internal/repository/mq/producer"
+	"github.com/namnv2496/post-service/internal/service"
 )
 
 // Injectors from wire.go:
 
-func Initilize() (*app.App, func(), error) {
+func Initilize() (*app.App, error) {
 	config, err := configs.NewConfig()
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 	configsDatabase := config.Database
-	db, cleanup, err := database.NewDatabase(configsDatabase)
+	db := database.NewDatabaseConnection(configsDatabase)
+	iLikeRepository, err := repository.NewLikeRepository(db, configsDatabase)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
-	goquDatabase := database.InitializeGoquDB(db)
+	iLikeCountRepository, err := repository.NewLikeCountRepository(db, configsDatabase)
+	if err != nil {
+		return nil, err
+	}
+	iTransaction := repository.NewTransaction(db)
 	kafka := config.Kafka
 	client := producer.NewClient(kafka)
-	postService := logic.NewPostService(goquDatabase, client)
-	commentService := logic.NewCommentService(goquDatabase, client)
-	likeService := logic.NewLikeService(goquDatabase, client)
-	postServiceServer := grpc.NewGrpcHander(postService, commentService, likeService)
-	server := grpc.NewServer(postServiceServer)
-	appApp := app.NewApp(server)
-	return appApp, func() {
-		cleanup()
-	}, nil
+	iLikeService := service.NewLikeService(iLikeRepository, iLikeCountRepository, iTransaction, client)
+	iPostRepository, err := repository.NewPostRepository(db, configsDatabase)
+	if err != nil {
+		return nil, err
+	}
+	iPostService := service.NewPostService(iPostRepository, client)
+	iCommentRepository, err := repository.NewCommentRepository(db, configsDatabase)
+	if err != nil {
+		return nil, err
+	}
+	iCommentService := service.NewCommentService(iCommentRepository, client)
+	iController := controller.NewController(iLikeService, iPostService, iCommentService)
+	appApp := app.NewApp(iController)
+	return appApp, nil
 }

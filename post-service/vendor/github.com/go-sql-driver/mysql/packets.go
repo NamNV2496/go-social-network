@@ -14,10 +14,10 @@ import (
 	"database/sql/driver"
 	"encoding/binary"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"math"
-	"strconv"
 	"time"
 )
 
@@ -34,7 +34,7 @@ func (mc *mysqlConn) readPacket() ([]byte, error) {
 			if cerr := mc.canceled.Value(); cerr != nil {
 				return nil, cerr
 			}
-			mc.log(err)
+			errLog.Print(err)
 			mc.Close()
 			return nil, ErrInvalidConn
 		}
@@ -44,7 +44,6 @@ func (mc *mysqlConn) readPacket() ([]byte, error) {
 
 		// check packet sync [8 bit]
 		if data[3] != mc.sequence {
-			mc.Close()
 			if data[3] > mc.sequence {
 				return nil, ErrPktSyncMul
 			}
@@ -57,7 +56,7 @@ func (mc *mysqlConn) readPacket() ([]byte, error) {
 		if pktLen == 0 {
 			// there was no previous packet
 			if prevData == nil {
-				mc.log(ErrMalformPkt)
+				errLog.Print(ErrMalformPkt)
 				mc.Close()
 				return nil, ErrInvalidConn
 			}
@@ -71,7 +70,7 @@ func (mc *mysqlConn) readPacket() ([]byte, error) {
 			if cerr := mc.canceled.Value(); cerr != nil {
 				return nil, cerr
 			}
-			mc.log(err)
+			errLog.Print(err)
 			mc.Close()
 			return nil, ErrInvalidConn
 		}
@@ -96,6 +95,34 @@ func (mc *mysqlConn) writePacket(data []byte) error {
 
 	if pktLen > mc.maxAllowedPacket {
 		return ErrPktTooLarge
+	}
+
+	// Perform a stale connection check. We only perform this check for
+	// the first query on a connection that has been checked out of the
+	// connection pool: a fresh connection from the pool is more likely
+	// to be stale, and it has not performed any previous writes that
+	// could cause data corruption, so it's safe to return ErrBadConn
+	// if the check fails.
+	if mc.reset {
+		mc.reset = false
+		conn := mc.netConn
+		if mc.rawConn != nil {
+			conn = mc.rawConn
+		}
+		var err error
+		if mc.cfg.CheckConnLiveness {
+			if mc.cfg.ReadTimeout != 0 {
+				err = conn.SetReadDeadline(time.Now().Add(mc.cfg.ReadTimeout))
+			}
+			if err == nil {
+				err = connCheck(conn)
+			}
+		}
+		if err != nil {
+			errLog.Print("closing bad idle connection: ", err)
+			mc.Close()
+			return driver.ErrBadConn
+		}
 	}
 
 	for {
@@ -134,7 +161,7 @@ func (mc *mysqlConn) writePacket(data []byte) error {
 		// Handle error
 		if err == nil { // n != len(data)
 			mc.cleanup()
-			mc.log(ErrMalformPkt)
+			errLog.Print(ErrMalformPkt)
 		} else {
 			if cerr := mc.canceled.Value(); cerr != nil {
 				return cerr
@@ -144,7 +171,7 @@ func (mc *mysqlConn) writePacket(data []byte) error {
 				return errBadConnNoWrite
 			}
 			mc.cleanup()
-			mc.log(err)
+			errLog.Print(err)
 		}
 		return ErrInvalidConn
 	}
@@ -212,7 +239,7 @@ func (mc *mysqlConn) readHandshakePacket() (data []byte, plugin string, err erro
 		// reserved (all [00]) [10 bytes]
 		pos += 1 + 2 + 2 + 1 + 10
 
-		// second part of the password cipher [minimum 13 bytes],
+		// second part of the password cipher [mininum 13 bytes],
 		// where len=MAX(13, length of auth-plugin-data - 8)
 		//
 		// The web documentation is ambiguous about the length. However,
@@ -258,7 +285,6 @@ func (mc *mysqlConn) writeHandshakeResponsePacket(authResp []byte, plugin string
 		clientLocalFiles |
 		clientPluginAuth |
 		clientMultiResults |
-		clientConnectAttrs |
 		mc.flags&clientLongFlag
 
 	if mc.cfg.ClientFoundRows {
@@ -292,17 +318,11 @@ func (mc *mysqlConn) writeHandshakeResponsePacket(authResp []byte, plugin string
 		pktLen += n + 1
 	}
 
-	// encode length of the connection attributes
-	var connAttrsLEIBuf [9]byte
-	connAttrsLen := len(mc.connector.encodedAttributes)
-	connAttrsLEI := appendLengthEncodedInteger(connAttrsLEIBuf[:0], uint64(connAttrsLen))
-	pktLen += len(connAttrsLEI) + len(mc.connector.encodedAttributes)
-
 	// Calculate packet length and get buffer with that size
-	data, err := mc.buf.takeBuffer(pktLen + 4)
+	data, err := mc.buf.takeSmallBuffer(pktLen + 4)
 	if err != nil {
 		// cannot take the buffer. Something must be wrong with the connection
-		mc.log(err)
+		errLog.Print(err)
 		return errBadConnNoWrite
 	}
 
@@ -318,18 +338,14 @@ func (mc *mysqlConn) writeHandshakeResponsePacket(authResp []byte, plugin string
 	data[10] = 0x00
 	data[11] = 0x00
 
-	// Collation ID [1 byte]
-	cname := mc.cfg.Collation
-	if cname == "" {
-		cname = defaultCollation
-	}
+	// Charset [1 byte]
 	var found bool
-	data[12], found = collations[cname]
+	data[12], found = collations[mc.cfg.Collation]
 	if !found {
 		// Note possibility for false negatives:
 		// could be triggered  although the collation is valid if the
 		// collations map does not contain entries the server supports.
-		return fmt.Errorf("unknown collation: %q", cname)
+		return errors.New("unknown collation")
 	}
 
 	// Filler [23 bytes] (all 0x00)
@@ -351,6 +367,7 @@ func (mc *mysqlConn) writeHandshakeResponsePacket(authResp []byte, plugin string
 		if err := tlsConn.Handshake(); err != nil {
 			return err
 		}
+		mc.rawConn = mc.netConn
 		mc.netConn = tlsConn
 		mc.buf.nc = tlsConn
 	}
@@ -377,10 +394,6 @@ func (mc *mysqlConn) writeHandshakeResponsePacket(authResp []byte, plugin string
 	data[pos] = 0x00
 	pos++
 
-	// Connection Attributes
-	pos += copy(data[pos:], connAttrsLEI)
-	pos += copy(data[pos:], []byte(mc.connector.encodedAttributes))
-
 	// Send Auth packet
 	return mc.writePacket(data[:pos])
 }
@@ -391,7 +404,7 @@ func (mc *mysqlConn) writeAuthSwitchPacket(authData []byte) error {
 	data, err := mc.buf.takeSmallBuffer(pktLen)
 	if err != nil {
 		// cannot take the buffer. Something must be wrong with the connection
-		mc.log(err)
+		errLog.Print(err)
 		return errBadConnNoWrite
 	}
 
@@ -411,7 +424,7 @@ func (mc *mysqlConn) writeCommandPacket(command byte) error {
 	data, err := mc.buf.takeSmallBuffer(4 + 1)
 	if err != nil {
 		// cannot take the buffer. Something must be wrong with the connection
-		mc.log(err)
+		errLog.Print(err)
 		return errBadConnNoWrite
 	}
 
@@ -430,7 +443,7 @@ func (mc *mysqlConn) writeCommandPacketStr(command byte, arg string) error {
 	data, err := mc.buf.takeBuffer(pktLen + 4)
 	if err != nil {
 		// cannot take the buffer. Something must be wrong with the connection
-		mc.log(err)
+		errLog.Print(err)
 		return errBadConnNoWrite
 	}
 
@@ -451,7 +464,7 @@ func (mc *mysqlConn) writeCommandPacketUint32(command byte, arg uint32) error {
 	data, err := mc.buf.takeSmallBuffer(4 + 1 + 4)
 	if err != nil {
 		// cannot take the buffer. Something must be wrong with the connection
-		mc.log(err)
+		errLog.Print(err)
 		return errBadConnNoWrite
 	}
 
@@ -482,9 +495,7 @@ func (mc *mysqlConn) readAuthResult() ([]byte, string, error) {
 	switch data[0] {
 
 	case iOK:
-		// resultUnchanged, since auth happens before any queries or
-		// commands have been executed.
-		return nil, "", mc.resultUnchanged().handleOkPacket(data)
+		return nil, "", mc.handleOkPacket(data)
 
 	case iAuthMoreData:
 		return data[1:], "", err
@@ -507,9 +518,9 @@ func (mc *mysqlConn) readAuthResult() ([]byte, string, error) {
 	}
 }
 
-// Returns error if Packet is not a 'Result OK'-Packet
-func (mc *okHandler) readResultOK() error {
-	data, err := mc.conn().readPacket()
+// Returns error if Packet is not an 'Result OK'-Packet
+func (mc *mysqlConn) readResultOK() error {
+	data, err := mc.readPacket()
 	if err != nil {
 		return err
 	}
@@ -517,17 +528,13 @@ func (mc *okHandler) readResultOK() error {
 	if data[0] == iOK {
 		return mc.handleOkPacket(data)
 	}
-	return mc.conn().handleErrorPacket(data)
+	return mc.handleErrorPacket(data)
 }
 
 // Result Set Header Packet
 // http://dev.mysql.com/doc/internals/en/com-query-response.html#packet-ProtocolText::Resultset
-func (mc *okHandler) readResultSetHeaderPacket() (int, error) {
-	// handleOkPacket replaces both values; other cases leave the values unchanged.
-	mc.result.affectedRows = append(mc.result.affectedRows, 0)
-	mc.result.insertIds = append(mc.result.insertIds, 0)
-
-	data, err := mc.conn().readPacket()
+func (mc *mysqlConn) readResultSetHeaderPacket() (int, error) {
+	data, err := mc.readPacket()
 	if err == nil {
 		switch data[0] {
 
@@ -535,16 +542,19 @@ func (mc *okHandler) readResultSetHeaderPacket() (int, error) {
 			return 0, mc.handleOkPacket(data)
 
 		case iERR:
-			return 0, mc.conn().handleErrorPacket(data)
+			return 0, mc.handleErrorPacket(data)
 
 		case iLocalInFile:
 			return 0, mc.handleInFileRequest(string(data[1:]))
 		}
 
 		// column count
-		num, _, _ := readLengthEncodedInteger(data)
-		// ignore remaining data in the packet. see #1478.
-		return int(num), nil
+		num, _, n := readLengthEncodedInteger(data)
+		if n-len(data) == 0 {
+			return int(num), nil
+		}
+
+		return 0, ErrMalformPkt
 	}
 	return 0, err
 }
@@ -597,61 +607,18 @@ func readStatus(b []byte) statusFlag {
 	return statusFlag(b[0]) | statusFlag(b[1])<<8
 }
 
-// Returns an instance of okHandler for codepaths where mysqlConn.result doesn't
-// need to be cleared first (e.g. during authentication, or while additional
-// resultsets are being fetched.)
-func (mc *mysqlConn) resultUnchanged() *okHandler {
-	return (*okHandler)(mc)
-}
-
-// okHandler represents the state of the connection when mysqlConn.result has
-// been prepared for processing of OK packets.
-//
-// To correctly populate mysqlConn.result (updated by handleOkPacket()), all
-// callpaths must either:
-//
-// 1. first clear it using clearResult(), or
-// 2. confirm that they don't need to (by calling resultUnchanged()).
-//
-// Both return an instance of type *okHandler.
-type okHandler mysqlConn
-
-// Exposes the underlying type's methods.
-func (mc *okHandler) conn() *mysqlConn {
-	return (*mysqlConn)(mc)
-}
-
-// clearResult clears the connection's stored affectedRows and insertIds
-// fields.
-//
-// It returns a handler that can process OK responses.
-func (mc *mysqlConn) clearResult() *okHandler {
-	mc.result = mysqlResult{}
-	return (*okHandler)(mc)
-}
-
 // Ok Packet
 // http://dev.mysql.com/doc/internals/en/generic-response-packets.html#packet-OK_Packet
-func (mc *okHandler) handleOkPacket(data []byte) error {
+func (mc *mysqlConn) handleOkPacket(data []byte) error {
 	var n, m int
-	var affectedRows, insertId uint64
 
 	// 0x00 [1 byte]
 
 	// Affected rows [Length Coded Binary]
-	affectedRows, _, n = readLengthEncodedInteger(data[1:])
+	mc.affectedRows, _, n = readLengthEncodedInteger(data[1:])
 
 	// Insert id [Length Coded Binary]
-	insertId, _, m = readLengthEncodedInteger(data[1+n:])
-
-	// Update for the current statement result (only used by
-	// readResultSetHeaderPacket).
-	if len(mc.result.affectedRows) > 0 {
-		mc.result.affectedRows[len(mc.result.affectedRows)-1] = int64(affectedRows)
-	}
-	if len(mc.result.insertIds) > 0 {
-		mc.result.insertIds[len(mc.result.insertIds)-1] = int64(insertId)
-	}
+	mc.insertId, _, m = readLengthEncodedInteger(data[1+n:])
 
 	// server_status [2 bytes]
 	mc.status = readStatus(data[1+n+m : 1+n+m+2])
@@ -802,8 +769,7 @@ func (rows *textRows) readRow(dest []driver.Value) error {
 
 	for i := range dest {
 		// Read bytes and convert to string
-		var buf []byte
-		buf, isNull, n, err = readLengthEncodedString(data[pos:])
+		dest[i], isNull, n, err = readLengthEncodedString(data[pos:])
 		pos += n
 
 		if err != nil {
@@ -815,40 +781,19 @@ func (rows *textRows) readRow(dest []driver.Value) error {
 			continue
 		}
 
+		if !mc.parseTime {
+			continue
+		}
+
+		// Parse time field
 		switch rows.rs.columns[i].fieldType {
 		case fieldTypeTimestamp,
 			fieldTypeDateTime,
 			fieldTypeDate,
 			fieldTypeNewDate:
-			if mc.parseTime {
-				dest[i], err = parseDateTime(buf, mc.cfg.Loc)
-			} else {
-				dest[i] = buf
+			if dest[i], err = parseDateTime(dest[i].([]byte), mc.cfg.Loc); err != nil {
+				return err
 			}
-
-		case fieldTypeTiny, fieldTypeShort, fieldTypeInt24, fieldTypeYear, fieldTypeLong:
-			dest[i], err = strconv.ParseInt(string(buf), 10, 64)
-
-		case fieldTypeLongLong:
-			if rows.rs.columns[i].flags&flagUnsigned != 0 {
-				dest[i], err = strconv.ParseUint(string(buf), 10, 64)
-			} else {
-				dest[i], err = strconv.ParseInt(string(buf), 10, 64)
-			}
-
-		case fieldTypeFloat:
-			var d float64
-			d, err = strconv.ParseFloat(string(buf), 32)
-			dest[i] = float32(d)
-
-		case fieldTypeDouble:
-			dest[i], err = strconv.ParseFloat(string(buf), 64)
-
-		default:
-			dest[i] = buf
-		}
-		if err != nil {
-			return err
 		}
 	}
 
@@ -993,7 +938,7 @@ func (stmt *mysqlStmt) writeExecutePacket(args []driver.Value) error {
 	}
 	if err != nil {
 		// cannot take the buffer. Something must be wrong with the connection
-		mc.log(err)
+		errLog.Print(err)
 		return errBadConnNoWrite
 	}
 
@@ -1171,7 +1116,7 @@ func (stmt *mysqlStmt) writeExecutePacket(args []driver.Value) error {
 				if v.IsZero() {
 					b = append(b, "0000-00-00"...)
 				} else {
-					b, err = appendDateTime(b, v.In(mc.cfg.Loc), mc.cfg.timeTruncate)
+					b, err = appendDateTime(b, v.In(mc.cfg.Loc))
 					if err != nil {
 						return err
 					}
@@ -1192,7 +1137,7 @@ func (stmt *mysqlStmt) writeExecutePacket(args []driver.Value) error {
 		if valuesCap != cap(paramValues) {
 			data = append(data[:pos], paramValues...)
 			if err = mc.buf.store(data); err != nil {
-				mc.log(err)
+				errLog.Print(err)
 				return errBadConnNoWrite
 			}
 		}
@@ -1204,9 +1149,7 @@ func (stmt *mysqlStmt) writeExecutePacket(args []driver.Value) error {
 	return mc.writePacket(data)
 }
 
-// For each remaining resultset in the stream, discards its rows and updates
-// mc.affectedRows and mc.insertIds.
-func (mc *okHandler) discardResults() error {
+func (mc *mysqlConn) discardResults() error {
 	for mc.status&statusMoreResultsExists != 0 {
 		resLen, err := mc.readResultSetHeaderPacket()
 		if err != nil {
@@ -1214,11 +1157,11 @@ func (mc *okHandler) discardResults() error {
 		}
 		if resLen > 0 {
 			// columns
-			if err := mc.conn().readUntilEOF(); err != nil {
+			if err := mc.readUntilEOF(); err != nil {
 				return err
 			}
 			// rows
-			if err := mc.conn().readUntilEOF(); err != nil {
+			if err := mc.readUntilEOF(); err != nil {
 				return err
 			}
 		}

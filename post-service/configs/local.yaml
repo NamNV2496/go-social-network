@@ -10,3 +10,4 @@ database:
   username: root
   password: root
   database: network
+  auto_migrate: true

@@ -10,7 +10,6 @@ package mysql
 
 import (
 	"bytes"
-	"context"
 	"crypto/rsa"
 	"crypto/tls"
 	"errors"
@@ -35,27 +34,22 @@ var (
 // If a new Config is created instead of being parsed from a DSN string,
 // the NewConfig function should be used, which sets default values.
 type Config struct {
-	// non boolean fields
-
-	User                 string            // Username
-	Passwd               string            // Password (requires User)
-	Net                  string            // Network (e.g. "tcp", "tcp6", "unix". default: "tcp")
-	Addr                 string            // Address (default: "127.0.0.1:3306" for "tcp" and "/tmp/mysql.sock" for "unix")
-	DBName               string            // Database name
-	Params               map[string]string // Connection parameters
-	ConnectionAttributes string            // Connection Attributes, comma-delimited string of user-defined "key:value" pairs
-	Collation            string            // Connection collation
-	Loc                  *time.Location    // Location for time.Time values
-	MaxAllowedPacket     int               // Max packet size allowed
-	ServerPubKey         string            // Server public key name
-	TLSConfig            string            // TLS configuration name
-	TLS                  *tls.Config       // TLS configuration, its priority is higher than TLSConfig
-	Timeout              time.Duration     // Dial timeout
-	ReadTimeout          time.Duration     // I/O read timeout
-	WriteTimeout         time.Duration     // I/O write timeout
-	Logger               Logger            // Logger
-
-	// boolean fields
+	User             string            // Username
+	Passwd           string            // Password (requires User)
+	Net              string            // Network type
+	Addr             string            // Network address (requires Net)
+	DBName           string            // Database name
+	Params           map[string]string // Connection parameters
+	Collation        string            // Connection collation
+	Loc              *time.Location    // Location for time.Time values
+	MaxAllowedPacket int               // Max packet size allowed
+	ServerPubKey     string            // Server public key name
+	pubKey           *rsa.PublicKey    // Server public key
+	TLSConfig        string            // TLS configuration name
+	TLS              *tls.Config       // TLS configuration, its priority is higher than TLSConfig
+	Timeout          time.Duration     // Dial timeout
+	ReadTimeout      time.Duration     // I/O read timeout
+	WriteTimeout     time.Duration     // I/O write timeout
 
 	AllowAllFiles            bool // Allow all files to be used with LOAD DATA LOCAL INFILE
 	AllowCleartextPasswords  bool // Allows the cleartext client side plugin
@@ -69,56 +63,16 @@ type Config struct {
 	MultiStatements          bool // Allow multiple statements in one query
 	ParseTime                bool // Parse time values to time.Time
 	RejectReadOnly           bool // Reject read-only connections
-
-	// unexported fields. new options should be come here
-
-	beforeConnect func(context.Context, *Config) error // Invoked before a connection is established
-	pubKey        *rsa.PublicKey                       // Server public key
-	timeTruncate  time.Duration                        // Truncate time.Time values to the specified duration
 }
-
-// Functional Options Pattern
-// https://dave.cheney.net/2014/10/17/functional-options-for-friendly-apis
-type Option func(*Config) error
 
 // NewConfig creates a new Config and sets default values.
 func NewConfig() *Config {
-	cfg := &Config{
+	return &Config{
+		Collation:            defaultCollation,
 		Loc:                  time.UTC,
 		MaxAllowedPacket:     defaultMaxAllowedPacket,
-		Logger:               defaultLogger,
 		AllowNativePasswords: true,
 		CheckConnLiveness:    true,
-	}
-
-	return cfg
-}
-
-// Apply applies the given options to the Config object.
-func (c *Config) Apply(opts ...Option) error {
-	for _, opt := range opts {
-		err := opt(c)
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-// TimeTruncate sets the time duration to truncate time.Time values in
-// query parameters.
-func TimeTruncate(d time.Duration) Option {
-	return func(cfg *Config) error {
-		cfg.timeTruncate = d
-		return nil
-	}
-}
-
-// BeforeConnect sets the function to be invoked before a connection is established.
-func BeforeConnect(fn func(context.Context, *Config) error) Option {
-	return func(cfg *Config) error {
-		cfg.beforeConnect = fn
-		return nil
 	}
 }
 
@@ -143,7 +97,7 @@ func (cfg *Config) Clone() *Config {
 }
 
 func (cfg *Config) normalize() error {
-	if cfg.InterpolateParams && cfg.Collation != "" && unsafeCollations[cfg.Collation] {
+	if cfg.InterpolateParams && unsafeCollations[cfg.Collation] {
 		return errInvalidDSNUnsafeCollation
 	}
 
@@ -199,10 +153,6 @@ func (cfg *Config) normalize() error {
 		}
 	}
 
-	if cfg.Logger == nil {
-		cfg.Logger = defaultLogger
-	}
-
 	return nil
 }
 
@@ -221,8 +171,6 @@ func writeDSNParam(buf *bytes.Buffer, hasParam *bool, name, value string) {
 
 // FormatDSN formats the given Config into a DSN string which can be passed to
 // the driver.
-//
-// Note: use [NewConnector] and [database/sql.OpenDB] to open a connection from a [*Config].
 func (cfg *Config) FormatDSN() string {
 	var buf bytes.Buffer
 
@@ -248,7 +196,7 @@ func (cfg *Config) FormatDSN() string {
 
 	// /dbname
 	buf.WriteByte('/')
-	buf.WriteString(url.PathEscape(cfg.DBName))
+	buf.WriteString(cfg.DBName)
 
 	// [?param1=value1&...&paramN=valueN]
 	hasParam := false
@@ -282,7 +230,7 @@ func (cfg *Config) FormatDSN() string {
 		writeDSNParam(&buf, &hasParam, "clientFoundRows", "true")
 	}
 
-	if col := cfg.Collation; col != "" {
+	if col := cfg.Collation; col != defaultCollation && len(col) > 0 {
 		writeDSNParam(&buf, &hasParam, "collation", col)
 	}
 
@@ -304,10 +252,6 @@ func (cfg *Config) FormatDSN() string {
 
 	if cfg.ParseTime {
 		writeDSNParam(&buf, &hasParam, "parseTime", "true")
-	}
-
-	if cfg.timeTruncate > 0 {
-		writeDSNParam(&buf, &hasParam, "timeTruncate", cfg.timeTruncate.String())
 	}
 
 	if cfg.ReadTimeout > 0 {
@@ -414,11 +358,7 @@ func ParseDSN(dsn string) (cfg *Config, err error) {
 					break
 				}
 			}
-
-			dbname := dsn[i+1 : j]
-			if cfg.DBName, err = url.PathUnescape(dbname); err != nil {
-				return nil, fmt.Errorf("invalid dbname %q: %w", dbname, err)
-			}
+			cfg.DBName = dsn[i+1 : j]
 
 			break
 		}
@@ -438,13 +378,13 @@ func ParseDSN(dsn string) (cfg *Config, err error) {
 // Values must be url.QueryEscape'ed
 func parseDSNParams(cfg *Config, params string) (err error) {
 	for _, v := range strings.Split(params, "&") {
-		key, value, found := strings.Cut(v, "=")
-		if !found {
+		param := strings.SplitN(v, "=", 2)
+		if len(param) != 2 {
 			continue
 		}
 
 		// cfg params
-		switch key {
+		switch value := param[1]; param[0] {
 		// Disable INFILE allowlist / enable all files
 		case "allowAllFiles":
 			var isBool bool
@@ -550,13 +490,6 @@ func parseDSNParams(cfg *Config, params string) (err error) {
 				return errors.New("invalid bool value: " + value)
 			}
 
-		// time.Time truncation
-		case "timeTruncate":
-			cfg.timeTruncate, err = time.ParseDuration(value)
-			if err != nil {
-				return fmt.Errorf("invalid timeTruncate value: %v, error: %w", value, err)
-			}
-
 		// I/O read Timeout
 		case "readTimeout":
 			cfg.ReadTimeout, err = time.ParseDuration(value)
@@ -621,22 +554,13 @@ func parseDSNParams(cfg *Config, params string) (err error) {
 			if err != nil {
 				return
 			}
-
-		// Connection attributes
-		case "connectionAttributes":
-			connectionAttributes, err := url.QueryUnescape(value)
-			if err != nil {
-				return fmt.Errorf("invalid connectionAttributes value: %v", err)
-			}
-			cfg.ConnectionAttributes = connectionAttributes
-
 		default:
 			// lazy init
 			if cfg.Params == nil {
 				cfg.Params = make(map[string]string)
 			}
 
-			if cfg.Params[key], err = url.QueryUnescape(value); err != nil {
+			if cfg.Params[param[0]], err = url.QueryUnescape(value); err != nil {
 				return
 			}
 		}

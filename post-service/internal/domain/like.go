@@ -1,20 +1,38 @@
 package domain
 
 import (
-	"time"
-
-	"github.com/doug-martin/goqu/v9"
+	"github.com/namnv2496/post-service/internal/repository/database"
+	"gorm.io/gorm"
 )
 
 var (
-	TabNameLike = goqu.T("like")
+	TabNameLike = "like"
 )
 
 type Like struct {
-	Id        uint64    `db:"id" goqu:"omitnil"`
-	PostId    uint64    `db:"post_id" goqu:"omitnil"`
-	UserId    string    `db:"user_id" goqu:"omitnil"`
-	Like      bool      `db:"like" goqu:"omitnil"`
-	CreatedAt time.Time `db:"created_at" goqu:"omitnil"`
-	UpdatedAt time.Time `db:"updated_at" goqu:"omitnil"`
+	database.BaseEntity `gorm:"embedded"`
+	Id                  int64  `gorm:"column:id;type:bigint" json:"id"`
+	PostId              int64  `gorm:"column:post_id;type:bigint" json:"post_id"`
+	UserId              string `gorm:"column:user_id;type:text" json:"user_id"`
+	Like                bool   `gorm:"column:like;type:bool" json:"like"`
+}
+
+func (_self Like) TableName() string {
+	return TabNameLike
+}
+
+func LikeByPostId(postId int64) database.QueryOption {
+	return func(tx *gorm.DB) {
+		if postId > 0 {
+			tx.Where("like.post_id = ?", postId)
+		}
+	}
+}
+
+func LikeByUserId(userId string) database.QueryOption {
+	return func(tx *gorm.DB) {
+		if userId != "" {
+			tx.Where("like.user_id = ?", userId)
+		}
+	}
 }

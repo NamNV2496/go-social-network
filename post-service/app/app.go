@@ -3,7 +3,7 @@ package app
 import (
 	"context"
 
-	"github.com/namnv2496/post-service/internal/handler/grpc"
+	"github.com/namnv2496/post-service/internal/controller"
 )
 
 type AppInterface interface {
@@ -11,18 +11,17 @@ type AppInterface interface {
 }
 
 type App struct {
-	grpcServer grpc.Server
+	controller controller.IController
 }
 
 func NewApp(
-	grpcServer grpc.Server,
+	controller controller.IController,
 ) *App {
-
 	return &App{
-		grpcServer: grpcServer,
+		controller: controller,
 	}
 }
 
 func (a App) Start() error {
-	return a.grpcServer.Start(context.Background())
+	return a.controller.Start(context.Background())
 }
