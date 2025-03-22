@@ -5,6 +5,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
     <link rel="stylesheet" href="css/index.css" type="text/css">
+    <style>
+        /* Popup styles */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            z-index: 1000;
+        }
+        .popup input {
+            display: block;
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .popup button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .popup button:hover {
+            background-color: #0056b3;
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+    </style>
 </head>
 <body>
 
@@ -14,6 +58,21 @@
     <input type="text" id="userId" placeholder="User ID" required>
     <input type="password" id="password" placeholder="Password" required>
     <button onclick="login()">Login</button>
+    <button id="registerButton" style="background-color: gray;">Register</button>
+</div>
+
+<div class="overlay" id="overlay"></div>
+
+<div class="popup" id="registerPopup" style="width: 400px;">
+    <h2>Register</h2>
+    <form id="registerForm" >
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="text" id="name" placeholder="Name" required>
+        <input type="password" id="registerPassword" placeholder="Password" required>
+        <input type="text" id="registerUserId" placeholder="User ID (lowercase, no special characters)" pattern="[a-z0-9]+" title="Only lowercase letters and numbers are allowed" required>
+        <input type="text" id="picture" placeholder="Avatar" required>
+        <button type="submit">Submit</button>
+    </form>
 </div>
 
 <script>
@@ -46,6 +105,51 @@
             errorMessage.style.display = 'block';
         }
     }
+
+    // Show the register popup
+    const registerButton = document.getElementById('registerButton');
+    const registerPopup = document.getElementById('registerPopup');
+    const overlay = document.getElementById('overlay');
+    const registerForm = document.getElementById('registerForm');
+
+    registerButton.addEventListener('click', () => {
+        registerPopup.style.display = 'block';
+        overlay.style.display = 'block';
+    });
+
+    // Hide the popup when clicking outside
+    overlay.addEventListener('click', () => {
+        registerPopup.style.display = 'none';
+        overlay.style.display = 'none';
+    });
+
+    // Handle register form submission
+    registerForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const email = document.getElementById('email').value;
+        const name = document.getElementById('name').value;
+        const password = document.getElementById('registerPassword').value;
+        const userId = document.getElementById('registerUserId').value;
+        const avatar = document.getElementById('picture').value;
+
+        const response = await fetch('http://localhost:8080/api/v1/account', {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ account: { email, name, password, userId, avatar } })
+        });
+
+        if (response.ok) {
+            alert('Registration successful!');
+            registerPopup.style.display = 'none';
+            overlay.style.display = 'none';
+            window.location.href = 'newsfeed.html';
+        } else {
+            alert('Registration failed. Please try again.');
+        }
+    });
 </script>
 
 </body>

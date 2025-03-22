@@ -87,6 +87,7 @@ func (p postService) GetPosts(
 			log.Println("error: ", err)
 			continue
 		}
+		postElem.PostId = uint64(post.Id)
 		postElem.Date = post.CreatedAt.String()
 		postElem.Images = strings.Split(post.Images, ",")
 		postElem.Tags = strings.Split(post.Tags, ",")

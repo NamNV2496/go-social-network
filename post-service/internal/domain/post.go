@@ -11,7 +11,7 @@ var (
 
 type Post struct {
 	database.BaseEntity `gorm:"embedded"`
-	Id                  int64  `gorm:"column:id;primaryKey;autoIncrement" json:"post_id"`
+	Id                  int64  `gorm:"column:id;primaryKey;autoIncrement" json:"id"`
 	Uuid                string `gorm:"column:uuid;type:varchar(36);not null" json:"uuid"`
 	User_id             string `gorm:"column:user_id;type:varchar(255);not null" json:"user_id"`
 	Content_text        string `gorm:"column:content_text;type:text" json:"content_text"`

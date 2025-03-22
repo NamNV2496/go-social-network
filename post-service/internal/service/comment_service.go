@@ -50,6 +50,26 @@ func (c commentService) GetComment(
 	ctx context.Context,
 	req *postv1.GetCommentRequest,
 ) (*postv1.GetCommentResponse, error) {
+	comments, err := c.commentRepository.GetComment(ctx, domain.CommentByPostId(int64(req.PostId)))
+	if err != nil {
+		return nil, err
+	}
+	var resp []*postv1.Comment
+	for _, comment := range comments {
+		resp = append(resp, &postv1.Comment{
+			CommentId:     uint64(comment.Id),
+			UserId:        comment.UserId,
+			CommentText:   comment.CommentText,
+			CommentLevel:  uint32(comment.CommentLevel),
+			CommentParent: uint64(comment.CommentParent),
+			Images:        strings.Split(comment.Images, ","),
+			Tags:          strings.Split(comment.Tags, ","),
+			Date:          comment.CreatedAt.String(),
+		})
+	}
+	return &postv1.GetCommentResponse{
+		Comment: resp,
+	}, nil
 	// 	// Create the raw SQL query
 	// 	sql := `
 	// 	WITH top_comments AS (
@@ -114,5 +134,5 @@ func (c commentService) GetComment(
 	//	return &postv1.GetCommentResponse{
 	//		Comment: commentRes,
 	//	}, nil
-	return nil, nil
+	// return nil, nil
 }

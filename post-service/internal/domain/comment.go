@@ -2,6 +2,7 @@ package domain
 
 import (
 	"github.com/namnv2496/post-service/internal/repository/database"
+	"gorm.io/gorm"
 )
 
 var (
@@ -22,4 +23,12 @@ type Comment struct {
 
 func (_self Comment) TableName() string {
 	return TabNameComment
+}
+
+func CommentByPostId(postId int64) database.QueryOption {
+	return func(tx *gorm.DB) {
+		if postId > 0 {
+			tx.Where("comment.post_id = ?", postId)
+		}
+	}
 }
