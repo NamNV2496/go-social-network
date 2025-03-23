@@ -124,7 +124,9 @@ func (s *server) runRESTServer() error {
 	log.Println("Connect to post: ", postServiceAddr)
 	log.Println("Connect to newsfeed: ", newsfeedServiceAddr)
 
-	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
+	opts := []grpc.DialOption{
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+	}
 	var err error
 
 	// connect to user-service

@@ -84,31 +84,31 @@ func (s newsfeedService) GetNewsfeed(
 	ctx context.Context,
 	userId string,
 ) (*newsfeedv1.GetNewsfeedResponse, error) {
-	data, exist := s.redis.Get(ctx, userId)
-	if exist == nil {
-		var posts []domain.Post
-		if err := json.Unmarshal([]byte(data.(string)), &posts); err != nil {
-			log.Println("error when marshal old post")
-			return nil, err
-		}
-		postPointers := make([]*newsfeedv1.NewsfeedPost, len(posts))
-		reverseSlice(posts)
-		for i, post := range posts {
-			postPointers[i] = &newsfeedv1.NewsfeedPost{
-				UserId:      post.User_id,
-				PostId:      post.Id,
-				ContentText: post.Content_text,
-				Images:      strings.Split(post.Images, ","),
-				Tags:        strings.Split(post.Tags, ","),
-				Visible:     post.Visible,
-				Date:        post.CreatedAt.String(),
-			}
-		}
-		return &newsfeedv1.GetNewsfeedResponse{
-			Posts: postPointers,
-		}, nil
+	data, ok := s.redis.Get(ctx, userId)
+	if ok != nil {
+		return nil, nil
 	}
-	return nil, nil
+	var posts []domain.Post
+	if err := json.Unmarshal([]byte(data.(string)), &posts); err != nil {
+		log.Println("error when marshal old post")
+		return nil, err
+	}
+	postPointers := make([]*newsfeedv1.NewsfeedPost, len(posts))
+	reverseSlice(posts)
+	for i, post := range posts {
+		postPointers[i] = &newsfeedv1.NewsfeedPost{
+			UserId:      post.User_id,
+			PostId:      post.Id,
+			ContentText: post.Content_text,
+			Images:      strings.Split(post.Images, ","),
+			Tags:        strings.Split(post.Tags, ","),
+			Visible:     post.Visible,
+			Date:        post.CreatedAt.String(),
+		}
+	}
+	return &newsfeedv1.GetNewsfeedResponse{
+		Posts: postPointers,
+	}, nil
 }
 
 func reverseSlice(posts []domain.Post) {

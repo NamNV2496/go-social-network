@@ -1,22 +1,22 @@
 # Build stage
 FROM golang:1.22-alpine3.20 AS builder
-WORKDIR /app/user-service
+WORKDIR /app
 
 # Copy go.mod and go.sum to cache dependencies
-COPY user-service/go.mod ./
-COPY user-service/go.sum ./
+COPY user-service/go.mod user-service/go.sum ./user-service/
+WORKDIR /app/user-service
 RUN go mod download
 
 # Copy the rest of the source code
 COPY user-service/ ./
 
 # Build the binary
-RUN go build -o /user cmd/main.go
+RUN go build -o /user-service main.go
 
 # Run stage
 FROM alpine:3.20
 WORKDIR /app
-COPY --from=builder /user .
+COPY --from=builder /user-service .
 
 EXPOSE 8084
-CMD ["/app/user"]
+CMD ["/app/user-service"]

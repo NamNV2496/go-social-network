@@ -3,7 +3,7 @@ package configs
 import "time"
 
 type Auth struct {
-	Duration string `yaml:"duration"`
+	Duration string `env:"duration" envDefault:"24h"`
 }
 
 func (t *Auth) GetTokenDuration() time.Duration {

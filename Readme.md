@@ -11,17 +11,12 @@
 
 # 2. How to start
 
-## Install
-
-    go install github.com/google/wire/cmd/wire@latest
-
-
-## Docker
+## Run by Docker
 
     1. run `docker compose up`
     2. Check status of services
 
-## Local
+## Run on Local
 
     1. go to "cd deployments" and run "docker-compose up"
     2. run http-gateway "cd http_gateway/" and "go run cmd/main.go"
@@ -47,9 +42,15 @@
 
 # 3. Data migration
 
+sql files location:
+
     user-service\internal\database\migrations\mysql
 
 # 4. Demo
+
+## Install
+
+    go install github.com/google/wire/cmd/wire@latest
 
 ## Newsfeed
 

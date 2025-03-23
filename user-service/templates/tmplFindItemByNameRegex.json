@@ -1,0 +1,36 @@
+{
+    "size": "{{.Size}}",
+    "from": "{{.From}}",
+    "_source": {
+        "includes": [
+            "id",
+            "userId",
+            "name",
+            "email"
+        ]
+    },
+    "query": {
+        "bool": {
+            "should": {
+                "regexp": {
+                    "name": {
+                        "value": ".*{{.UserId}}.*",
+                        "flags": "ALL"
+                    }
+                }
+            }
+        }
+    },
+    "sort":[
+        {
+            "created_at": {
+                "order": "desc"
+            }
+        },
+        {
+            "updated_at": {
+                "order": "desc"
+            }
+        }
+    ]
+}

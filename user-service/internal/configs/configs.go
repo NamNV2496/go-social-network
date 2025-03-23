@@ -3,27 +3,22 @@ package configs
 import (
 	"fmt"
 
-	"github.com/namnv2496/user-service/configs"
-	"gopkg.in/yaml.v2"
+	"github.com/caarlos0/env/v6"
 )
 
 type Config struct {
-	Auth     Auth     `yaml:"auth"`
-	Redis    Redis    `yaml:"redis"`
-	GRPC     GRPC     `yaml:"grpc"`
-	Database Database `yaml:"database"`
+	Auth          Auth
+	Redis         Redis
+	GRPC          GRPC
+	Database      Database
+	ElasticSearch ElasticSearch
 }
 
-func NewConfig() (Config, error) {
-	var (
-		configBytes []byte = configs.DefaultConfigBytes
-		config      Config
-		err         error
-	)
-	err = yaml.Unmarshal(configBytes, &config)
-	if err != nil {
-		return Config{}, fmt.Errorf("error unmarshal configuration file: %w", err)
+func NewConfig() (*Config, error) {
+	var dbConfig Config
+	if err := env.Parse(&dbConfig); err != nil {
+		fmt.Printf("Failed to parse environment variables: %v", err)
+		return nil, err
 	}
-
-	return config, nil
+	return &dbConfig, nil
 }

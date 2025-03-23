@@ -1,0 +1,37 @@
+// {
+//     "size": "{{.Size}}",
+//     "from": "{{.From}}",
+//     "_source": {
+//         "excludes": [
+//             "images",
+//             "sold"
+//         ]
+//     },
+//     "query": {
+//         "bool": {
+//             "must": {
+//                 "wildcard": {
+//                     "name": "*{{.Name}}*"
+//                 }
+//             },
+//             "filter": [
+//                 {{if .ShopId}}
+//                 {
+//                     "term": {
+//                         "shop_id": "{{.ShopId}}"
+//                     }
+//                 }{{if .Price}},{{end}}
+//                 {{end}}
+//                 {{if .Price}}
+//                 {
+//                     "range": {
+//                         "price": {
+//                             "gte": "{{.Price}}"
+//                         }
+//                     }
+//                 }
+//                 {{end}}
+//             ]
+//         }
+//     }
+// }
