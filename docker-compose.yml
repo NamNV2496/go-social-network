@@ -123,6 +123,16 @@ services:
             - mysql
             - redis
             - elasticsearch
+            
+    frontend:
+        image: nginx:alpine
+        container_name: frontend
+        ports:
+            - "3000:80"
+        volumes:
+            - ./web:/usr/share/nginx/html:ro
+        restart: always
+
 volumes:
   esdata:
       driver: local

@@ -7,7 +7,8 @@
     3. kafka - "github.com/IBM/sarama"
     4. redis - "github.com/go-redis/redis/v8"
     5. websocket - "github.com/gorilla/websocket"
-    6. gorm - 	"gorm.io/gorm" (post-service only)
+    6. gorm - "gorm.io/gorm" (post-service only)
+    7. Elastic search - "github.com/elastic/go-elasticsearch/v8"
 
 # 2. How to start
 
@@ -48,11 +49,11 @@ sql files location:
 
 # 4. Demo
 
-## Install
+## Install wire to generate dependency injection
 
     go install github.com/google/wire/cmd/wire@latest
 
-## Newsfeed
+## Newsfeed 
 
 ![alt text](docs/newsfeed.png)
 
