@@ -11,6 +11,7 @@ type Config struct {
 	GRPC     GRPC     `yaml:"grpc"`
 	Kafka    Kafka    `yaml:"kafka"`
 	Database Database `yaml:"database"`
+	Logger   Logger   `yaml:"logger"`
 }
 
 func NewConfig() (Config, error) {

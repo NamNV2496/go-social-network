@@ -18,5 +18,9 @@ FROM alpine:3.20
 WORKDIR /app
 COPY --from=builder /user-service .
 
+# Copy the templates directory into the Docker image
+COPY user-service/templates /app/templates
+
 EXPOSE 8084
 CMD ["/app/user-service"]
+

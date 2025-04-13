@@ -38,15 +38,6 @@ func NewDatabase(
 		log.Printf("error connecting to the database: %+v\n", err)
 		return nil, nil, err
 	}
-
-	// dbMigrator, err := NewMigrator(db)
-	// if err != nil {
-	// 	return db, nil, err
-	// }
-	// err = dbMigrator.Up(context.Background())
-	// if err != nil {
-	// 	return db, nil, err
-	// }
 	cleanup := func() {
 		db.Close()
 	}

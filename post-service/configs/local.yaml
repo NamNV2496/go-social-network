@@ -11,3 +11,8 @@ database:
   password: root
   database: network
   auto_migrate: true
+
+logger:
+  level: debug
+
+

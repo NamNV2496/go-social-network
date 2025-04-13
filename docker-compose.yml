@@ -8,6 +8,8 @@ services:
             MYSQL_DATABASE: network
         ports:
             - "3309:3306"
+        networks:
+            - social
 
     redis:
         image: redis:7-alpine
@@ -18,6 +20,8 @@ services:
         image: "bitnami/zookeeper:3.8.4-debian-12-r8"
         ports:
             - "2181:2181"
+        networks:
+            - social
         environment:
             - ALLOW_ANONYMOUS_LOGIN=yes
 
@@ -25,6 +29,8 @@ services:
         image: "bitnami/kafka:3.7.1-debian-12-r0"
         ports:
             - "29092:29092"
+        networks:
+            - social
         environment:
             - KAFKA_BROKER_ID=2
             - KAFKA_CFG_LISTENERS=PLAINTEXT://:29092
@@ -38,16 +44,65 @@ services:
         image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
         container_name: elasticsearch
         environment:
-        - discovery.type=single-node
-        - ES_JAVA_OPTS=-Xms512m -Xmx512m
-        - xpack.security.enabled=true
-        - ELASTIC_USERNAME=elastic
-        - ELASTIC_PASSWORD=admin
+            - discovery.type=single-node
+            - ES_JAVA_OPTS=-Xms512m -Xmx512m
+            - xpack.security.enabled=true
+            - ELASTIC_USERNAME=elastic
+            - ELASTIC_PASSWORD=admin
         ports:
-        - 9200:9200 # for REST API access
+            - 9200:9200 # for REST API access
+        networks:
+            - social
         # - 9300:9300 # for inter-node communication
         volumes:
-        - esdata:/usr/share/elasticsearch/data
+            - esdata:/usr/share/elasticsearch/data
+    
+    # grafana
+    grafana:
+        image: grafana/grafana
+        ports:
+            - "3000:3000"
+        container_name: grafana
+        restart: unless-stopped
+        networks:
+            - social
+        environment:
+            - GF_SECURITY_ADMIN_USER=admin
+            - GF_SECURITY_ADMIN_PASSWORD=admin
+        depends_on:
+            - prometheus
+        # volumes:
+        #     - grafana-data:/var/lib/grafana
+        #     - ./grafana.ini:/etc/grafana/grafana.ini
+
+    # Install prometheus and node-exporter
+    prometheus:
+        image: prom/prometheus
+        container_name: prometheus
+        ports:
+            - "9090:9090"
+        networks:
+            - social
+        volumes:
+            - prometheus:/prometheus
+            - ./prometheus.yml:/etc/prometheus/prometheus.yml
+        
+    # A Prometheus exporter that collects hardware and OS-level metrics from Linux and other Unix-like systems. Node Exporter enables monitoring of host-level resources and performance metrics.
+    # exporter:
+    #     image: prom/node-exporter:latest
+    #     container_name: exporter
+    #     ports:
+    #         - "9100:9100"
+    #     networks:
+    #         - social
+    #     volumes:
+    #         - /proc:/host/proc:ro
+    #         - /sys:/host/sys:ro
+    #         - /:/rootfs:ro
+    #     command:
+    #         - "--path.procfs=/host/proc"
+    #         - "--path.sysfs=/host/sys"
+    #         - "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
 
     http:
         build:
@@ -63,15 +118,19 @@ services:
             - mysql
             - redis
             - kafka
+        networks:
+            - social
         environment:
             - USER_URL=user:5610
-            - NEWSFEED_URL=newsfeed:5612
             - POST_URL=post:5611
+            - NEWSFEED_URL=newsfeed:5612
 
     message:
         build:
             context: .
             dockerfile: message-service/Dockerfile
+        networks:
+            - social
         ports:
             - "8081:8081"
 
@@ -84,9 +143,11 @@ services:
         environment:
             - DATABASE_URL=root:root@tcp(mysql:3306)/network?parseTime=true
             - KAFKA_BROKER=kafka:29092
-            - NEWSFEED_URL=newsfeed:5612
-            - USER_URL=user:5610
             - REDIS_URL=redis:6379
+            - USER_URL=user:5610
+            - NEWSFEED_URL=newsfeed:5612
+        networks:
+            - social
         depends_on:
             - mysql
             - kafka
@@ -101,6 +162,8 @@ services:
             - DATABASE_URL=root:root@tcp(mysql:3306)/network?parseTime=true
             - KAFKA_BROKER=kafka:29092
             - POST_URL=post:5611
+        networks:
+            - social
         depends_on:
             - mysql
             - kafka
@@ -123,16 +186,25 @@ services:
             - mysql
             - redis
             - elasticsearch
-            
+        networks:
+            - social
+        
     frontend:
         image: nginx:alpine
         container_name: frontend
         ports:
-            - "3000:80"
+            - "3001:80"
         volumes:
             - ./web:/usr/share/nginx/html:ro
-        restart: always
 
 volumes:
   esdata:
       driver: local
+  grafana-data: # Added volume for Grafana
+    driver: local
+  prometheus:
+    driver: local
+
+networks:
+  social:
+    driver: bridge

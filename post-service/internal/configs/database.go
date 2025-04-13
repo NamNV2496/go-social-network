@@ -14,4 +14,5 @@ type Database struct {
 	Password    string       `yaml:"password"`
 	Database    string       `yaml:"database"`
 	AutoMigrate bool         `yaml:"auto_migrate"`
+	Logger      Logger       `yaml:"logger"`
 }

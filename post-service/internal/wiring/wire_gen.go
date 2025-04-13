@@ -47,7 +47,7 @@ func Initilize() (*app.App, error) {
 		return nil, err
 	}
 	iCommentService := service.NewCommentService(iCommentRepository, client)
-	iController := controller.NewController(iLikeService, iPostService, iCommentService)
+	iController := controller.NewController(config, iLikeService, iPostService, iCommentService)
 	appApp := app.NewApp(iController)
 	return appApp, nil
 }
