@@ -18,8 +18,8 @@ import (
 
 type Server interface {
 	Start(string) error
-	ConnectToUserService(ctx context.Context) error
-	ConnectToPostService(ctx context.Context) error
+	// ConnectToUserService(ctx context.Context) error
+	// ConnectToPostService(ctx context.Context) error
 }
 
 type server struct {
@@ -41,38 +41,38 @@ func NewServer(
 	}
 }
 
-func (s *server) ConnectToUserService(ctx context.Context) error {
+// func (s *server) ConnectToUserService(ctx context.Context) error {
 
-	var userServiceAddr string
-	if value := os.Getenv("USER_URL"); value != "" {
-		userServiceAddr = value
-	} else {
-		userServiceAddr = "0.0.0.0:5610"
-	}
+// 	var userServiceAddr string
+// 	if value := os.Getenv("USER_URL"); value != "" {
+// 		userServiceAddr = value
+// 	} else {
+// 		userServiceAddr = "0.0.0.0:5610"
+// 	}
 
-	conn, err := grpc.NewClient(userServiceAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		log.Fatalf("could not connect to order service: %v", err)
-	}
-	defer conn.Close()
-	return nil
-}
+// 	conn, err := grpc.NewClient(userServiceAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+// 	if err != nil {
+// 		log.Fatalf("could not connect to order service: %v", err)
+// 	}
+// 	defer conn.Close()
+// 	return nil
+// }
 
-func (s *server) ConnectToPostService(ctx context.Context) error {
+// func (s *server) ConnectToPostService(ctx context.Context) error {
 
-	var postServiceAddr string
-	if value := os.Getenv("POST_URL"); value != "" {
-		postServiceAddr = value
-	} else {
-		postServiceAddr = "0.0.0.0:5611"
-	}
-	conn, err := grpc.NewClient(postServiceAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		log.Fatalf("could not connect to order service: %v", err)
-	}
-	defer conn.Close()
-	return nil
-}
+// 	var postServiceAddr string
+// 	if value := os.Getenv("POST_URL"); value != "" {
+// 		postServiceAddr = value
+// 	} else {
+// 		postServiceAddr = "0.0.0.0:5611"
+// 	}
+// 	conn, err := grpc.NewClient(postServiceAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+// 	if err != nil {
+// 		log.Fatalf("could not connect to order service: %v", err)
+// 	}
+// 	defer conn.Close()
+// 	return nil
+// }
 
 func (s *server) Start(serverType string) error {
 
@@ -174,13 +174,19 @@ func corsHandler(h http.Handler) http.Handler {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+		w.Header().Set("Access-Control-Allow-Credentials", "true") // Allow credentials if needed
 
 		// Handle preflight requests
 		if r.Method == http.MethodOptions {
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS")
+			w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 			w.WriteHeader(http.StatusNoContent)
 			return
 		}
-		fmt.Println(r.Method, r.URL.Path)
+
+		// Debugging incoming requests
+		fmt.Printf("Incoming request: Method=%s, Path=%s, Origin=%s\n", r.Method, r.URL.Path, r.Header.Get("Origin"))
 
 		h.ServeHTTP(w, r)
 	})
