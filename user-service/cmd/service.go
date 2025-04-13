@@ -20,23 +20,9 @@ import (
 	"github.com/namnv2496/user-service/internal/repository/repo"
 	"github.com/namnv2496/user-service/internal/service"
 	pb "github.com/namnv2496/user-service/pkg/user_core/v1"
-	"github.com/spf13/cobra"
 	"go.uber.org/fx"
 	"google.golang.org/grpc"
 )
-
-var serviceCmd = &cobra.Command{
-	Use:   "service",
-	Short: "run service",
-	Long:  "run service",
-	Run: func(cmd *cobra.Command, args []string) {
-		Invoke(
-			// StartGRPC,
-			// StartREST,
-			startServer,
-		).Run()
-	},
-}
 
 func Invoke(invokers ...any) *fx.App {
 	conf, _ := configs.NewConfig()

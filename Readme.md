@@ -10,12 +10,60 @@
     6. gorm - "gorm.io/gorm" (post-service only)
     7. Elastic search - "github.com/elastic/go-elasticsearch/v8"
 
-# 2. How to start
+# 2. Prerequisite
+
+## How to build protobuf
+```
+cd api
+buf mod update
+buf build
+```
+access each service
+```
+    make generate
+```
+
+## Grafana custom
+
+after login, you can setup dashboard for monitoring
+
+![grafana1](docs/grafana1.png)
+
+![grafana2](docs/grafana2.png)
+
+![grafana3](docs/grafana3.png)
+
+![grafana4](docs/grafana4.png)
+
+![grafana5](docs/grafana5.png)
+
+access to download dashboard template
+
+https://grafana.com/grafana/dashboards/1860-node-exporter-full/
+
+![grafana6](docs/grafana6.png)
+
+import template by id or json
+
+![grafana7](docs/grafana7.png)
+
+![grafana8](docs/grafana8.png)
+
+![grafana9](docs/grafana9.png)
+
+
+
+
+# 3. How to start
 
 ## Run by Docker
 
     1. run `docker compose up`
     2. Check status of services
+    3. Access prometheus: [http://localhost:9090/targets](http://localhost:9090/targets)
+    4. Access grafana: [http://localhost:3000/login](http://localhost:3000/login) (user: admin - password: admin)
+    5. Access `localhost:3001`
+
 
 ## Run on Local
 
@@ -41,13 +89,13 @@
 
 ![alt text](docs/follower.png)
 
-# 3. Data migration
+# 4. Data migration
 
 sql files location:
 
     user-service\internal\database\migrations\mysql
 
-# 4. Demo
+# 5. Demo
 
 ## Install wire to generate dependency injection
 
@@ -94,3 +142,6 @@ Create new chat room private with friend from newsfeed. Only 2 member of chat ca
 ![alt text](docs/search1.png)
 
 
+# Monitoring
+
+![monitoring1](monitoring1.png)

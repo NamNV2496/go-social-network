@@ -16,10 +16,10 @@ import (
 
 var (
 	MapQueryTemplates = map[string]*template.Template{
-		"tmplGetItemByShopId":        template.Must(template.ParseFiles(filepath.Join("templates", "tmplGetItemByShopId.json"))),
-		"tmplFindItemByNameMatch":    template.Must(template.ParseFiles(filepath.Join("templates", "tmplFindItemByNameMatch.json"))),
-		"tmplFindItemByNameRegex":    template.Must(template.ParseFiles(filepath.Join("templates", "tmplFindItemByNameRegex.json"))),
-		"tmplFindItemByNameWildcard": template.Must(template.ParseFiles(filepath.Join("templates", "tmplFindItemByNameWildcard.json"))),
+		// "tmplGetItemByShopId":        template.Must(template.ParseFiles(filepath.Join("templates", "tmplGetItemByShopId.json"))),
+		// "tmplFindItemByNameMatch":    template.Must(template.ParseFiles(filepath.Join("templates", "tmplFindItemByNameMatch.json"))),
+		"tmplFindItemByNameRegex": template.Must(template.ParseFiles(filepath.Join("templates", "tmplFindItemByNameRegex.json"))),
+		// "tmplFindItemByNameWildcard": template.Must(template.ParseFiles(filepath.Join("templates", "tmplFindItemByNameWildcard.json"))),
 	}
 )
 

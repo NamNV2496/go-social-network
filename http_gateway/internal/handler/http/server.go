@@ -2,6 +2,7 @@ package http
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -179,6 +180,7 @@ func corsHandler(h http.Handler) http.Handler {
 			w.WriteHeader(http.StatusNoContent)
 			return
 		}
+		fmt.Println(r.Method, r.URL.Path)
 
 		h.ServeHTTP(w, r)
 	})
