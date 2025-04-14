@@ -12,6 +12,7 @@ type Config struct {
 	GRPC          GRPC
 	Database      Database
 	ElasticSearch ElasticSearch
+	Email         Email
 }
 
 func NewConfig() (*Config, error) {

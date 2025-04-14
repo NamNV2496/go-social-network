@@ -1,5 +1,1 @@
-post-service/vendor* 
-message-service/vendor* 
-http-gateway/vendor* 
-newsfeed-service/vendor* 
-user-service/vendor* 
+**/vendor*

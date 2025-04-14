@@ -188,6 +188,19 @@ services:
             - elasticsearch
         networks:
             - social
+
+    user-service-migrate:
+        build:
+            context: .
+            dockerfile: user-service/Dockerfile
+        command: sh -c "/app/user-service migrate"
+        # or command: ["/app/user-service", "migrate"]
+        depends_on:
+            - mysql
+            - redis
+            - elasticsearch
+        networks:
+            - social
         
     frontend:
         image: nginx:alpine

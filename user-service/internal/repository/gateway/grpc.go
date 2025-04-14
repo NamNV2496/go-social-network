@@ -37,8 +37,6 @@ func newGRPCServer(conf *config) (*grpcServer, error) {
 		grpc.ChainStreamInterceptor(
 			validator.StreamServerInterceptor(),
 		),
-		grpc.MaxRecvMsgSize(16 * 1024 * 1024), // 16MB
-		grpc.MaxSendMsgSize(16 * 1024 * 1024), // 16MB
 	}
 	server := grpc.NewServer(grpcOpts...)
 	conf.grpc.registerFunc(server)
@@ -57,7 +55,7 @@ func newGRPCServer(conf *config) (*grpcServer, error) {
 
 func (s *grpcServer) Serve() error {
 	if err := s.servers.Serve(s.lis); err != nil {
-		return fmt.Errorf("grpc start failed: ", err)
+		return fmt.Errorf("grpc start failed: %w", err)
 	}
 	return nil
 }

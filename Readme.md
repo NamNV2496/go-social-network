@@ -9,6 +9,9 @@
     5. websocket - "github.com/gorilla/websocket"
     6. gorm - "gorm.io/gorm" (post-service only)
     7. Elastic search - "github.com/elastic/go-elasticsearch/v8"
+    8. prometheus - "github.com/prometheus/client_golang/prometheus"
+    9. grafana for monitoring
+    10. email - "github.com/jordan-wright/email"
 
 # 2. Prerequisite
 

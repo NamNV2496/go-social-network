@@ -86,7 +86,7 @@ func NewConsumer(
 	log.Println("Create connect with: ", kafkaBroker)
 	saramaConsumer, err := sarama.NewConsumerGroup([]string{kafkaBroker}, configs.ClientID, newSaramaConfig(configs))
 	if err != nil {
-		log.Panicln("failed to create sarama consumer: ", err)
+		log.Panic("failed to create sarama consumer: ", err)
 		return nil
 	}
 

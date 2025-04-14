@@ -16,6 +16,7 @@ import (
 	"github.com/namnv2496/user-service/internal/repository/cache"
 	"github.com/namnv2496/user-service/internal/repository/database"
 	"github.com/namnv2496/user-service/internal/repository/elasticsearch"
+	"github.com/namnv2496/user-service/internal/repository/email"
 	"github.com/namnv2496/user-service/internal/repository/gateway"
 	"github.com/namnv2496/user-service/internal/repository/repo"
 	"github.com/namnv2496/user-service/internal/service"
@@ -40,6 +41,7 @@ func Invoke(invokers ...any) *fx.App {
 			fx.Annotate(service.NewUserService, fx.As(new(service.UserService))),
 			fx.Annotate(repo.NewUserRepository, fx.As(new(repo.UserRepo))),
 			fx.Annotate(repo.NewUserUserRepository, fx.As(new(repo.UserUserRepo))),
+			fx.Annotate(email.NewEmailClient, fx.As(new(email.IEmail))),
 		),
 		fx.Supply(
 			conf,
@@ -52,7 +54,7 @@ func Invoke(invokers ...any) *fx.App {
 // =========================== WAY 1 ===========================
 func startServer(
 	lc fx.Lifecycle,
-	grpcServer userv1.AccountServiceServer,
+	grpcImpl userv1.AccountServiceServer,
 ) {
 	var userServiceAddr string
 	if value := os.Getenv("USER_URL"); value != "" {
@@ -65,8 +67,8 @@ func startServer(
 		SetHTTPAddress(userServiceAddr).
 		SetGRPCEnable(true).
 		SetHTTPEnable(false).
-		SetGRPCRegisterFunc(func(s *grpc.Server) {
-			userv1.RegisterAccountServiceServer(s, grpcServer)
+		SetGRPCRegisterFunc(func(server *grpc.Server) {
+			userv1.RegisterAccountServiceServer(server, grpcImpl)
 		}).
 		SetHTTPRegisterFunc(func(mux *runtime.ServeMux, conn *grpc.ClientConn) {
 			userv1.RegisterAccountServiceHandler(context.Background(), mux, conn)
@@ -77,12 +79,10 @@ func startServer(
 	}
 	lc.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
-			go func() {
-				err := server.Serve(ctx)
-				if err != nil {
-					panic(err)
-				}
-			}()
+			err := server.Serve(ctx)
+			if err != nil {
+				panic(err)
+			}
 			return nil
 		},
 		OnStop: server.Stop,
@@ -92,7 +92,7 @@ func startServer(
 // =========================== WAY 2 ===========================
 func StartGRPC(
 	lc fx.Lifecycle,
-	grpcClient userv1.AccountServiceServer,
+	grpcImpl userv1.AccountServiceServer,
 ) {
 	lis, err := net.Listen("tcp", ":5610")
 	if err != nil {
@@ -108,7 +108,7 @@ func StartGRPC(
 		),
 	}
 	grpcServer := grpc.NewServer(grpcOpts...)
-	userv1.RegisterAccountServiceServer(grpcServer, grpcClient)
+	userv1.RegisterAccountServiceServer(grpcServer, grpcImpl)
 	reflection.Register(grpcServer)
 
 	log.Printf("GRPC server is running on %s", lis.Addr().String())

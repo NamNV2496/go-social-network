@@ -2,7 +2,9 @@ package controller
 
 import (
 	"context"
+	"log/slog"
 
+	"github.com/namnv2496/user-service/internal/repository/email"
 	"github.com/namnv2496/user-service/internal/service"
 	logic "github.com/namnv2496/user-service/internal/service"
 	userv1 "github.com/namnv2496/user-service/pkg/user_core/v1"
@@ -10,14 +12,17 @@ import (
 
 type GrpcHandler struct {
 	userv1.UnimplementedAccountServiceServer
-	userService service.UserService
+	userService  service.UserService
+	emailService email.IEmail
 }
 
 func NewGrpcHander(
 	userService logic.UserService,
+	emailService email.IEmail,
 ) userv1.AccountServiceServer {
 	return &GrpcHandler{
-		userService: userService,
+		userService:  userService,
+		emailService: emailService,
 	}
 }
 
@@ -25,12 +30,26 @@ func (s GrpcHandler) CreateAccount(
 	ctx context.Context,
 	in *userv1.CreateAccountRequest,
 ) (*userv1.CreateAccountResponse, error) {
-
 	id, err := s.userService.CreateAccount(ctx, in.Account)
 	if err != nil {
 		return &userv1.CreateAccountResponse{
 			Id: 0,
 		}, err
+	}
+	// notify email
+	result, err := s.emailService.SendEmailByTemplate(ctx, email.SendEmailByTemplate{
+		ToEmail: in.Account.Email,
+		Cc:      "",
+		Params: map[string]string{
+			"full_name": "nguyen van a",
+			"otp":       "12345",
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+	if !result.Success {
+		slog.Info("failed to send email")
 	}
 	return &userv1.CreateAccountResponse{
 		Id: id,
