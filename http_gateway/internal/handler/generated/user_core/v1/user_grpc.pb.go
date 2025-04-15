@@ -22,6 +22,7 @@ const (
 	AccountService_CreateAccount_FullMethodName   = "/user.v1.AccountService/CreateAccount"
 	AccountService_GetAccount_FullMethodName      = "/user.v1.AccountService/GetAccount"
 	AccountService_FindAccount_FullMethodName     = "/user.v1.AccountService/FindAccount"
+	AccountService_Login_FullMethodName           = "/user.v1.AccountService/Login"
 	AccountService_CreateSession_FullMethodName   = "/user.v1.AccountService/CreateSession"
 	AccountService_GetFollowing_FullMethodName    = "/user.v1.AccountService/GetFollowing"
 	AccountService_CreateFollowing_FullMethodName = "/user.v1.AccountService/CreateFollowing"
@@ -36,6 +37,7 @@ type AccountServiceClient interface {
 	CreateAccount(ctx context.Context, in *CreateAccountRequest, opts ...grpc.CallOption) (*CreateAccountResponse, error)
 	GetAccount(ctx context.Context, in *GetAccountRequest, opts ...grpc.CallOption) (*GetAccountResponse, error)
 	FindAccount(ctx context.Context, in *FindAccountRequest, opts ...grpc.CallOption) (*FindAccountResponse, error)
+	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 	CreateSession(ctx context.Context, in *CreateSessionRequest, opts ...grpc.CallOption) (*CreateSessionResponse, error)
 	GetFollowing(ctx context.Context, in *GetFollowingRequest, opts ...grpc.CallOption) (*GetFollowingResponse, error)
 	CreateFollowing(ctx context.Context, in *CheckFollowingRequest, opts ...grpc.CallOption) (*CheckFollowingResponse, error)
@@ -75,6 +77,16 @@ func (c *accountServiceClient) FindAccount(ctx context.Context, in *FindAccountR
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(FindAccountResponse)
 	err := c.cc.Invoke(ctx, AccountService_FindAccount_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *accountServiceClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(LoginResponse)
+	err := c.cc.Invoke(ctx, AccountService_Login_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -138,6 +150,7 @@ type AccountServiceServer interface {
 	CreateAccount(context.Context, *CreateAccountRequest) (*CreateAccountResponse, error)
 	GetAccount(context.Context, *GetAccountRequest) (*GetAccountResponse, error)
 	FindAccount(context.Context, *FindAccountRequest) (*FindAccountResponse, error)
+	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	CreateSession(context.Context, *CreateSessionRequest) (*CreateSessionResponse, error)
 	GetFollowing(context.Context, *GetFollowingRequest) (*GetFollowingResponse, error)
 	CreateFollowing(context.Context, *CheckFollowingRequest) (*CheckFollowingResponse, error)
@@ -161,6 +174,9 @@ func (UnimplementedAccountServiceServer) GetAccount(context.Context, *GetAccount
 }
 func (UnimplementedAccountServiceServer) FindAccount(context.Context, *FindAccountRequest) (*FindAccountResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FindAccount not implemented")
+}
+func (UnimplementedAccountServiceServer) Login(context.Context, *LoginRequest) (*LoginResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
 }
 func (UnimplementedAccountServiceServer) CreateSession(context.Context, *CreateSessionRequest) (*CreateSessionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateSession not implemented")
@@ -248,6 +264,24 @@ func _AccountService_FindAccount_Handler(srv interface{}, ctx context.Context, d
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AccountServiceServer).FindAccount(ctx, req.(*FindAccountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AccountService_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LoginRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServiceServer).Login(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AccountService_Login_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServiceServer).Login(ctx, req.(*LoginRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -360,6 +394,10 @@ var AccountService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "FindAccount",
 			Handler:    _AccountService_FindAccount_Handler,
+		},
+		{
+			MethodName: "Login",
+			Handler:    _AccountService_Login_Handler,
 		},
 		{
 			MethodName: "CreateSession",

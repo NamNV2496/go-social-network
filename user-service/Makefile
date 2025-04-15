@@ -8,4 +8,4 @@ wire:
 	wire ./internal/wiring/
 
 run:
-	go run main.go service 
+	go run main.go 

@@ -64,7 +64,6 @@ func (c redisClient) Set(ctx context.Context, key string, data any, ttl ...time.
 }
 
 func (c redisClient) Get(ctx context.Context, key string) (any, error) {
-
 	data, err := c.redisClient.Get(ctx, key).Result()
 	if err != nil {
 		if errors.Is(err, redis.Nil) {
@@ -77,7 +76,6 @@ func (c redisClient) Get(ctx context.Context, key string) (any, error) {
 }
 
 func (c redisClient) AddToSet(ctx context.Context, key string, data ...any) error {
-
 	if err := c.redisClient.SAdd(ctx, key, data...).Err(); err != nil {
 		return status.Error(codes.Internal, "failed to set data into set inside cache")
 	}
@@ -86,7 +84,6 @@ func (c redisClient) AddToSet(ctx context.Context, key string, data ...any) erro
 }
 
 func (c redisClient) IsDataInSet(ctx context.Context, key string, data any) (bool, error) {
-
 	result, err := c.redisClient.SIsMember(ctx, key, data).Result()
 	if err != nil {
 		return false, status.Error(codes.Internal, "failed to check if data is member of set inside cache")

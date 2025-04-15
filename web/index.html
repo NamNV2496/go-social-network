@@ -76,6 +76,99 @@
 </div>
 
 <script>
+    function displayOtpPopup(userId) {
+        // Create OTP popup container
+        const otpPopup = document.createElement('div');
+        otpPopup.classList.add('popup');
+        otpPopup.style.display = 'block';
+
+        // Create close button
+        const closeButton = document.createElement('button');
+        closeButton.textContent = '×';
+        closeButton.style.position = 'absolute';
+        closeButton.style.top = '10px';
+        closeButton.style.right = '10px';
+        closeButton.style.backgroundColor = 'transparent';
+        closeButton.style.border = 'none';
+        closeButton.style.fontSize = '20px';
+        closeButton.style.cursor = 'pointer';
+        closeButton.addEventListener('click', () => {
+            otpPopup.style.display = 'none';
+            document.body.removeChild(otpPopup);
+            overlay.style.display = 'none';
+        });
+
+        // Create OTP form
+        const otpForm = document.createElement('form');
+        otpForm.style.textAlign = 'center';
+
+        const title = document.createElement('h3');
+        title.textContent = 'Enter OTP';
+        title.style.marginBottom = '20px';
+
+        const otpInput = document.createElement('input');
+        otpInput.type = 'text';
+        otpInput.placeholder = 'Enter 4-digit OTP';
+        otpInput.maxLength = 4;
+        otpInput.required = true;
+        otpInput.style.marginBottom = '15px';
+
+        const submitOtpButton = document.createElement('button');
+        submitOtpButton.textContent = 'Submit';
+        submitOtpButton.type = 'submit';
+        submitOtpButton.style.backgroundColor = '#007bff';
+        submitOtpButton.style.color = 'white';
+        submitOtpButton.style.border = 'none';
+        submitOtpButton.style.padding = '10px 20px';
+        submitOtpButton.style.borderRadius = '4px';
+        submitOtpButton.style.cursor = 'pointer';
+
+        otpForm.appendChild(title);
+        otpForm.appendChild(otpInput);
+        otpForm.appendChild(submitOtpButton);
+
+        otpPopup.appendChild(closeButton);
+        otpPopup.appendChild(otpForm);
+        document.body.appendChild(otpPopup);
+
+        // Add overlay
+        const overlay = document.getElementById('overlay');
+        overlay.style.display = 'block';
+
+        // Handle OTP form submission
+        otpForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const otp = otpInput.value.trim();
+            if (otp.length === 4) {
+                try {
+                    const otpResponse = await fetch('http://localhost:8080/api/v1/create_session', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ userId, otp })
+                    });
+                    const data = await otpResponse.json();
+                    if (otpResponse.ok) {
+                        if (data.message === "wrong otp") {
+                            alert('Wrong OTP!');
+                            return;
+                        }
+                        sessionStorage.setItem('token', data.token);
+                        sessionStorage.setItem('userName', userId);
+                        window.location.href = 'newsfeed.html';
+                    } else {
+                        alert('Invalid OTP. Please try again.');
+                    }
+                } catch (error) {
+                    alert('An error occurred. Please try again.');
+                }
+            } else {
+                alert('Please enter a valid 4-digit OTP.');
+            }
+        });
+    }
+
     async function login() {
         const userId = document.getElementById('userId').value;
         const password = document.getElementById('password').value;
@@ -93,8 +186,8 @@
 
         if (response.ok) {
             if (data.token == "") {
-                alert('Login failed!');
-                window.location.reload;
+                displayOtpPopup(userId);
+                return
             }
             console.log("update token in session")
             sessionStorage.setItem('token', data.token);

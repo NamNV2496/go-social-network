@@ -19,6 +19,7 @@ import (
 	"github.com/namnv2496/user-service/internal/repository/email"
 	"github.com/namnv2496/user-service/internal/repository/gateway"
 	"github.com/namnv2496/user-service/internal/repository/repo"
+	"github.com/namnv2496/user-service/internal/repository/sms"
 	"github.com/namnv2496/user-service/internal/service"
 	userv1 "github.com/namnv2496/user-service/pkg/user_core/v1"
 	"go.uber.org/fx"
@@ -42,6 +43,8 @@ func Invoke(invokers ...any) *fx.App {
 			fx.Annotate(repo.NewUserRepository, fx.As(new(repo.UserRepo))),
 			fx.Annotate(repo.NewUserUserRepository, fx.As(new(repo.UserUserRepo))),
 			fx.Annotate(email.NewEmailClient, fx.As(new(email.IEmail))),
+			fx.Annotate(service.NewOTPService, fx.As(new(service.IOTP))),
+			fx.Annotate(sms.NewSms, fx.As(new(sms.ISms))),
 		),
 		fx.Supply(
 			conf,
@@ -63,8 +66,8 @@ func startServer(
 		userServiceAddr = "localhost:9090"
 	}
 	config := gateway.NewServerConfig().
-		SetGRPCAddress("localhost:5610").
-		SetHTTPAddress(userServiceAddr).
+		SetGRPCAddress(userServiceAddr).
+		SetHTTPAddress("localhost:9089").
 		SetGRPCEnable(true).
 		SetHTTPEnable(false).
 		SetGRPCRegisterFunc(func(server *grpc.Server) {

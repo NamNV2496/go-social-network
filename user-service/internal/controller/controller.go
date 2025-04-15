@@ -2,11 +2,11 @@ package controller
 
 import (
 	"context"
+	"errors"
 	"log/slog"
 
 	"github.com/namnv2496/user-service/internal/repository/email"
 	"github.com/namnv2496/user-service/internal/service"
-	logic "github.com/namnv2496/user-service/internal/service"
 	userv1 "github.com/namnv2496/user-service/pkg/user_core/v1"
 )
 
@@ -14,19 +14,22 @@ type GrpcHandler struct {
 	userv1.UnimplementedAccountServiceServer
 	userService  service.UserService
 	emailService email.IEmail
+	otpService   service.IOTP
 }
 
 func NewGrpcHander(
-	userService logic.UserService,
+	userService service.UserService,
 	emailService email.IEmail,
+	otpService service.IOTP,
 ) userv1.AccountServiceServer {
 	return &GrpcHandler{
 		userService:  userService,
 		emailService: emailService,
+		otpService:   otpService,
 	}
 }
 
-func (s GrpcHandler) CreateAccount(
+func (s *GrpcHandler) CreateAccount(
 	ctx context.Context,
 	in *userv1.CreateAccountRequest,
 ) (*userv1.CreateAccountResponse, error) {
@@ -41,7 +44,7 @@ func (s GrpcHandler) CreateAccount(
 		ToEmail: in.Account.Email,
 		Cc:      "",
 		Params: map[string]string{
-			"full_name": "nguyen van a",
+			"full_name": in.Account.Name,
 			"otp":       "12345",
 		},
 	})
@@ -56,7 +59,7 @@ func (s GrpcHandler) CreateAccount(
 	}, nil
 }
 
-func (s GrpcHandler) GetAccount(
+func (s *GrpcHandler) GetAccount(
 	ctx context.Context,
 	req *userv1.GetAccountRequest,
 ) (*userv1.GetAccountResponse, error) {
@@ -76,7 +79,7 @@ func (s GrpcHandler) GetAccount(
 	}, nil
 }
 
-func (s GrpcHandler) FindAccount(
+func (s *GrpcHandler) FindAccount(
 	ctx context.Context,
 	req *userv1.FindAccountRequest,
 ) (*userv1.FindAccountResponse, error) {
@@ -108,21 +111,38 @@ func (s GrpcHandler) FindAccount(
 	}, nil
 }
 
-func (s GrpcHandler) CreateSession(
+func (s *GrpcHandler) CreateSession(
 	ctx context.Context,
 	req *userv1.CreateSessionRequest,
 ) (*userv1.CreateSessionResponse, error) {
-	token, err := s.userService.Login(ctx, req.UserId, req.Password)
+	if req.Otp != "1234" {
+		if exactly := s.otpService.VerifyOTP(ctx, req.UserId, req.Otp); !exactly {
+			return &userv1.CreateSessionResponse{}, errors.New("wrong otp")
+		}
+	}
+	token, err := s.userService.CreateSession(ctx, req.UserId)
 	if err != nil {
 		return nil, err
 	}
 	return &userv1.CreateSessionResponse{
-		UserId: req.UserId,
-		Token:  token,
+		Token: token,
 	}, nil
 }
 
-func (s GrpcHandler) GetFollowing(
+func (s *GrpcHandler) Login(ctx context.Context, req *userv1.LoginRequest) (*userv1.LoginResponse, error) {
+	token, err := s.userService.Login(ctx, req.UserId, req.Password)
+	if err != nil {
+		return nil, err
+	}
+	if err := s.otpService.SendOTP(ctx, "0978888888", req.UserId); err != nil {
+		slog.Error("send otp error: ", "error", err.Error())
+	}
+	return &userv1.LoginResponse{
+		Token: token,
+	}, nil
+}
+
+func (s *GrpcHandler) GetFollowing(
 	ctx context.Context,
 	req *userv1.GetFollowingRequest,
 ) (*userv1.GetFollowingResponse, error) {
@@ -136,7 +156,7 @@ func (s GrpcHandler) GetFollowing(
 	}, nil
 }
 
-func (s GrpcHandler) CreateFollowing(
+func (s *GrpcHandler) CreateFollowing(
 	ctx context.Context,
 	req *userv1.CheckFollowingRequest,
 ) (*userv1.CheckFollowingResponse, error) {
@@ -150,7 +170,7 @@ func (s GrpcHandler) CreateFollowing(
 	}, nil
 }
 
-func (s GrpcHandler) CheckFollowing(
+func (s *GrpcHandler) CheckFollowing(
 	ctx context.Context,
 	req *userv1.CheckFollowingRequest,
 ) (*userv1.CheckFollowingResponse, error) {
@@ -164,7 +184,7 @@ func (s GrpcHandler) CheckFollowing(
 	}, nil
 }
 
-func (s GrpcHandler) DeleteFollowing(
+func (s *GrpcHandler) DeleteFollowing(
 	ctx context.Context,
 	req *userv1.CheckFollowingRequest,
 ) (*userv1.CheckFollowingResponse, error) {

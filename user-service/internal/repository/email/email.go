@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"log/slog"
 	"net/smtp"
 	"strings"
 	"text/template"
@@ -89,6 +90,7 @@ func (e *Email) SendEmail(ctx context.Context, request *SendEmailRequest) (*Send
 func (e *Email) SendEmailByTemplate(ctx context.Context, request SendEmailByTemplate) (*SendEmailByTemplateResponse, error) {
 	templateBody := getTemplate(request.TemplateId)
 	body := parseTemplate(templateBody, request.Params)
+	slog.Info("send email with body", "body", body)
 
 	e.emailClient.From = fmt.Sprintf("%s <%s>", "Registation account", request.FromEmail)
 	e.emailClient.Subject = "Registation account confirmation"
@@ -117,6 +119,7 @@ func getTemplate(templateId string) string {
 
 func parseTemplate(templateformat string, input map[string]string) string {
 	body := strings.Replace(templateformat, "\n", "<br />", -1)
+	body = strings.Replace(body, "<b>", "", -1)
 	body = strings.Replace(body, "[", "{{.", -1)
 	body = strings.Replace(body, "]", "}}.", -1)
 	body = strings.Replace(body, `\"`, `"`, -1)

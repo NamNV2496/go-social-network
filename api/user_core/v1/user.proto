@@ -15,13 +15,22 @@ message Account {
     string updated_at = 100;
 }
 
-message CreateSessionRequest {
+message LoginRequest {
     string user_id = 1;
     string password = 2;
 }
 
-message CreateSessionResponse {
+message LoginResponse {
+    string status = 1;
+    string token = 2;
+}
+
+message CreateSessionRequest {
     string user_id = 1;
+    string otp = 2;
+}
+
+message CreateSessionResponse {
     string token = 2;
 }
 
@@ -85,9 +94,16 @@ service AccountService {
 		};
     }
 
-    rpc CreateSession(CreateSessionRequest) returns (CreateSessionResponse) {
+    rpc Login(LoginRequest) returns (LoginResponse) {
         option (google.api.http) = {
 			post: "/api/v1/login"
+            body: "*"
+		};
+    }
+
+    rpc CreateSession(CreateSessionRequest) returns (CreateSessionResponse) {
+        option (google.api.http) = {
+			post: "/api/v1/create_session"
             body: "*"
 		};
     }

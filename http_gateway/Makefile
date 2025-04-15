@@ -1,7 +1,6 @@
-update:
-	buf mod update ../api/
+
 generate:
-	buf mod updat
+	buf dep update ../api/
 	buf generate ../api/
 	wire ./internal/wiring/
 

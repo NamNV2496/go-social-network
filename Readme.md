@@ -16,11 +16,16 @@
 # 2. Prerequisite
 
 ## How to build protobuf
+
 ```
-cd api
-buf mod update
-buf build
+    cd http_gateway
+    make generate
+
+then copy to target service
 ```
+
+
+
 access each service
 ```
     make generate

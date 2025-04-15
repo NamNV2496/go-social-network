@@ -13,6 +13,7 @@ type Config struct {
 	Database      Database
 	ElasticSearch ElasticSearch
 	Email         Email
+	SMS           SMS
 }
 
 func NewConfig() (*Config, error) {

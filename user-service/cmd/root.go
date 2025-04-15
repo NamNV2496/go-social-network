@@ -8,9 +8,9 @@ func Execute() error {
 		Long:  `root`,
 		Run: func(cmd *cobra.Command, args []string) {
 			Invoke(
-				StartGRPC,
+				// StartGRPC,
 				// StartREST,
-				// startServer,
+				startServer,
 			).Run()
 		},
 	}

@@ -106,6 +106,38 @@
         ]
       }
     },
+    "/api/v1/create_session": {
+      "post": {
+        "operationId": "AccountService_CreateSession",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CreateSessionResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CreateSessionRequest"
+            }
+          }
+        ],
+        "tags": [
+          "AccountService"
+        ]
+      }
+    },
     "/api/v1/following": {
       "get": {
         "operationId": "AccountService_GetFollowing",
@@ -242,12 +274,12 @@
     },
     "/api/v1/login": {
       "post": {
-        "operationId": "AccountService_CreateSession",
+        "operationId": "AccountService_Login",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1CreateSessionResponse"
+              "$ref": "#/definitions/v1LoginResponse"
             }
           },
           "default": {
@@ -263,7 +295,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1CreateSessionRequest"
+              "$ref": "#/definitions/v1LoginRequest"
             }
           }
         ],
@@ -363,7 +395,7 @@
         "userId": {
           "type": "string"
         },
-        "password": {
+        "otp": {
           "type": "string"
         }
       }
@@ -371,9 +403,6 @@
     "v1CreateSessionResponse": {
       "type": "object",
       "properties": {
-        "userId": {
-          "type": "string"
-        },
         "token": {
           "type": "string"
         }
@@ -407,6 +436,28 @@
           "items": {
             "type": "string"
           }
+        }
+      }
+    },
+    "v1LoginRequest": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "v1LoginResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
         }
       }
     }

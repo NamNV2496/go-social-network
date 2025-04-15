@@ -122,7 +122,7 @@ func (x *Account) GetUpdatedAt() string {
 	return ""
 }
 
-type CreateSessionRequest struct {
+type LoginRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	Password      string                 `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
@@ -130,9 +130,113 @@ type CreateSessionRequest struct {
 	sizeCache     protoimpl.SizeCache
 }
 
+func (x *LoginRequest) Reset() {
+	*x = LoginRequest{}
+	mi := &file_user_core_v1_user_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *LoginRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*LoginRequest) ProtoMessage() {}
+
+func (x *LoginRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_core_v1_user_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use LoginRequest.ProtoReflect.Descriptor instead.
+func (*LoginRequest) Descriptor() ([]byte, []int) {
+	return file_user_core_v1_user_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *LoginRequest) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *LoginRequest) GetPassword() string {
+	if x != nil {
+		return x.Password
+	}
+	return ""
+}
+
+type LoginResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Status        string                 `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`
+	Token         string                 `protobuf:"bytes,2,opt,name=token,proto3" json:"token,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *LoginResponse) Reset() {
+	*x = LoginResponse{}
+	mi := &file_user_core_v1_user_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *LoginResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*LoginResponse) ProtoMessage() {}
+
+func (x *LoginResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_user_core_v1_user_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use LoginResponse.ProtoReflect.Descriptor instead.
+func (*LoginResponse) Descriptor() ([]byte, []int) {
+	return file_user_core_v1_user_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *LoginResponse) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+func (x *LoginResponse) GetToken() string {
+	if x != nil {
+		return x.Token
+	}
+	return ""
+}
+
+type CreateSessionRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Otp           string                 `protobuf:"bytes,2,opt,name=otp,proto3" json:"otp,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
 func (x *CreateSessionRequest) Reset() {
 	*x = CreateSessionRequest{}
-	mi := &file_user_core_v1_user_proto_msgTypes[1]
+	mi := &file_user_core_v1_user_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -144,7 +248,7 @@ func (x *CreateSessionRequest) String() string {
 func (*CreateSessionRequest) ProtoMessage() {}
 
 func (x *CreateSessionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_core_v1_user_proto_msgTypes[1]
+	mi := &file_user_core_v1_user_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -157,7 +261,7 @@ func (x *CreateSessionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateSessionRequest.ProtoReflect.Descriptor instead.
 func (*CreateSessionRequest) Descriptor() ([]byte, []int) {
-	return file_user_core_v1_user_proto_rawDescGZIP(), []int{1}
+	return file_user_core_v1_user_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *CreateSessionRequest) GetUserId() string {
@@ -167,16 +271,15 @@ func (x *CreateSessionRequest) GetUserId() string {
 	return ""
 }
 
-func (x *CreateSessionRequest) GetPassword() string {
+func (x *CreateSessionRequest) GetOtp() string {
 	if x != nil {
-		return x.Password
+		return x.Otp
 	}
 	return ""
 }
 
 type CreateSessionResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	Token         string                 `protobuf:"bytes,2,opt,name=token,proto3" json:"token,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -184,7 +287,7 @@ type CreateSessionResponse struct {
 
 func (x *CreateSessionResponse) Reset() {
 	*x = CreateSessionResponse{}
-	mi := &file_user_core_v1_user_proto_msgTypes[2]
+	mi := &file_user_core_v1_user_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -196,7 +299,7 @@ func (x *CreateSessionResponse) String() string {
 func (*CreateSessionResponse) ProtoMessage() {}
 
 func (x *CreateSessionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_user_core_v1_user_proto_msgTypes[2]
+	mi := &file_user_core_v1_user_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -209,14 +312,7 @@ func (x *CreateSessionResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateSessionResponse.ProtoReflect.Descriptor instead.
 func (*CreateSessionResponse) Descriptor() ([]byte, []int) {
-	return file_user_core_v1_user_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *CreateSessionResponse) GetUserId() string {
-	if x != nil {
-		return x.UserId
-	}
-	return ""
+	return file_user_core_v1_user_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *CreateSessionResponse) GetToken() string {
@@ -235,7 +331,7 @@ type CreateAccountRequest struct {
 
 func (x *CreateAccountRequest) Reset() {
 	*x = CreateAccountRequest{}
-	mi := &file_user_core_v1_user_proto_msgTypes[3]
+	mi := &file_user_core_v1_user_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -247,7 +343,7 @@ func (x *CreateAccountRequest) String() string {
 func (*CreateAccountRequest) ProtoMessage() {}
 
 func (x *CreateAccountRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_core_v1_user_proto_msgTypes[3]
+	mi := &file_user_core_v1_user_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -260,7 +356,7 @@ func (x *CreateAccountRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateAccountRequest.ProtoReflect.Descriptor instead.
 func (*CreateAccountRequest) Descriptor() ([]byte, []int) {
-	return file_user_core_v1_user_proto_rawDescGZIP(), []int{3}
+	return file_user_core_v1_user_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *CreateAccountRequest) GetAccount() *Account {
@@ -279,7 +375,7 @@ type CreateAccountResponse struct {
 
 func (x *CreateAccountResponse) Reset() {
 	*x = CreateAccountResponse{}
-	mi := &file_user_core_v1_user_proto_msgTypes[4]
+	mi := &file_user_core_v1_user_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -291,7 +387,7 @@ func (x *CreateAccountResponse) String() string {
 func (*CreateAccountResponse) ProtoMessage() {}
 
 func (x *CreateAccountResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_user_core_v1_user_proto_msgTypes[4]
+	mi := &file_user_core_v1_user_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -304,7 +400,7 @@ func (x *CreateAccountResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateAccountResponse.ProtoReflect.Descriptor instead.
 func (*CreateAccountResponse) Descriptor() ([]byte, []int) {
-	return file_user_core_v1_user_proto_rawDescGZIP(), []int{4}
+	return file_user_core_v1_user_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *CreateAccountResponse) GetId() uint64 {
@@ -323,7 +419,7 @@ type UpdateAccountRequest struct {
 
 func (x *UpdateAccountRequest) Reset() {
 	*x = UpdateAccountRequest{}
-	mi := &file_user_core_v1_user_proto_msgTypes[5]
+	mi := &file_user_core_v1_user_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -335,7 +431,7 @@ func (x *UpdateAccountRequest) String() string {
 func (*UpdateAccountRequest) ProtoMessage() {}
 
 func (x *UpdateAccountRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_core_v1_user_proto_msgTypes[5]
+	mi := &file_user_core_v1_user_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -348,7 +444,7 @@ func (x *UpdateAccountRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateAccountRequest.ProtoReflect.Descriptor instead.
 func (*UpdateAccountRequest) Descriptor() ([]byte, []int) {
-	return file_user_core_v1_user_proto_rawDescGZIP(), []int{5}
+	return file_user_core_v1_user_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *UpdateAccountRequest) GetAccount() *Account {
@@ -367,7 +463,7 @@ type UpdateAccountResponse struct {
 
 func (x *UpdateAccountResponse) Reset() {
 	*x = UpdateAccountResponse{}
-	mi := &file_user_core_v1_user_proto_msgTypes[6]
+	mi := &file_user_core_v1_user_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -379,7 +475,7 @@ func (x *UpdateAccountResponse) String() string {
 func (*UpdateAccountResponse) ProtoMessage() {}
 
 func (x *UpdateAccountResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_user_core_v1_user_proto_msgTypes[6]
+	mi := &file_user_core_v1_user_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -392,7 +488,7 @@ func (x *UpdateAccountResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateAccountResponse.ProtoReflect.Descriptor instead.
 func (*UpdateAccountResponse) Descriptor() ([]byte, []int) {
-	return file_user_core_v1_user_proto_rawDescGZIP(), []int{6}
+	return file_user_core_v1_user_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *UpdateAccountResponse) GetAccount() *Account {
@@ -411,7 +507,7 @@ type GetAccountRequest struct {
 
 func (x *GetAccountRequest) Reset() {
 	*x = GetAccountRequest{}
-	mi := &file_user_core_v1_user_proto_msgTypes[7]
+	mi := &file_user_core_v1_user_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -423,7 +519,7 @@ func (x *GetAccountRequest) String() string {
 func (*GetAccountRequest) ProtoMessage() {}
 
 func (x *GetAccountRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_core_v1_user_proto_msgTypes[7]
+	mi := &file_user_core_v1_user_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -436,7 +532,7 @@ func (x *GetAccountRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAccountRequest.ProtoReflect.Descriptor instead.
 func (*GetAccountRequest) Descriptor() ([]byte, []int) {
-	return file_user_core_v1_user_proto_rawDescGZIP(), []int{7}
+	return file_user_core_v1_user_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *GetAccountRequest) GetUserId() string {
@@ -455,7 +551,7 @@ type GetAccountResponse struct {
 
 func (x *GetAccountResponse) Reset() {
 	*x = GetAccountResponse{}
-	mi := &file_user_core_v1_user_proto_msgTypes[8]
+	mi := &file_user_core_v1_user_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -467,7 +563,7 @@ func (x *GetAccountResponse) String() string {
 func (*GetAccountResponse) ProtoMessage() {}
 
 func (x *GetAccountResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_user_core_v1_user_proto_msgTypes[8]
+	mi := &file_user_core_v1_user_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -480,7 +576,7 @@ func (x *GetAccountResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAccountResponse.ProtoReflect.Descriptor instead.
 func (*GetAccountResponse) Descriptor() ([]byte, []int) {
-	return file_user_core_v1_user_proto_rawDescGZIP(), []int{8}
+	return file_user_core_v1_user_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *GetAccountResponse) GetAccount() *Account {
@@ -499,7 +595,7 @@ type FindAccountRequest struct {
 
 func (x *FindAccountRequest) Reset() {
 	*x = FindAccountRequest{}
-	mi := &file_user_core_v1_user_proto_msgTypes[9]
+	mi := &file_user_core_v1_user_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -511,7 +607,7 @@ func (x *FindAccountRequest) String() string {
 func (*FindAccountRequest) ProtoMessage() {}
 
 func (x *FindAccountRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_core_v1_user_proto_msgTypes[9]
+	mi := &file_user_core_v1_user_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -524,7 +620,7 @@ func (x *FindAccountRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FindAccountRequest.ProtoReflect.Descriptor instead.
 func (*FindAccountRequest) Descriptor() ([]byte, []int) {
-	return file_user_core_v1_user_proto_rawDescGZIP(), []int{9}
+	return file_user_core_v1_user_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *FindAccountRequest) GetUserId() string {
@@ -543,7 +639,7 @@ type FindAccountResponse struct {
 
 func (x *FindAccountResponse) Reset() {
 	*x = FindAccountResponse{}
-	mi := &file_user_core_v1_user_proto_msgTypes[10]
+	mi := &file_user_core_v1_user_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -555,7 +651,7 @@ func (x *FindAccountResponse) String() string {
 func (*FindAccountResponse) ProtoMessage() {}
 
 func (x *FindAccountResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_user_core_v1_user_proto_msgTypes[10]
+	mi := &file_user_core_v1_user_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -568,7 +664,7 @@ func (x *FindAccountResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FindAccountResponse.ProtoReflect.Descriptor instead.
 func (*FindAccountResponse) Descriptor() ([]byte, []int) {
-	return file_user_core_v1_user_proto_rawDescGZIP(), []int{10}
+	return file_user_core_v1_user_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *FindAccountResponse) GetAccount() []*Account {
@@ -589,7 +685,7 @@ type AccountSession struct {
 
 func (x *AccountSession) Reset() {
 	*x = AccountSession{}
-	mi := &file_user_core_v1_user_proto_msgTypes[11]
+	mi := &file_user_core_v1_user_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -601,7 +697,7 @@ func (x *AccountSession) String() string {
 func (*AccountSession) ProtoMessage() {}
 
 func (x *AccountSession) ProtoReflect() protoreflect.Message {
-	mi := &file_user_core_v1_user_proto_msgTypes[11]
+	mi := &file_user_core_v1_user_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -614,7 +710,7 @@ func (x *AccountSession) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AccountSession.ProtoReflect.Descriptor instead.
 func (*AccountSession) Descriptor() ([]byte, []int) {
-	return file_user_core_v1_user_proto_rawDescGZIP(), []int{11}
+	return file_user_core_v1_user_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *AccountSession) GetToken() string {
@@ -648,7 +744,7 @@ type CheckFollowingRequest struct {
 
 func (x *CheckFollowingRequest) Reset() {
 	*x = CheckFollowingRequest{}
-	mi := &file_user_core_v1_user_proto_msgTypes[12]
+	mi := &file_user_core_v1_user_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -660,7 +756,7 @@ func (x *CheckFollowingRequest) String() string {
 func (*CheckFollowingRequest) ProtoMessage() {}
 
 func (x *CheckFollowingRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_core_v1_user_proto_msgTypes[12]
+	mi := &file_user_core_v1_user_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -673,7 +769,7 @@ func (x *CheckFollowingRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CheckFollowingRequest.ProtoReflect.Descriptor instead.
 func (*CheckFollowingRequest) Descriptor() ([]byte, []int) {
-	return file_user_core_v1_user_proto_rawDescGZIP(), []int{12}
+	return file_user_core_v1_user_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *CheckFollowingRequest) GetCurrentId() string {
@@ -699,7 +795,7 @@ type CheckFollowingResponse struct {
 
 func (x *CheckFollowingResponse) Reset() {
 	*x = CheckFollowingResponse{}
-	mi := &file_user_core_v1_user_proto_msgTypes[13]
+	mi := &file_user_core_v1_user_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -711,7 +807,7 @@ func (x *CheckFollowingResponse) String() string {
 func (*CheckFollowingResponse) ProtoMessage() {}
 
 func (x *CheckFollowingResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_user_core_v1_user_proto_msgTypes[13]
+	mi := &file_user_core_v1_user_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -724,7 +820,7 @@ func (x *CheckFollowingResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CheckFollowingResponse.ProtoReflect.Descriptor instead.
 func (*CheckFollowingResponse) Descriptor() ([]byte, []int) {
-	return file_user_core_v1_user_proto_rawDescGZIP(), []int{13}
+	return file_user_core_v1_user_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *CheckFollowingResponse) GetFollowing() bool {
@@ -743,7 +839,7 @@ type GetFollowingRequest struct {
 
 func (x *GetFollowingRequest) Reset() {
 	*x = GetFollowingRequest{}
-	mi := &file_user_core_v1_user_proto_msgTypes[14]
+	mi := &file_user_core_v1_user_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -755,7 +851,7 @@ func (x *GetFollowingRequest) String() string {
 func (*GetFollowingRequest) ProtoMessage() {}
 
 func (x *GetFollowingRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_core_v1_user_proto_msgTypes[14]
+	mi := &file_user_core_v1_user_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -768,7 +864,7 @@ func (x *GetFollowingRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetFollowingRequest.ProtoReflect.Descriptor instead.
 func (*GetFollowingRequest) Descriptor() ([]byte, []int) {
-	return file_user_core_v1_user_proto_rawDescGZIP(), []int{14}
+	return file_user_core_v1_user_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *GetFollowingRequest) GetUserId() string {
@@ -787,7 +883,7 @@ type GetFollowingResponse struct {
 
 func (x *GetFollowingResponse) Reset() {
 	*x = GetFollowingResponse{}
-	mi := &file_user_core_v1_user_proto_msgTypes[15]
+	mi := &file_user_core_v1_user_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -799,7 +895,7 @@ func (x *GetFollowingResponse) String() string {
 func (*GetFollowingResponse) ProtoMessage() {}
 
 func (x *GetFollowingResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_user_core_v1_user_proto_msgTypes[15]
+	mi := &file_user_core_v1_user_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -812,7 +908,7 @@ func (x *GetFollowingResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetFollowingResponse.ProtoReflect.Descriptor instead.
 func (*GetFollowingResponse) Descriptor() ([]byte, []int) {
-	return file_user_core_v1_user_proto_rawDescGZIP(), []int{15}
+	return file_user_core_v1_user_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *GetFollowingResponse) GetUserId() []string {
@@ -837,12 +933,17 @@ const file_user_core_v1_user_proto_rawDesc = "" +
 	"\n" +
 	"created_at\x18c \x01(\tR\tcreatedAt\x12\x1d\n" +
 	"\n" +
-	"updated_at\x18d \x01(\tR\tupdatedAt\"K\n" +
-	"\x14CreateSessionRequest\x12\x17\n" +
+	"updated_at\x18d \x01(\tR\tupdatedAt\"C\n" +
+	"\fLoginRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x1a\n" +
-	"\bpassword\x18\x02 \x01(\tR\bpassword\"F\n" +
-	"\x15CreateSessionResponse\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x14\n" +
+	"\bpassword\x18\x02 \x01(\tR\bpassword\"=\n" +
+	"\rLoginResponse\x12\x16\n" +
+	"\x06status\x18\x01 \x01(\tR\x06status\x12\x14\n" +
+	"\x05token\x18\x02 \x01(\tR\x05token\"A\n" +
+	"\x14CreateSessionRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x10\n" +
+	"\x03otp\x18\x02 \x01(\tR\x03otp\"-\n" +
+	"\x15CreateSessionResponse\x12\x14\n" +
 	"\x05token\x18\x02 \x01(\tR\x05token\"B\n" +
 	"\x14CreateAccountRequest\x12*\n" +
 	"\aaccount\x18\x01 \x01(\v2\x10.user.v1.AccountR\aaccount\"'\n" +
@@ -874,13 +975,14 @@ const file_user_core_v1_user_proto_rawDesc = "" +
 	"\x13GetFollowingRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\"/\n" +
 	"\x14GetFollowingResponse\x12\x17\n" +
-	"\auser_id\x18\x01 \x03(\tR\x06userId2\xe8\x06\n" +
+	"\auser_id\x18\x01 \x03(\tR\x06userId2\xc3\a\n" +
 	"\x0eAccountService\x12j\n" +
 	"\rCreateAccount\x12\x1d.user.v1.CreateAccountRequest\x1a\x1e.user.v1.CreateAccountResponse\"\x1a\x82\xd3\xe4\x93\x02\x14:\x01*\"\x0f/api/v1/account\x12g\n" +
 	"\n" +
 	"GetAccount\x12\x1a.user.v1.GetAccountRequest\x1a\x1b.user.v1.GetAccountResponse\" \x82\xd3\xe4\x93\x02\x1a\x12\x18/api/v1/account/{userId}\x12a\n" +
-	"\vFindAccount\x12\x1b.user.v1.FindAccountRequest\x1a\x1c.user.v1.FindAccountResponse\"\x17\x82\xd3\xe4\x93\x02\x11\x12\x0f/api/v1/account\x12h\n" +
-	"\rCreateSession\x12\x1d.user.v1.CreateSessionRequest\x1a\x1e.user.v1.CreateSessionResponse\"\x18\x82\xd3\xe4\x93\x02\x12:\x01*\"\r/api/v1/login\x12f\n" +
+	"\vFindAccount\x12\x1b.user.v1.FindAccountRequest\x1a\x1c.user.v1.FindAccountResponse\"\x17\x82\xd3\xe4\x93\x02\x11\x12\x0f/api/v1/account\x12P\n" +
+	"\x05Login\x12\x15.user.v1.LoginRequest\x1a\x16.user.v1.LoginResponse\"\x18\x82\xd3\xe4\x93\x02\x12:\x01*\"\r/api/v1/login\x12q\n" +
+	"\rCreateSession\x12\x1d.user.v1.CreateSessionRequest\x1a\x1e.user.v1.CreateSessionResponse\"!\x82\xd3\xe4\x93\x02\x1b:\x01*\"\x16/api/v1/create_session\x12f\n" +
 	"\fGetFollowing\x12\x1c.user.v1.GetFollowingRequest\x1a\x1d.user.v1.GetFollowingResponse\"\x19\x82\xd3\xe4\x93\x02\x13\x12\x11/api/v1/following\x12m\n" +
 	"\x0fCreateFollowing\x12\x1e.user.v1.CheckFollowingRequest\x1a\x1f.user.v1.CheckFollowingResponse\"\x19\x82\xd3\xe4\x93\x02\x13\"\x11/api/v1/following\x12m\n" +
 	"\x0fDeleteFollowing\x12\x1e.user.v1.CheckFollowingRequest\x1a\x1f.user.v1.CheckFollowingResponse\"\x19\x82\xd3\xe4\x93\x02\x13*\x11/api/v1/following\x12n\n" +
@@ -899,24 +1001,26 @@ func file_user_core_v1_user_proto_rawDescGZIP() []byte {
 	return file_user_core_v1_user_proto_rawDescData
 }
 
-var file_user_core_v1_user_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
+var file_user_core_v1_user_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
 var file_user_core_v1_user_proto_goTypes = []any{
 	(*Account)(nil),                // 0: user.v1.Account
-	(*CreateSessionRequest)(nil),   // 1: user.v1.CreateSessionRequest
-	(*CreateSessionResponse)(nil),  // 2: user.v1.CreateSessionResponse
-	(*CreateAccountRequest)(nil),   // 3: user.v1.CreateAccountRequest
-	(*CreateAccountResponse)(nil),  // 4: user.v1.CreateAccountResponse
-	(*UpdateAccountRequest)(nil),   // 5: user.v1.UpdateAccountRequest
-	(*UpdateAccountResponse)(nil),  // 6: user.v1.UpdateAccountResponse
-	(*GetAccountRequest)(nil),      // 7: user.v1.GetAccountRequest
-	(*GetAccountResponse)(nil),     // 8: user.v1.GetAccountResponse
-	(*FindAccountRequest)(nil),     // 9: user.v1.FindAccountRequest
-	(*FindAccountResponse)(nil),    // 10: user.v1.FindAccountResponse
-	(*AccountSession)(nil),         // 11: user.v1.AccountSession
-	(*CheckFollowingRequest)(nil),  // 12: user.v1.CheckFollowingRequest
-	(*CheckFollowingResponse)(nil), // 13: user.v1.CheckFollowingResponse
-	(*GetFollowingRequest)(nil),    // 14: user.v1.GetFollowingRequest
-	(*GetFollowingResponse)(nil),   // 15: user.v1.GetFollowingResponse
+	(*LoginRequest)(nil),           // 1: user.v1.LoginRequest
+	(*LoginResponse)(nil),          // 2: user.v1.LoginResponse
+	(*CreateSessionRequest)(nil),   // 3: user.v1.CreateSessionRequest
+	(*CreateSessionResponse)(nil),  // 4: user.v1.CreateSessionResponse
+	(*CreateAccountRequest)(nil),   // 5: user.v1.CreateAccountRequest
+	(*CreateAccountResponse)(nil),  // 6: user.v1.CreateAccountResponse
+	(*UpdateAccountRequest)(nil),   // 7: user.v1.UpdateAccountRequest
+	(*UpdateAccountResponse)(nil),  // 8: user.v1.UpdateAccountResponse
+	(*GetAccountRequest)(nil),      // 9: user.v1.GetAccountRequest
+	(*GetAccountResponse)(nil),     // 10: user.v1.GetAccountResponse
+	(*FindAccountRequest)(nil),     // 11: user.v1.FindAccountRequest
+	(*FindAccountResponse)(nil),    // 12: user.v1.FindAccountResponse
+	(*AccountSession)(nil),         // 13: user.v1.AccountSession
+	(*CheckFollowingRequest)(nil),  // 14: user.v1.CheckFollowingRequest
+	(*CheckFollowingResponse)(nil), // 15: user.v1.CheckFollowingResponse
+	(*GetFollowingRequest)(nil),    // 16: user.v1.GetFollowingRequest
+	(*GetFollowingResponse)(nil),   // 17: user.v1.GetFollowingResponse
 }
 var file_user_core_v1_user_proto_depIdxs = []int32{
 	0,  // 0: user.v1.CreateAccountRequest.account:type_name -> user.v1.Account
@@ -924,24 +1028,26 @@ var file_user_core_v1_user_proto_depIdxs = []int32{
 	0,  // 2: user.v1.UpdateAccountResponse.account:type_name -> user.v1.Account
 	0,  // 3: user.v1.GetAccountResponse.account:type_name -> user.v1.Account
 	0,  // 4: user.v1.FindAccountResponse.account:type_name -> user.v1.Account
-	3,  // 5: user.v1.AccountService.CreateAccount:input_type -> user.v1.CreateAccountRequest
-	7,  // 6: user.v1.AccountService.GetAccount:input_type -> user.v1.GetAccountRequest
-	9,  // 7: user.v1.AccountService.FindAccount:input_type -> user.v1.FindAccountRequest
-	1,  // 8: user.v1.AccountService.CreateSession:input_type -> user.v1.CreateSessionRequest
-	14, // 9: user.v1.AccountService.GetFollowing:input_type -> user.v1.GetFollowingRequest
-	12, // 10: user.v1.AccountService.CreateFollowing:input_type -> user.v1.CheckFollowingRequest
-	12, // 11: user.v1.AccountService.DeleteFollowing:input_type -> user.v1.CheckFollowingRequest
-	12, // 12: user.v1.AccountService.CheckFollowing:input_type -> user.v1.CheckFollowingRequest
-	4,  // 13: user.v1.AccountService.CreateAccount:output_type -> user.v1.CreateAccountResponse
-	8,  // 14: user.v1.AccountService.GetAccount:output_type -> user.v1.GetAccountResponse
-	10, // 15: user.v1.AccountService.FindAccount:output_type -> user.v1.FindAccountResponse
-	2,  // 16: user.v1.AccountService.CreateSession:output_type -> user.v1.CreateSessionResponse
-	15, // 17: user.v1.AccountService.GetFollowing:output_type -> user.v1.GetFollowingResponse
-	13, // 18: user.v1.AccountService.CreateFollowing:output_type -> user.v1.CheckFollowingResponse
-	13, // 19: user.v1.AccountService.DeleteFollowing:output_type -> user.v1.CheckFollowingResponse
-	13, // 20: user.v1.AccountService.CheckFollowing:output_type -> user.v1.CheckFollowingResponse
-	13, // [13:21] is the sub-list for method output_type
-	5,  // [5:13] is the sub-list for method input_type
+	5,  // 5: user.v1.AccountService.CreateAccount:input_type -> user.v1.CreateAccountRequest
+	9,  // 6: user.v1.AccountService.GetAccount:input_type -> user.v1.GetAccountRequest
+	11, // 7: user.v1.AccountService.FindAccount:input_type -> user.v1.FindAccountRequest
+	1,  // 8: user.v1.AccountService.Login:input_type -> user.v1.LoginRequest
+	3,  // 9: user.v1.AccountService.CreateSession:input_type -> user.v1.CreateSessionRequest
+	16, // 10: user.v1.AccountService.GetFollowing:input_type -> user.v1.GetFollowingRequest
+	14, // 11: user.v1.AccountService.CreateFollowing:input_type -> user.v1.CheckFollowingRequest
+	14, // 12: user.v1.AccountService.DeleteFollowing:input_type -> user.v1.CheckFollowingRequest
+	14, // 13: user.v1.AccountService.CheckFollowing:input_type -> user.v1.CheckFollowingRequest
+	6,  // 14: user.v1.AccountService.CreateAccount:output_type -> user.v1.CreateAccountResponse
+	10, // 15: user.v1.AccountService.GetAccount:output_type -> user.v1.GetAccountResponse
+	12, // 16: user.v1.AccountService.FindAccount:output_type -> user.v1.FindAccountResponse
+	2,  // 17: user.v1.AccountService.Login:output_type -> user.v1.LoginResponse
+	4,  // 18: user.v1.AccountService.CreateSession:output_type -> user.v1.CreateSessionResponse
+	17, // 19: user.v1.AccountService.GetFollowing:output_type -> user.v1.GetFollowingResponse
+	15, // 20: user.v1.AccountService.CreateFollowing:output_type -> user.v1.CheckFollowingResponse
+	15, // 21: user.v1.AccountService.DeleteFollowing:output_type -> user.v1.CheckFollowingResponse
+	15, // 22: user.v1.AccountService.CheckFollowing:output_type -> user.v1.CheckFollowingResponse
+	14, // [14:23] is the sub-list for method output_type
+	5,  // [5:14] is the sub-list for method input_type
 	5,  // [5:5] is the sub-list for extension type_name
 	5,  // [5:5] is the sub-list for extension extendee
 	0,  // [0:5] is the sub-list for field type_name
@@ -958,7 +1064,7 @@ func file_user_core_v1_user_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_user_core_v1_user_proto_rawDesc), len(file_user_core_v1_user_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   16,
+			NumMessages:   18,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
