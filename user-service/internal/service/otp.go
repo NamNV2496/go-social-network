@@ -39,7 +39,7 @@ func NewOTPService(
 
 func (c *OTP) SendOTP(ctx context.Context, phone string, userId string) error {
 	otp := c.GenerateOTP(ctx, userId)
-	slog.Info("OTP: ", "otp", otp)
+	slog.Info("send to phone %s OTP: ", "phone", phone, "otp", otp)
 	return c.smsClient.SendOTP(phone, otp)
 }
 

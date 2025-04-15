@@ -12,6 +12,7 @@
     8. prometheus - "github.com/prometheus/client_golang/prometheus"
     9. grafana for monitoring
     10. email - "github.com/jordan-wright/email"
+    11. sms - "github.com/twilio/twilio-go"
 
 # 2. Prerequisite
 
@@ -109,6 +110,9 @@ sql files location:
 
     go install github.com/google/wire/cmd/wire@latest
 
+## Login
+
+![alt text](docs/otp.png)
 ## Newsfeed 
 
 ![alt text](docs/newsfeed.png)

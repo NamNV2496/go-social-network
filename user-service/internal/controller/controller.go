@@ -5,7 +5,7 @@ import (
 	"errors"
 	"log/slog"
 
-	"github.com/namnv2496/user-service/internal/repository/email"
+	"github.com/namnv2496/user-service/internal/domain"
 	"github.com/namnv2496/user-service/internal/service"
 	userv1 "github.com/namnv2496/user-service/pkg/user_core/v1"
 )
@@ -13,13 +13,13 @@ import (
 type GrpcHandler struct {
 	userv1.UnimplementedAccountServiceServer
 	userService  service.UserService
-	emailService email.IEmail
+	emailService service.IEmail
 	otpService   service.IOTP
 }
 
 func NewGrpcHander(
 	userService service.UserService,
-	emailService email.IEmail,
+	emailService service.IEmail,
 	otpService service.IOTP,
 ) userv1.AccountServiceServer {
 	return &GrpcHandler{
@@ -40,7 +40,7 @@ func (s *GrpcHandler) CreateAccount(
 		}, err
 	}
 	// notify email
-	result, err := s.emailService.SendEmailByTemplate(ctx, email.SendEmailByTemplate{
+	result, err := s.emailService.SendEmailByTemplate(ctx, &domain.SendEmailByTemplate{
 		ToEmail: in.Account.Email,
 		Cc:      "",
 		Params: map[string]string{
@@ -130,11 +130,11 @@ func (s *GrpcHandler) CreateSession(
 }
 
 func (s *GrpcHandler) Login(ctx context.Context, req *userv1.LoginRequest) (*userv1.LoginResponse, error) {
-	token, err := s.userService.Login(ctx, req.UserId, req.Password)
+	token, phone, err := s.userService.Login(ctx, req.UserId, req.Password)
 	if err != nil {
 		return nil, err
 	}
-	if err := s.otpService.SendOTP(ctx, "0978888888", req.UserId); err != nil {
+	if err := s.otpService.SendOTP(ctx, phone, req.UserId); err != nil {
 		slog.Error("send otp error: ", "error", err.Error())
 	}
 	return &userv1.LoginResponse{

@@ -16,7 +16,6 @@ import (
 	"github.com/namnv2496/user-service/internal/repository/cache"
 	"github.com/namnv2496/user-service/internal/repository/database"
 	"github.com/namnv2496/user-service/internal/repository/elasticsearch"
-	"github.com/namnv2496/user-service/internal/repository/email"
 	"github.com/namnv2496/user-service/internal/repository/gateway"
 	"github.com/namnv2496/user-service/internal/repository/repo"
 	"github.com/namnv2496/user-service/internal/repository/sms"
@@ -42,7 +41,7 @@ func Invoke(invokers ...any) *fx.App {
 			fx.Annotate(service.NewUserService, fx.As(new(service.UserService))),
 			fx.Annotate(repo.NewUserRepository, fx.As(new(repo.UserRepo))),
 			fx.Annotate(repo.NewUserUserRepository, fx.As(new(repo.UserUserRepo))),
-			fx.Annotate(email.NewEmailClient, fx.As(new(email.IEmail))),
+			fx.Annotate(service.NewEmailClient, fx.As(new(service.IEmail))),
 			fx.Annotate(service.NewOTPService, fx.As(new(service.IOTP))),
 			fx.Annotate(sms.NewSms, fx.As(new(sms.ISms))),
 		),
@@ -63,7 +62,7 @@ func startServer(
 	if value := os.Getenv("USER_URL"); value != "" {
 		userServiceAddr = value
 	} else {
-		userServiceAddr = "localhost:9090"
+		userServiceAddr = "0.0.0.0:5610"
 	}
 	config := gateway.NewServerConfig().
 		SetGRPCAddress(userServiceAddr).

@@ -8,9 +8,10 @@ message Account {
     uint64 id = 1;
     string email = 2;
     string name = 3;
-    string picture = 4;
-    string user_id = 5;
-    string password = 6;
+    string phone = 4;
+    string picture = 5;
+    string user_id = 6;
+    string password = 7;
     string created_at = 99;
     string updated_at = 100;
 }

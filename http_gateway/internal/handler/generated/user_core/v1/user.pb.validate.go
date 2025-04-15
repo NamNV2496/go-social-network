@@ -62,6 +62,8 @@ func (m *Account) validate(all bool) error {
 
 	// no validation rules for Name
 
+	// no validation rules for Phone
+
 	// no validation rules for Picture
 
 	// no validation rules for UserId

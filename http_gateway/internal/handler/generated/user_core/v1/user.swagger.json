@@ -347,6 +347,9 @@
         "name": {
           "type": "string"
         },
+        "phone": {
+          "type": "string"
+        },
         "picture": {
           "type": "string"
         },

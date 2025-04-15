@@ -22,7 +22,7 @@ type UserService interface {
 	FindAccount(context.Context, string) ([]domain.User, error)
 	FindAccountByTemplate(context.Context, string) ([]*domain.User, error)
 	CreateAccount(context.Context, *userv1.Account) (uint64, error)
-	Login(context.Context, string, string) (string, error)
+	Login(context.Context, string, string) (string, string, error)
 	CreateSession(ctx context.Context, userId string) (string, error)
 	GetFollowing(context.Context, string) ([]string, error)
 	CreateFollowing(context.Context, string, string) (bool, error)
@@ -50,16 +50,14 @@ func NewUserService(
 	}
 }
 
-func (u *userService) CreateAccount(
-	ctx context.Context,
-	req *userv1.Account,
-) (uint64, error) {
+func (u *userService) CreateAccount(ctx context.Context, req *userv1.Account) (uint64, error) {
 	log.Println("Password: ", req.Password)
 	passwordHash, _ := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	user := domain.User{
 		Name:      req.Name,
 		Email:     req.Email,
 		UserId:    req.UserId,
+		Phone:     req.Phone,
 		Password:  string(passwordHash),
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
@@ -92,10 +90,7 @@ func (u *userService) CreateAccount(
 	return uint64(user.Id), nil
 }
 
-func (u *userService) GetAccount(
-	ctx context.Context,
-	userId string,
-) (domain.User, error) {
+func (u *userService) GetAccount(ctx context.Context, userId string) (domain.User, error) {
 	return u.userRepo.GetAccount(ctx, userId)
 }
 
@@ -170,31 +165,24 @@ func (u *userService) FindAccount(
 	return res, nil
 }
 
-func (u *userService) Login(
-	ctx context.Context,
-	userId string,
-	password string,
-) (string, error) {
+func (u *userService) Login(ctx context.Context, userId string, password string) (string, string, error) {
 	user, err := u.userRepo.GetAccount(ctx, userId)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 	value, exist := u.redis.Get(ctx, userId+"_token")
 	if exist == nil {
 		// existed
-		return value.(string), nil
+		return value.(string), user.Phone, nil
 	}
-	return "", nil
+	return "", "", nil
 }
 
-func (u *userService) CreateSession(
-	ctx context.Context,
-	userId string,
-) (string, error) {
+func (u *userService) CreateSession(ctx context.Context, userId string) (string, error) {
 	token, err := security.GenerateJWTToken(userId)
 	if err != nil {
 		return "", err
@@ -205,19 +193,11 @@ func (u *userService) CreateSession(
 	return token, err
 }
 
-func (u *userService) GetFollowing(
-	ctx context.Context,
-	userId string,
-) ([]string, error) {
-
+func (u *userService) GetFollowing(ctx context.Context, userId string) ([]string, error) {
 	return u.userUserRepo.GetFollowing(ctx, userId)
 }
 
-func (u *userService) CreateFollowing(
-	ctx context.Context,
-	currentId string,
-	userId string,
-) (bool, error) {
+func (u *userService) CreateFollowing(ctx context.Context, currentId string, userId string) (bool, error) {
 	log.Println("Add new following: ", currentId, " - ", userId)
 	err := u.userUserRepo.CreateFollowing(ctx, currentId, userId)
 	if err != nil {
@@ -226,11 +206,7 @@ func (u *userService) CreateFollowing(
 	return true, nil
 }
 
-func (u *userService) CheckFollowing(
-	ctx context.Context,
-	currentId string,
-	userId string,
-) (bool, error) {
+func (u *userService) CheckFollowing(ctx context.Context, currentId string, userId string) (bool, error) {
 
 	exist, err := u.userUserRepo.CheckFollowing(ctx, currentId, userId)
 	if err != nil {
@@ -239,11 +215,7 @@ func (u *userService) CheckFollowing(
 	return exist, nil
 }
 
-func (u *userService) Unfollowing(
-	ctx context.Context,
-	currentId string,
-	userId string,
-) error {
+func (u *userService) Unfollowing(ctx context.Context, currentId string, userId string) error {
 
 	err := u.userUserRepo.Unfollowing(ctx, currentId, userId)
 	if err != nil {
@@ -252,9 +224,6 @@ func (u *userService) Unfollowing(
 	return nil
 }
 
-func (u *userService) FindAccountByTemplate(
-	ctx context.Context,
-	userId string,
-) ([]*domain.User, error) {
+func (u *userService) FindAccountByTemplate(ctx context.Context, userId string) ([]*domain.User, error) {
 	return u.esClient.TemplateQuery(ctx, userId, "tmplFindItemByNameRegex", 0, 20)
 }

@@ -1,4 +1,4 @@
-package email
+package service
 
 import (
 	"bytes"
@@ -12,6 +12,7 @@ import (
 
 	"github.com/jordan-wright/email"
 	"github.com/namnv2496/user-service/internal/configs"
+	"github.com/namnv2496/user-service/internal/domain"
 )
 
 const (
@@ -40,8 +41,8 @@ type SendEmailResponse struct {
 }
 
 type IEmail interface {
-	SendEmail(ctx context.Context, request *SendEmailRequest) (*SendRawQueryResponse, error)
-	SendEmailByTemplate(ctx context.Context, request SendEmailByTemplate) (*SendEmailByTemplateResponse, error)
+	SendEmail(ctx context.Context, request *SendEmailRequest) (*domain.SendRawQueryResponse, error)
+	SendEmailByTemplate(ctx context.Context, request *domain.SendEmailByTemplate) (*domain.SendEmailByTemplateResponse, error)
 }
 
 type Email struct {
@@ -58,7 +59,7 @@ func NewEmailClient(
 	}
 }
 
-func (e *Email) SendEmail(ctx context.Context, request *SendEmailRequest) (*SendRawQueryResponse, error) {
+func (e *Email) SendEmail(ctx context.Context, request *SendEmailRequest) (*domain.SendRawQueryResponse, error) {
 	// requestBody := &SendRawQuery{
 	// 	FromEmail:    request.FromEmail,
 	// 	ToEmail:      request.ToEmail,
@@ -76,18 +77,18 @@ func (e *Email) SendEmail(ctx context.Context, request *SendEmailRequest) (*Send
 
 	smtpAuth := smtp.PlainAuth("", e.cfg.Email, e.cfg.Password, smtpAuthAddress)
 	if err := e.emailClient.Send(smtpServerAddress, smtpAuth); err != nil {
-		return &SendRawQueryResponse{
+		return &domain.SendRawQueryResponse{
 			Success: false,
 			Payload: "fail",
 		}, err
 	}
-	return &SendRawQueryResponse{
+	return &domain.SendRawQueryResponse{
 		Success: true,
 		Payload: "success",
 	}, nil
 }
 
-func (e *Email) SendEmailByTemplate(ctx context.Context, request SendEmailByTemplate) (*SendEmailByTemplateResponse, error) {
+func (e *Email) SendEmailByTemplate(ctx context.Context, request *domain.SendEmailByTemplate) (*domain.SendEmailByTemplateResponse, error) {
 	templateBody := getTemplate(request.TemplateId)
 	body := parseTemplate(templateBody, request.Params)
 	slog.Info("send email with body", "body", body)
@@ -101,12 +102,12 @@ func (e *Email) SendEmailByTemplate(ctx context.Context, request SendEmailByTemp
 
 	smtpAuth := smtp.PlainAuth("", e.cfg.Email, e.cfg.Password, smtpAuthAddress)
 	if err := e.emailClient.Send(smtpServerAddress, smtpAuth); err != nil {
-		return &SendEmailByTemplateResponse{
+		return &domain.SendEmailByTemplateResponse{
 			Success: false,
 			Payload: "fail",
 		}, err
 	}
-	return &SendEmailByTemplateResponse{
+	return &domain.SendEmailByTemplateResponse{
 		Success: true,
 		Payload: "success",
 	}, nil

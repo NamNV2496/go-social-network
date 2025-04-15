@@ -65,12 +65,13 @@
 
 <div class="popup" id="registerPopup" style="width: 400px;">
     <h2>Register</h2>
-    <form id="registerForm" >
+    <form id="registerForm"></form>
         <input type="email" id="email" placeholder="Email" required>
         <input type="text" id="name" placeholder="Name" required>
         <input type="password" id="registerPassword" placeholder="Password" required>
         <input type="text" id="registerUserId" placeholder="User ID (lowercase, no special characters)" pattern="[a-z0-9]+" title="Only lowercase letters and numbers are allowed" required>
         <input type="text" id="picture" placeholder="Avatar" required>
+        <input type="tel" id="phone" placeholder="Phone Number" pattern="[0-9]{10}" title="Enter a valid 10-digit phone number" required>
         <button type="submit">Submit</button>
     </form>
 </div>
@@ -191,7 +192,7 @@
             }
             console.log("update token in session")
             sessionStorage.setItem('token', data.token);
-            sessionStorage.setItem('userName', data.userId);
+            sessionStorage.setItem('userName', userId);
             // Redirect to another page or perform additional actions
             window.location.href = 'newsfeed.html';
         } else {
@@ -225,13 +226,14 @@
         const password = document.getElementById('registerPassword').value;
         const userId = document.getElementById('registerUserId').value;
         const avatar = document.getElementById('picture').value;
+        const phone = document.getElementById('phone').value;
 
         const response = await fetch('http://localhost:8080/api/v1/account', {
             method: 'POST',
             headers: {
             'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ account: { email, name, password, userId, avatar } })
+            body: JSON.stringify({ account: { email, name, phone, password, userId, avatar } })
         });
 
         if (response.ok) {
