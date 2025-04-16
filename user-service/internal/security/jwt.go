@@ -34,7 +34,6 @@ func InitJWT(path string) {
 }
 
 func GenerateJWTToken(userId string) (string, error) {
-
 	tokenTTL, _ := strconv.Atoi(os.Getenv("TOKEN_TTL"))
 	token, _ := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"userId": userId,
@@ -46,7 +45,6 @@ func GenerateJWTToken(userId string) (string, error) {
 }
 
 func IsTimeExpired(expire int64) error {
-
 	if expire != 0 {
 		exp := time.Unix(int64(expire), 0)
 		if exp.After(time.Now()) {
@@ -57,7 +55,6 @@ func IsTimeExpired(expire int64) error {
 }
 
 func ParseClaims(tokenString string) (jwt.MapClaims, error) {
-
 	token, err := ParseToken(tokenString)
 	if err != nil {
 		return nil, err

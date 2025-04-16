@@ -8,7 +8,7 @@ import (
 	"os"
 
 	"github.com/namnv2496/user-service/internal/configs"
-	"github.com/namnv2496/user-service/internal/repository/database"
+	"github.com/namnv2496/user-service/internal/repository/database/migrations"
 	"github.com/spf13/cobra"
 )
 
@@ -37,7 +37,7 @@ var migrateDataCmd = &cobra.Command{
 			log.Printf("error connecting to the database: %+v\n", err)
 			return
 		}
-		dbMigrator, err := database.NewMigrator(db)
+		dbMigrator, err := migrations.NewMigrator(db)
 		if err != nil {
 			return
 		}

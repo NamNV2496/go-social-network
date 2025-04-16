@@ -423,3 +423,219 @@ var AccountService_ServiceDesc = grpc.ServiceDesc{
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "user_core/v1/user.proto",
 }
+
+const (
+	EmailTemplateService_GetEmailTemplateById_FullMethodName         = "/user.v1.EmailTemplateService/GetEmailTemplateById"
+	EmailTemplateService_GetEmailTemplateByTemplateId_FullMethodName = "/user.v1.EmailTemplateService/GetEmailTemplateByTemplateId"
+	EmailTemplateService_AddEmailTemplate_FullMethodName             = "/user.v1.EmailTemplateService/AddEmailTemplate"
+	EmailTemplateService_UpdateEmailTemplate_FullMethodName          = "/user.v1.EmailTemplateService/UpdateEmailTemplate"
+)
+
+// EmailTemplateServiceClient is the client API for EmailTemplateService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type EmailTemplateServiceClient interface {
+	GetEmailTemplateById(ctx context.Context, in *GetEmailTemplateRequest, opts ...grpc.CallOption) (*GetEmailTemplateResponse, error)
+	GetEmailTemplateByTemplateId(ctx context.Context, in *GetEmailTemplateByTemplateIdRequest, opts ...grpc.CallOption) (*GetEmailTemplateResponse, error)
+	AddEmailTemplate(ctx context.Context, in *AddEmailTemplateRequest, opts ...grpc.CallOption) (*AddEmailTemplateResponse, error)
+	UpdateEmailTemplate(ctx context.Context, in *UpdateEmailTemplateRequest, opts ...grpc.CallOption) (*UpdateEmailTemplateResponse, error)
+}
+
+type emailTemplateServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewEmailTemplateServiceClient(cc grpc.ClientConnInterface) EmailTemplateServiceClient {
+	return &emailTemplateServiceClient{cc}
+}
+
+func (c *emailTemplateServiceClient) GetEmailTemplateById(ctx context.Context, in *GetEmailTemplateRequest, opts ...grpc.CallOption) (*GetEmailTemplateResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetEmailTemplateResponse)
+	err := c.cc.Invoke(ctx, EmailTemplateService_GetEmailTemplateById_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *emailTemplateServiceClient) GetEmailTemplateByTemplateId(ctx context.Context, in *GetEmailTemplateByTemplateIdRequest, opts ...grpc.CallOption) (*GetEmailTemplateResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetEmailTemplateResponse)
+	err := c.cc.Invoke(ctx, EmailTemplateService_GetEmailTemplateByTemplateId_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *emailTemplateServiceClient) AddEmailTemplate(ctx context.Context, in *AddEmailTemplateRequest, opts ...grpc.CallOption) (*AddEmailTemplateResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AddEmailTemplateResponse)
+	err := c.cc.Invoke(ctx, EmailTemplateService_AddEmailTemplate_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *emailTemplateServiceClient) UpdateEmailTemplate(ctx context.Context, in *UpdateEmailTemplateRequest, opts ...grpc.CallOption) (*UpdateEmailTemplateResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateEmailTemplateResponse)
+	err := c.cc.Invoke(ctx, EmailTemplateService_UpdateEmailTemplate_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// EmailTemplateServiceServer is the server API for EmailTemplateService service.
+// All implementations must embed UnimplementedEmailTemplateServiceServer
+// for forward compatibility.
+type EmailTemplateServiceServer interface {
+	GetEmailTemplateById(context.Context, *GetEmailTemplateRequest) (*GetEmailTemplateResponse, error)
+	GetEmailTemplateByTemplateId(context.Context, *GetEmailTemplateByTemplateIdRequest) (*GetEmailTemplateResponse, error)
+	AddEmailTemplate(context.Context, *AddEmailTemplateRequest) (*AddEmailTemplateResponse, error)
+	UpdateEmailTemplate(context.Context, *UpdateEmailTemplateRequest) (*UpdateEmailTemplateResponse, error)
+	mustEmbedUnimplementedEmailTemplateServiceServer()
+}
+
+// UnimplementedEmailTemplateServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedEmailTemplateServiceServer struct{}
+
+func (UnimplementedEmailTemplateServiceServer) GetEmailTemplateById(context.Context, *GetEmailTemplateRequest) (*GetEmailTemplateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetEmailTemplateById not implemented")
+}
+func (UnimplementedEmailTemplateServiceServer) GetEmailTemplateByTemplateId(context.Context, *GetEmailTemplateByTemplateIdRequest) (*GetEmailTemplateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetEmailTemplateByTemplateId not implemented")
+}
+func (UnimplementedEmailTemplateServiceServer) AddEmailTemplate(context.Context, *AddEmailTemplateRequest) (*AddEmailTemplateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddEmailTemplate not implemented")
+}
+func (UnimplementedEmailTemplateServiceServer) UpdateEmailTemplate(context.Context, *UpdateEmailTemplateRequest) (*UpdateEmailTemplateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateEmailTemplate not implemented")
+}
+func (UnimplementedEmailTemplateServiceServer) mustEmbedUnimplementedEmailTemplateServiceServer() {}
+func (UnimplementedEmailTemplateServiceServer) testEmbeddedByValue()                              {}
+
+// UnsafeEmailTemplateServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to EmailTemplateServiceServer will
+// result in compilation errors.
+type UnsafeEmailTemplateServiceServer interface {
+	mustEmbedUnimplementedEmailTemplateServiceServer()
+}
+
+func RegisterEmailTemplateServiceServer(s grpc.ServiceRegistrar, srv EmailTemplateServiceServer) {
+	// If the following call pancis, it indicates UnimplementedEmailTemplateServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&EmailTemplateService_ServiceDesc, srv)
+}
+
+func _EmailTemplateService_GetEmailTemplateById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetEmailTemplateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EmailTemplateServiceServer).GetEmailTemplateById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: EmailTemplateService_GetEmailTemplateById_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EmailTemplateServiceServer).GetEmailTemplateById(ctx, req.(*GetEmailTemplateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _EmailTemplateService_GetEmailTemplateByTemplateId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetEmailTemplateByTemplateIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EmailTemplateServiceServer).GetEmailTemplateByTemplateId(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: EmailTemplateService_GetEmailTemplateByTemplateId_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EmailTemplateServiceServer).GetEmailTemplateByTemplateId(ctx, req.(*GetEmailTemplateByTemplateIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _EmailTemplateService_AddEmailTemplate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddEmailTemplateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EmailTemplateServiceServer).AddEmailTemplate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: EmailTemplateService_AddEmailTemplate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EmailTemplateServiceServer).AddEmailTemplate(ctx, req.(*AddEmailTemplateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _EmailTemplateService_UpdateEmailTemplate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateEmailTemplateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EmailTemplateServiceServer).UpdateEmailTemplate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: EmailTemplateService_UpdateEmailTemplate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EmailTemplateServiceServer).UpdateEmailTemplate(ctx, req.(*UpdateEmailTemplateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// EmailTemplateService_ServiceDesc is the grpc.ServiceDesc for EmailTemplateService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var EmailTemplateService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "user.v1.EmailTemplateService",
+	HandlerType: (*EmailTemplateServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetEmailTemplateById",
+			Handler:    _EmailTemplateService_GetEmailTemplateById_Handler,
+		},
+		{
+			MethodName: "GetEmailTemplateByTemplateId",
+			Handler:    _EmailTemplateService_GetEmailTemplateByTemplateId_Handler,
+		},
+		{
+			MethodName: "AddEmailTemplate",
+			Handler:    _EmailTemplateService_AddEmailTemplate_Handler,
+		},
+		{
+			MethodName: "UpdateEmailTemplate",
+			Handler:    _EmailTemplateService_UpdateEmailTemplate_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "user_core/v1/user.proto",
+}

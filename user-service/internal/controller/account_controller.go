@@ -41,11 +41,12 @@ func (s *GrpcHandler) CreateAccount(
 	}
 	// notify email
 	result, err := s.emailService.SendEmailByTemplate(ctx, &domain.SendEmailByTemplate{
-		ToEmail: in.Account.Email,
-		Cc:      "",
+		TemplateId: "otp_email",
+		ToEmail:    in.Account.Email,
+		Cc:         "",
 		Params: map[string]string{
 			"full_name": in.Account.Name,
-			"otp":       "12345",
+			"otp":       s.otpService.GenerateOTP(ctx, in.Account.UserId),
 		},
 	})
 	if err != nil {

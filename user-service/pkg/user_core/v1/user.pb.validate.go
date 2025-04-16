@@ -2061,3 +2061,927 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = GetFollowingResponseValidationError{}
+
+// Validate checks the field values on GetEmailTemplate with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *GetEmailTemplate) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetEmailTemplate with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetEmailTemplateMultiError, or nil if none found.
+func (m *GetEmailTemplate) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetEmailTemplate) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	// no validation rules for Template
+
+	// no validation rules for TemplateId
+
+	if len(errors) > 0 {
+		return GetEmailTemplateMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetEmailTemplateMultiError is an error wrapping multiple validation errors
+// returned by GetEmailTemplate.ValidateAll() if the designated constraints
+// aren't met.
+type GetEmailTemplateMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetEmailTemplateMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetEmailTemplateMultiError) AllErrors() []error { return m }
+
+// GetEmailTemplateValidationError is the validation error returned by
+// GetEmailTemplate.Validate if the designated constraints aren't met.
+type GetEmailTemplateValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetEmailTemplateValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetEmailTemplateValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetEmailTemplateValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetEmailTemplateValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetEmailTemplateValidationError) ErrorName() string { return "GetEmailTemplateValidationError" }
+
+// Error satisfies the builtin error interface
+func (e GetEmailTemplateValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetEmailTemplate.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetEmailTemplateValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetEmailTemplateValidationError{}
+
+// Validate checks the field values on GetEmailTemplateByTemplateIdRequest with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, the first error encountered is returned, or nil if there are
+// no violations.
+func (m *GetEmailTemplateByTemplateIdRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetEmailTemplateByTemplateIdRequest
+// with the rules defined in the proto definition for this message. If any
+// rules are violated, the result is a list of violation errors wrapped in
+// GetEmailTemplateByTemplateIdRequestMultiError, or nil if none found.
+func (m *GetEmailTemplateByTemplateIdRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetEmailTemplateByTemplateIdRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for TemplateId
+
+	if len(errors) > 0 {
+		return GetEmailTemplateByTemplateIdRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetEmailTemplateByTemplateIdRequestMultiError is an error wrapping multiple
+// validation errors returned by
+// GetEmailTemplateByTemplateIdRequest.ValidateAll() if the designated
+// constraints aren't met.
+type GetEmailTemplateByTemplateIdRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetEmailTemplateByTemplateIdRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetEmailTemplateByTemplateIdRequestMultiError) AllErrors() []error { return m }
+
+// GetEmailTemplateByTemplateIdRequestValidationError is the validation error
+// returned by GetEmailTemplateByTemplateIdRequest.Validate if the designated
+// constraints aren't met.
+type GetEmailTemplateByTemplateIdRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetEmailTemplateByTemplateIdRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetEmailTemplateByTemplateIdRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetEmailTemplateByTemplateIdRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetEmailTemplateByTemplateIdRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetEmailTemplateByTemplateIdRequestValidationError) ErrorName() string {
+	return "GetEmailTemplateByTemplateIdRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetEmailTemplateByTemplateIdRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetEmailTemplateByTemplateIdRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetEmailTemplateByTemplateIdRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetEmailTemplateByTemplateIdRequestValidationError{}
+
+// Validate checks the field values on GetEmailTemplateRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetEmailTemplateRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetEmailTemplateRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetEmailTemplateRequestMultiError, or nil if none found.
+func (m *GetEmailTemplateRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetEmailTemplateRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	if len(errors) > 0 {
+		return GetEmailTemplateRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetEmailTemplateRequestMultiError is an error wrapping multiple validation
+// errors returned by GetEmailTemplateRequest.ValidateAll() if the designated
+// constraints aren't met.
+type GetEmailTemplateRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetEmailTemplateRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetEmailTemplateRequestMultiError) AllErrors() []error { return m }
+
+// GetEmailTemplateRequestValidationError is the validation error returned by
+// GetEmailTemplateRequest.Validate if the designated constraints aren't met.
+type GetEmailTemplateRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetEmailTemplateRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetEmailTemplateRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetEmailTemplateRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetEmailTemplateRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetEmailTemplateRequestValidationError) ErrorName() string {
+	return "GetEmailTemplateRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetEmailTemplateRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetEmailTemplateRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetEmailTemplateRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetEmailTemplateRequestValidationError{}
+
+// Validate checks the field values on GetEmailTemplateResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetEmailTemplateResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetEmailTemplateResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetEmailTemplateResponseMultiError, or nil if none found.
+func (m *GetEmailTemplateResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetEmailTemplateResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	for idx, item := range m.GetResponse() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, GetEmailTemplateResponseValidationError{
+						field:  fmt.Sprintf("Response[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, GetEmailTemplateResponseValidationError{
+						field:  fmt.Sprintf("Response[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return GetEmailTemplateResponseValidationError{
+					field:  fmt.Sprintf("Response[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return GetEmailTemplateResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetEmailTemplateResponseMultiError is an error wrapping multiple validation
+// errors returned by GetEmailTemplateResponse.ValidateAll() if the designated
+// constraints aren't met.
+type GetEmailTemplateResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetEmailTemplateResponseMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetEmailTemplateResponseMultiError) AllErrors() []error { return m }
+
+// GetEmailTemplateResponseValidationError is the validation error returned by
+// GetEmailTemplateResponse.Validate if the designated constraints aren't met.
+type GetEmailTemplateResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetEmailTemplateResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetEmailTemplateResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetEmailTemplateResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetEmailTemplateResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetEmailTemplateResponseValidationError) ErrorName() string {
+	return "GetEmailTemplateResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetEmailTemplateResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetEmailTemplateResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetEmailTemplateResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetEmailTemplateResponseValidationError{}
+
+// Validate checks the field values on AddEmailTemplateRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *AddEmailTemplateRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on AddEmailTemplateRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// AddEmailTemplateRequestMultiError, or nil if none found.
+func (m *AddEmailTemplateRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *AddEmailTemplateRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if all {
+		switch v := interface{}(m.GetTemplate()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, AddEmailTemplateRequestValidationError{
+					field:  "Template",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, AddEmailTemplateRequestValidationError{
+					field:  "Template",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetTemplate()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return AddEmailTemplateRequestValidationError{
+				field:  "Template",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return AddEmailTemplateRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// AddEmailTemplateRequestMultiError is an error wrapping multiple validation
+// errors returned by AddEmailTemplateRequest.ValidateAll() if the designated
+// constraints aren't met.
+type AddEmailTemplateRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m AddEmailTemplateRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m AddEmailTemplateRequestMultiError) AllErrors() []error { return m }
+
+// AddEmailTemplateRequestValidationError is the validation error returned by
+// AddEmailTemplateRequest.Validate if the designated constraints aren't met.
+type AddEmailTemplateRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e AddEmailTemplateRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e AddEmailTemplateRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e AddEmailTemplateRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e AddEmailTemplateRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e AddEmailTemplateRequestValidationError) ErrorName() string {
+	return "AddEmailTemplateRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e AddEmailTemplateRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sAddEmailTemplateRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = AddEmailTemplateRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = AddEmailTemplateRequestValidationError{}
+
+// Validate checks the field values on AddEmailTemplateResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *AddEmailTemplateResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on AddEmailTemplateResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// AddEmailTemplateResponseMultiError, or nil if none found.
+func (m *AddEmailTemplateResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *AddEmailTemplateResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Status
+
+	if len(errors) > 0 {
+		return AddEmailTemplateResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// AddEmailTemplateResponseMultiError is an error wrapping multiple validation
+// errors returned by AddEmailTemplateResponse.ValidateAll() if the designated
+// constraints aren't met.
+type AddEmailTemplateResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m AddEmailTemplateResponseMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m AddEmailTemplateResponseMultiError) AllErrors() []error { return m }
+
+// AddEmailTemplateResponseValidationError is the validation error returned by
+// AddEmailTemplateResponse.Validate if the designated constraints aren't met.
+type AddEmailTemplateResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e AddEmailTemplateResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e AddEmailTemplateResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e AddEmailTemplateResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e AddEmailTemplateResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e AddEmailTemplateResponseValidationError) ErrorName() string {
+	return "AddEmailTemplateResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e AddEmailTemplateResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sAddEmailTemplateResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = AddEmailTemplateResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = AddEmailTemplateResponseValidationError{}
+
+// Validate checks the field values on UpdateEmailTemplateRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *UpdateEmailTemplateRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UpdateEmailTemplateRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// UpdateEmailTemplateRequestMultiError, or nil if none found.
+func (m *UpdateEmailTemplateRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UpdateEmailTemplateRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if all {
+		switch v := interface{}(m.GetTemplate()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, UpdateEmailTemplateRequestValidationError{
+					field:  "Template",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, UpdateEmailTemplateRequestValidationError{
+					field:  "Template",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetTemplate()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return UpdateEmailTemplateRequestValidationError{
+				field:  "Template",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return UpdateEmailTemplateRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// UpdateEmailTemplateRequestMultiError is an error wrapping multiple
+// validation errors returned by UpdateEmailTemplateRequest.ValidateAll() if
+// the designated constraints aren't met.
+type UpdateEmailTemplateRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UpdateEmailTemplateRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UpdateEmailTemplateRequestMultiError) AllErrors() []error { return m }
+
+// UpdateEmailTemplateRequestValidationError is the validation error returned
+// by UpdateEmailTemplateRequest.Validate if the designated constraints aren't met.
+type UpdateEmailTemplateRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdateEmailTemplateRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdateEmailTemplateRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdateEmailTemplateRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdateEmailTemplateRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdateEmailTemplateRequestValidationError) ErrorName() string {
+	return "UpdateEmailTemplateRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UpdateEmailTemplateRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdateEmailTemplateRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdateEmailTemplateRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdateEmailTemplateRequestValidationError{}
+
+// Validate checks the field values on UpdateEmailTemplateResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *UpdateEmailTemplateResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UpdateEmailTemplateResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// UpdateEmailTemplateResponseMultiError, or nil if none found.
+func (m *UpdateEmailTemplateResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UpdateEmailTemplateResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Status
+
+	if len(errors) > 0 {
+		return UpdateEmailTemplateResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// UpdateEmailTemplateResponseMultiError is an error wrapping multiple
+// validation errors returned by UpdateEmailTemplateResponse.ValidateAll() if
+// the designated constraints aren't met.
+type UpdateEmailTemplateResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UpdateEmailTemplateResponseMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UpdateEmailTemplateResponseMultiError) AllErrors() []error { return m }
+
+// UpdateEmailTemplateResponseValidationError is the validation error returned
+// by UpdateEmailTemplateResponse.Validate if the designated constraints
+// aren't met.
+type UpdateEmailTemplateResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdateEmailTemplateResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdateEmailTemplateResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdateEmailTemplateResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdateEmailTemplateResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdateEmailTemplateResponseValidationError) ErrorName() string {
+	return "UpdateEmailTemplateResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UpdateEmailTemplateResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdateEmailTemplateResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdateEmailTemplateResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdateEmailTemplateResponseValidationError{}

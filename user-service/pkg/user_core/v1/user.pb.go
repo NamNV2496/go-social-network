@@ -926,6 +926,375 @@ func (x *GetFollowingResponse) GetUserId() []string {
 	return nil
 }
 
+// email
+type GetEmailTemplate struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            uint64                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Template      string                 `protobuf:"bytes,2,opt,name=template,proto3" json:"template,omitempty"`
+	TemplateId    string                 `protobuf:"bytes,3,opt,name=template_id,json=templateId,proto3" json:"template_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetEmailTemplate) Reset() {
+	*x = GetEmailTemplate{}
+	mi := &file_user_core_v1_user_proto_msgTypes[18]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetEmailTemplate) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetEmailTemplate) ProtoMessage() {}
+
+func (x *GetEmailTemplate) ProtoReflect() protoreflect.Message {
+	mi := &file_user_core_v1_user_proto_msgTypes[18]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetEmailTemplate.ProtoReflect.Descriptor instead.
+func (*GetEmailTemplate) Descriptor() ([]byte, []int) {
+	return file_user_core_v1_user_proto_rawDescGZIP(), []int{18}
+}
+
+func (x *GetEmailTemplate) GetId() uint64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *GetEmailTemplate) GetTemplate() string {
+	if x != nil {
+		return x.Template
+	}
+	return ""
+}
+
+func (x *GetEmailTemplate) GetTemplateId() string {
+	if x != nil {
+		return x.TemplateId
+	}
+	return ""
+}
+
+type GetEmailTemplateByTemplateIdRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	TemplateId    string                 `protobuf:"bytes,1,opt,name=template_id,json=templateId,proto3" json:"template_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetEmailTemplateByTemplateIdRequest) Reset() {
+	*x = GetEmailTemplateByTemplateIdRequest{}
+	mi := &file_user_core_v1_user_proto_msgTypes[19]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetEmailTemplateByTemplateIdRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetEmailTemplateByTemplateIdRequest) ProtoMessage() {}
+
+func (x *GetEmailTemplateByTemplateIdRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_core_v1_user_proto_msgTypes[19]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetEmailTemplateByTemplateIdRequest.ProtoReflect.Descriptor instead.
+func (*GetEmailTemplateByTemplateIdRequest) Descriptor() ([]byte, []int) {
+	return file_user_core_v1_user_proto_rawDescGZIP(), []int{19}
+}
+
+func (x *GetEmailTemplateByTemplateIdRequest) GetTemplateId() string {
+	if x != nil {
+		return x.TemplateId
+	}
+	return ""
+}
+
+type GetEmailTemplateRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            uint64                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetEmailTemplateRequest) Reset() {
+	*x = GetEmailTemplateRequest{}
+	mi := &file_user_core_v1_user_proto_msgTypes[20]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetEmailTemplateRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetEmailTemplateRequest) ProtoMessage() {}
+
+func (x *GetEmailTemplateRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_core_v1_user_proto_msgTypes[20]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetEmailTemplateRequest.ProtoReflect.Descriptor instead.
+func (*GetEmailTemplateRequest) Descriptor() ([]byte, []int) {
+	return file_user_core_v1_user_proto_rawDescGZIP(), []int{20}
+}
+
+func (x *GetEmailTemplateRequest) GetId() uint64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+type GetEmailTemplateResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Response      []*GetEmailTemplate    `protobuf:"bytes,1,rep,name=response,proto3" json:"response,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetEmailTemplateResponse) Reset() {
+	*x = GetEmailTemplateResponse{}
+	mi := &file_user_core_v1_user_proto_msgTypes[21]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetEmailTemplateResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetEmailTemplateResponse) ProtoMessage() {}
+
+func (x *GetEmailTemplateResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_user_core_v1_user_proto_msgTypes[21]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetEmailTemplateResponse.ProtoReflect.Descriptor instead.
+func (*GetEmailTemplateResponse) Descriptor() ([]byte, []int) {
+	return file_user_core_v1_user_proto_rawDescGZIP(), []int{21}
+}
+
+func (x *GetEmailTemplateResponse) GetResponse() []*GetEmailTemplate {
+	if x != nil {
+		return x.Response
+	}
+	return nil
+}
+
+type AddEmailTemplateRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Template      *GetEmailTemplate      `protobuf:"bytes,1,opt,name=template,proto3" json:"template,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AddEmailTemplateRequest) Reset() {
+	*x = AddEmailTemplateRequest{}
+	mi := &file_user_core_v1_user_proto_msgTypes[22]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AddEmailTemplateRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AddEmailTemplateRequest) ProtoMessage() {}
+
+func (x *AddEmailTemplateRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_core_v1_user_proto_msgTypes[22]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AddEmailTemplateRequest.ProtoReflect.Descriptor instead.
+func (*AddEmailTemplateRequest) Descriptor() ([]byte, []int) {
+	return file_user_core_v1_user_proto_rawDescGZIP(), []int{22}
+}
+
+func (x *AddEmailTemplateRequest) GetTemplate() *GetEmailTemplate {
+	if x != nil {
+		return x.Template
+	}
+	return nil
+}
+
+type AddEmailTemplateResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Status        string                 `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AddEmailTemplateResponse) Reset() {
+	*x = AddEmailTemplateResponse{}
+	mi := &file_user_core_v1_user_proto_msgTypes[23]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AddEmailTemplateResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AddEmailTemplateResponse) ProtoMessage() {}
+
+func (x *AddEmailTemplateResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_user_core_v1_user_proto_msgTypes[23]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AddEmailTemplateResponse.ProtoReflect.Descriptor instead.
+func (*AddEmailTemplateResponse) Descriptor() ([]byte, []int) {
+	return file_user_core_v1_user_proto_rawDescGZIP(), []int{23}
+}
+
+func (x *AddEmailTemplateResponse) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+type UpdateEmailTemplateRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Template      *GetEmailTemplate      `protobuf:"bytes,1,opt,name=template,proto3" json:"template,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateEmailTemplateRequest) Reset() {
+	*x = UpdateEmailTemplateRequest{}
+	mi := &file_user_core_v1_user_proto_msgTypes[24]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateEmailTemplateRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateEmailTemplateRequest) ProtoMessage() {}
+
+func (x *UpdateEmailTemplateRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_core_v1_user_proto_msgTypes[24]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateEmailTemplateRequest.ProtoReflect.Descriptor instead.
+func (*UpdateEmailTemplateRequest) Descriptor() ([]byte, []int) {
+	return file_user_core_v1_user_proto_rawDescGZIP(), []int{24}
+}
+
+func (x *UpdateEmailTemplateRequest) GetTemplate() *GetEmailTemplate {
+	if x != nil {
+		return x.Template
+	}
+	return nil
+}
+
+type UpdateEmailTemplateResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Status        string                 `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateEmailTemplateResponse) Reset() {
+	*x = UpdateEmailTemplateResponse{}
+	mi := &file_user_core_v1_user_proto_msgTypes[25]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateEmailTemplateResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateEmailTemplateResponse) ProtoMessage() {}
+
+func (x *UpdateEmailTemplateResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_user_core_v1_user_proto_msgTypes[25]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateEmailTemplateResponse.ProtoReflect.Descriptor instead.
+func (*UpdateEmailTemplateResponse) Descriptor() ([]byte, []int) {
+	return file_user_core_v1_user_proto_rawDescGZIP(), []int{25}
+}
+
+func (x *UpdateEmailTemplateResponse) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
 var File_user_core_v1_user_proto protoreflect.FileDescriptor
 
 const file_user_core_v1_user_proto_rawDesc = "" +
@@ -984,7 +1353,27 @@ const file_user_core_v1_user_proto_rawDesc = "" +
 	"\x13GetFollowingRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\"/\n" +
 	"\x14GetFollowingResponse\x12\x17\n" +
-	"\auser_id\x18\x01 \x03(\tR\x06userId2\xc3\a\n" +
+	"\auser_id\x18\x01 \x03(\tR\x06userId\"_\n" +
+	"\x10GetEmailTemplate\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x1a\n" +
+	"\btemplate\x18\x02 \x01(\tR\btemplate\x12\x1f\n" +
+	"\vtemplate_id\x18\x03 \x01(\tR\n" +
+	"templateId\"F\n" +
+	"#GetEmailTemplateByTemplateIdRequest\x12\x1f\n" +
+	"\vtemplate_id\x18\x01 \x01(\tR\n" +
+	"templateId\")\n" +
+	"\x17GetEmailTemplateRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\"Q\n" +
+	"\x18GetEmailTemplateResponse\x125\n" +
+	"\bresponse\x18\x01 \x03(\v2\x19.user.v1.GetEmailTemplateR\bresponse\"P\n" +
+	"\x17AddEmailTemplateRequest\x125\n" +
+	"\btemplate\x18\x01 \x01(\v2\x19.user.v1.GetEmailTemplateR\btemplate\"2\n" +
+	"\x18AddEmailTemplateResponse\x12\x16\n" +
+	"\x06status\x18\x01 \x01(\tR\x06status\"S\n" +
+	"\x1aUpdateEmailTemplateRequest\x125\n" +
+	"\btemplate\x18\x01 \x01(\v2\x19.user.v1.GetEmailTemplateR\btemplate\"5\n" +
+	"\x1bUpdateEmailTemplateResponse\x12\x16\n" +
+	"\x06status\x18\x01 \x01(\tR\x06status2\xc3\a\n" +
 	"\x0eAccountService\x12j\n" +
 	"\rCreateAccount\x12\x1d.user.v1.CreateAccountRequest\x1a\x1e.user.v1.CreateAccountResponse\"\x1a\x82\xd3\xe4\x93\x02\x14:\x01*\"\x0f/api/v1/account\x12g\n" +
 	"\n" +
@@ -995,7 +1384,12 @@ const file_user_core_v1_user_proto_rawDesc = "" +
 	"\fGetFollowing\x12\x1c.user.v1.GetFollowingRequest\x1a\x1d.user.v1.GetFollowingResponse\"\x19\x82\xd3\xe4\x93\x02\x13\x12\x11/api/v1/following\x12m\n" +
 	"\x0fCreateFollowing\x12\x1e.user.v1.CheckFollowingRequest\x1a\x1f.user.v1.CheckFollowingResponse\"\x19\x82\xd3\xe4\x93\x02\x13\"\x11/api/v1/following\x12m\n" +
 	"\x0fDeleteFollowing\x12\x1e.user.v1.CheckFollowingRequest\x1a\x1f.user.v1.CheckFollowingResponse\"\x19\x82\xd3\xe4\x93\x02\x13*\x11/api/v1/following\x12n\n" +
-	"\x0eCheckFollowing\x12\x1e.user.v1.CheckFollowingRequest\x1a\x1f.user.v1.CheckFollowingResponse\"\x1b\x82\xd3\xe4\x93\x02\x15\x12\x13/api/v1/isFollowingBy\n" +
+	"\x0eCheckFollowing\x12\x1e.user.v1.CheckFollowingRequest\x1a\x1f.user.v1.CheckFollowingResponse\"\x1b\x82\xd3\xe4\x93\x02\x15\x12\x13/api/v1/isFollowing2\xa8\x04\n" +
+	"\x14EmailTemplateService\x12\x81\x01\n" +
+	"\x14GetEmailTemplateById\x12 .user.v1.GetEmailTemplateRequest\x1a!.user.v1.GetEmailTemplateResponse\"$\x82\xd3\xe4\x93\x02\x1e\x12\x1c/api/v1/email_template_by_id\x12\x8f\x01\n" +
+	"\x1cGetEmailTemplateByTemplateId\x12,.user.v1.GetEmailTemplateByTemplateIdRequest\x1a!.user.v1.GetEmailTemplateResponse\"\x1e\x82\xd3\xe4\x93\x02\x18\x12\x16/api/v1/email_template\x12w\n" +
+	"\x10AddEmailTemplate\x12 .user.v1.AddEmailTemplateRequest\x1a!.user.v1.AddEmailTemplateResponse\"\x1e\x82\xd3\xe4\x93\x02\x18\"\x16/api/v1/email_template\x12\x80\x01\n" +
+	"\x13UpdateEmailTemplate\x12#.user.v1.UpdateEmailTemplateRequest\x1a$.user.v1.UpdateEmailTemplateResponse\"\x1e\x82\xd3\xe4\x93\x02\x18\x1a\x16/api/v1/email_templateBy\n" +
 	"\vcom.user.v1B\tUserProtoP\x01Z\"gateway_sevice/user_core/v1;userv1\xa2\x02\x03UXX\xaa\x02\aUser.V1\xca\x02\aUser\\V1\xe2\x02\x13User\\V1\\GPBMetadata\xea\x02\bUser::V1b\x06proto3"
 
 var (
@@ -1010,26 +1404,34 @@ func file_user_core_v1_user_proto_rawDescGZIP() []byte {
 	return file_user_core_v1_user_proto_rawDescData
 }
 
-var file_user_core_v1_user_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
+var file_user_core_v1_user_proto_msgTypes = make([]protoimpl.MessageInfo, 26)
 var file_user_core_v1_user_proto_goTypes = []any{
-	(*Account)(nil),                // 0: user.v1.Account
-	(*LoginRequest)(nil),           // 1: user.v1.LoginRequest
-	(*LoginResponse)(nil),          // 2: user.v1.LoginResponse
-	(*CreateSessionRequest)(nil),   // 3: user.v1.CreateSessionRequest
-	(*CreateSessionResponse)(nil),  // 4: user.v1.CreateSessionResponse
-	(*CreateAccountRequest)(nil),   // 5: user.v1.CreateAccountRequest
-	(*CreateAccountResponse)(nil),  // 6: user.v1.CreateAccountResponse
-	(*UpdateAccountRequest)(nil),   // 7: user.v1.UpdateAccountRequest
-	(*UpdateAccountResponse)(nil),  // 8: user.v1.UpdateAccountResponse
-	(*GetAccountRequest)(nil),      // 9: user.v1.GetAccountRequest
-	(*GetAccountResponse)(nil),     // 10: user.v1.GetAccountResponse
-	(*FindAccountRequest)(nil),     // 11: user.v1.FindAccountRequest
-	(*FindAccountResponse)(nil),    // 12: user.v1.FindAccountResponse
-	(*AccountSession)(nil),         // 13: user.v1.AccountSession
-	(*CheckFollowingRequest)(nil),  // 14: user.v1.CheckFollowingRequest
-	(*CheckFollowingResponse)(nil), // 15: user.v1.CheckFollowingResponse
-	(*GetFollowingRequest)(nil),    // 16: user.v1.GetFollowingRequest
-	(*GetFollowingResponse)(nil),   // 17: user.v1.GetFollowingResponse
+	(*Account)(nil),                             // 0: user.v1.Account
+	(*LoginRequest)(nil),                        // 1: user.v1.LoginRequest
+	(*LoginResponse)(nil),                       // 2: user.v1.LoginResponse
+	(*CreateSessionRequest)(nil),                // 3: user.v1.CreateSessionRequest
+	(*CreateSessionResponse)(nil),               // 4: user.v1.CreateSessionResponse
+	(*CreateAccountRequest)(nil),                // 5: user.v1.CreateAccountRequest
+	(*CreateAccountResponse)(nil),               // 6: user.v1.CreateAccountResponse
+	(*UpdateAccountRequest)(nil),                // 7: user.v1.UpdateAccountRequest
+	(*UpdateAccountResponse)(nil),               // 8: user.v1.UpdateAccountResponse
+	(*GetAccountRequest)(nil),                   // 9: user.v1.GetAccountRequest
+	(*GetAccountResponse)(nil),                  // 10: user.v1.GetAccountResponse
+	(*FindAccountRequest)(nil),                  // 11: user.v1.FindAccountRequest
+	(*FindAccountResponse)(nil),                 // 12: user.v1.FindAccountResponse
+	(*AccountSession)(nil),                      // 13: user.v1.AccountSession
+	(*CheckFollowingRequest)(nil),               // 14: user.v1.CheckFollowingRequest
+	(*CheckFollowingResponse)(nil),              // 15: user.v1.CheckFollowingResponse
+	(*GetFollowingRequest)(nil),                 // 16: user.v1.GetFollowingRequest
+	(*GetFollowingResponse)(nil),                // 17: user.v1.GetFollowingResponse
+	(*GetEmailTemplate)(nil),                    // 18: user.v1.GetEmailTemplate
+	(*GetEmailTemplateByTemplateIdRequest)(nil), // 19: user.v1.GetEmailTemplateByTemplateIdRequest
+	(*GetEmailTemplateRequest)(nil),             // 20: user.v1.GetEmailTemplateRequest
+	(*GetEmailTemplateResponse)(nil),            // 21: user.v1.GetEmailTemplateResponse
+	(*AddEmailTemplateRequest)(nil),             // 22: user.v1.AddEmailTemplateRequest
+	(*AddEmailTemplateResponse)(nil),            // 23: user.v1.AddEmailTemplateResponse
+	(*UpdateEmailTemplateRequest)(nil),          // 24: user.v1.UpdateEmailTemplateRequest
+	(*UpdateEmailTemplateResponse)(nil),         // 25: user.v1.UpdateEmailTemplateResponse
 }
 var file_user_core_v1_user_proto_depIdxs = []int32{
 	0,  // 0: user.v1.CreateAccountRequest.account:type_name -> user.v1.Account
@@ -1037,29 +1439,40 @@ var file_user_core_v1_user_proto_depIdxs = []int32{
 	0,  // 2: user.v1.UpdateAccountResponse.account:type_name -> user.v1.Account
 	0,  // 3: user.v1.GetAccountResponse.account:type_name -> user.v1.Account
 	0,  // 4: user.v1.FindAccountResponse.account:type_name -> user.v1.Account
-	5,  // 5: user.v1.AccountService.CreateAccount:input_type -> user.v1.CreateAccountRequest
-	9,  // 6: user.v1.AccountService.GetAccount:input_type -> user.v1.GetAccountRequest
-	11, // 7: user.v1.AccountService.FindAccount:input_type -> user.v1.FindAccountRequest
-	1,  // 8: user.v1.AccountService.Login:input_type -> user.v1.LoginRequest
-	3,  // 9: user.v1.AccountService.CreateSession:input_type -> user.v1.CreateSessionRequest
-	16, // 10: user.v1.AccountService.GetFollowing:input_type -> user.v1.GetFollowingRequest
-	14, // 11: user.v1.AccountService.CreateFollowing:input_type -> user.v1.CheckFollowingRequest
-	14, // 12: user.v1.AccountService.DeleteFollowing:input_type -> user.v1.CheckFollowingRequest
-	14, // 13: user.v1.AccountService.CheckFollowing:input_type -> user.v1.CheckFollowingRequest
-	6,  // 14: user.v1.AccountService.CreateAccount:output_type -> user.v1.CreateAccountResponse
-	10, // 15: user.v1.AccountService.GetAccount:output_type -> user.v1.GetAccountResponse
-	12, // 16: user.v1.AccountService.FindAccount:output_type -> user.v1.FindAccountResponse
-	2,  // 17: user.v1.AccountService.Login:output_type -> user.v1.LoginResponse
-	4,  // 18: user.v1.AccountService.CreateSession:output_type -> user.v1.CreateSessionResponse
-	17, // 19: user.v1.AccountService.GetFollowing:output_type -> user.v1.GetFollowingResponse
-	15, // 20: user.v1.AccountService.CreateFollowing:output_type -> user.v1.CheckFollowingResponse
-	15, // 21: user.v1.AccountService.DeleteFollowing:output_type -> user.v1.CheckFollowingResponse
-	15, // 22: user.v1.AccountService.CheckFollowing:output_type -> user.v1.CheckFollowingResponse
-	14, // [14:23] is the sub-list for method output_type
-	5,  // [5:14] is the sub-list for method input_type
-	5,  // [5:5] is the sub-list for extension type_name
-	5,  // [5:5] is the sub-list for extension extendee
-	0,  // [0:5] is the sub-list for field type_name
+	18, // 5: user.v1.GetEmailTemplateResponse.response:type_name -> user.v1.GetEmailTemplate
+	18, // 6: user.v1.AddEmailTemplateRequest.template:type_name -> user.v1.GetEmailTemplate
+	18, // 7: user.v1.UpdateEmailTemplateRequest.template:type_name -> user.v1.GetEmailTemplate
+	5,  // 8: user.v1.AccountService.CreateAccount:input_type -> user.v1.CreateAccountRequest
+	9,  // 9: user.v1.AccountService.GetAccount:input_type -> user.v1.GetAccountRequest
+	11, // 10: user.v1.AccountService.FindAccount:input_type -> user.v1.FindAccountRequest
+	1,  // 11: user.v1.AccountService.Login:input_type -> user.v1.LoginRequest
+	3,  // 12: user.v1.AccountService.CreateSession:input_type -> user.v1.CreateSessionRequest
+	16, // 13: user.v1.AccountService.GetFollowing:input_type -> user.v1.GetFollowingRequest
+	14, // 14: user.v1.AccountService.CreateFollowing:input_type -> user.v1.CheckFollowingRequest
+	14, // 15: user.v1.AccountService.DeleteFollowing:input_type -> user.v1.CheckFollowingRequest
+	14, // 16: user.v1.AccountService.CheckFollowing:input_type -> user.v1.CheckFollowingRequest
+	20, // 17: user.v1.EmailTemplateService.GetEmailTemplateById:input_type -> user.v1.GetEmailTemplateRequest
+	19, // 18: user.v1.EmailTemplateService.GetEmailTemplateByTemplateId:input_type -> user.v1.GetEmailTemplateByTemplateIdRequest
+	22, // 19: user.v1.EmailTemplateService.AddEmailTemplate:input_type -> user.v1.AddEmailTemplateRequest
+	24, // 20: user.v1.EmailTemplateService.UpdateEmailTemplate:input_type -> user.v1.UpdateEmailTemplateRequest
+	6,  // 21: user.v1.AccountService.CreateAccount:output_type -> user.v1.CreateAccountResponse
+	10, // 22: user.v1.AccountService.GetAccount:output_type -> user.v1.GetAccountResponse
+	12, // 23: user.v1.AccountService.FindAccount:output_type -> user.v1.FindAccountResponse
+	2,  // 24: user.v1.AccountService.Login:output_type -> user.v1.LoginResponse
+	4,  // 25: user.v1.AccountService.CreateSession:output_type -> user.v1.CreateSessionResponse
+	17, // 26: user.v1.AccountService.GetFollowing:output_type -> user.v1.GetFollowingResponse
+	15, // 27: user.v1.AccountService.CreateFollowing:output_type -> user.v1.CheckFollowingResponse
+	15, // 28: user.v1.AccountService.DeleteFollowing:output_type -> user.v1.CheckFollowingResponse
+	15, // 29: user.v1.AccountService.CheckFollowing:output_type -> user.v1.CheckFollowingResponse
+	21, // 30: user.v1.EmailTemplateService.GetEmailTemplateById:output_type -> user.v1.GetEmailTemplateResponse
+	21, // 31: user.v1.EmailTemplateService.GetEmailTemplateByTemplateId:output_type -> user.v1.GetEmailTemplateResponse
+	23, // 32: user.v1.EmailTemplateService.AddEmailTemplate:output_type -> user.v1.AddEmailTemplateResponse
+	25, // 33: user.v1.EmailTemplateService.UpdateEmailTemplate:output_type -> user.v1.UpdateEmailTemplateResponse
+	21, // [21:34] is the sub-list for method output_type
+	8,  // [8:21] is the sub-list for method input_type
+	8,  // [8:8] is the sub-list for extension type_name
+	8,  // [8:8] is the sub-list for extension extendee
+	0,  // [0:8] is the sub-list for field type_name
 }
 
 func init() { file_user_core_v1_user_proto_init() }
@@ -1073,9 +1486,9 @@ func file_user_core_v1_user_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_user_core_v1_user_proto_rawDesc), len(file_user_core_v1_user_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   18,
+			NumMessages:   26,
 			NumExtensions: 0,
-			NumServices:   1,
+			NumServices:   2,
 		},
 		GoTypes:           file_user_core_v1_user_proto_goTypes,
 		DependencyIndexes: file_user_core_v1_user_proto_depIdxs,

@@ -7,6 +7,9 @@
   "tags": [
     {
       "name": "AccountService"
+    },
+    {
+      "name": "EmailTemplateService"
     }
   ],
   "consumes": [
@@ -135,6 +138,149 @@
         ],
         "tags": [
           "AccountService"
+        ]
+      }
+    },
+    "/api/v1/email_template": {
+      "get": {
+        "operationId": "EmailTemplateService_GetEmailTemplateByTemplateId",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetEmailTemplateResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "templateId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "EmailTemplateService"
+        ]
+      },
+      "post": {
+        "operationId": "EmailTemplateService_AddEmailTemplate",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1AddEmailTemplateResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "template.id",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "template.template",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "template.templateId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "EmailTemplateService"
+        ]
+      },
+      "put": {
+        "operationId": "EmailTemplateService_UpdateEmailTemplate",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1UpdateEmailTemplateResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "template.id",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "template.template",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "template.templateId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "EmailTemplateService"
+        ]
+      }
+    },
+    "/api/v1/email_template_by_id": {
+      "get": {
+        "operationId": "EmailTemplateService_GetEmailTemplateById",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetEmailTemplateResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "EmailTemplateService"
         ]
       }
     },
@@ -367,6 +513,14 @@
         }
       }
     },
+    "v1AddEmailTemplateResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        }
+      }
+    },
     "v1CheckFollowingResponse": {
       "type": "object",
       "properties": {
@@ -431,6 +585,34 @@
         }
       }
     },
+    "v1GetEmailTemplate": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "template": {
+          "type": "string"
+        },
+        "templateId": {
+          "type": "string"
+        }
+      },
+      "title": "email"
+    },
+    "v1GetEmailTemplateResponse": {
+      "type": "object",
+      "properties": {
+        "response": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1GetEmailTemplate"
+          }
+        }
+      }
+    },
     "v1GetFollowingResponse": {
       "type": "object",
       "properties": {
@@ -460,6 +642,14 @@
           "type": "string"
         },
         "token": {
+          "type": "string"
+        }
+      }
+    },
+    "v1UpdateEmailTemplateResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
           "type": "string"
         }
       }

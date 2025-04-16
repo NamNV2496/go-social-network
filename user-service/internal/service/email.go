@@ -13,6 +13,7 @@ import (
 	"github.com/jordan-wright/email"
 	"github.com/namnv2496/user-service/internal/configs"
 	"github.com/namnv2496/user-service/internal/domain"
+	"github.com/namnv2496/user-service/internal/repository/repo"
 )
 
 const (
@@ -43,19 +44,27 @@ type SendEmailResponse struct {
 type IEmail interface {
 	SendEmail(ctx context.Context, request *SendEmailRequest) (*domain.SendRawQueryResponse, error)
 	SendEmailByTemplate(ctx context.Context, request *domain.SendEmailByTemplate) (*domain.SendEmailByTemplateResponse, error)
+
+	GetEmailTemplateById(context.Context, *domain.GetEmailTemplateRequest) (*domain.GetEmailTemplateResponse, error)
+	GetEmailTemplateByTemplateId(context.Context, *domain.GetEmailTemplateByTemplateIdRequest) (*domain.GetEmailTemplateResponse, error)
+	AddEmailTemplate(ctx context.Context, req *domain.AddEmailTemplateRequest) (*domain.AddEmailTemplateResponse, error)
+	UpdateEmailTemplate(ctx context.Context, req *domain.UpdateEmailTemplateRequest) (*domain.UpdateEmailTemplateResponse, error)
 }
 
 type Email struct {
 	emailClient *email.Email
+	emailRepo   repo.IEmailTemplateRepo
 	cfg         configs.Email
 }
 
 func NewEmailClient(
 	conf *configs.Config,
+	emailRepo repo.IEmailTemplateRepo,
 ) IEmail {
 	return &Email{
 		cfg:         conf.Email,
 		emailClient: email.NewEmail(),
+		emailRepo:   emailRepo,
 	}
 }
 
@@ -89,7 +98,7 @@ func (e *Email) SendEmail(ctx context.Context, request *SendEmailRequest) (*doma
 }
 
 func (e *Email) SendEmailByTemplate(ctx context.Context, request *domain.SendEmailByTemplate) (*domain.SendEmailByTemplateResponse, error) {
-	templateBody := getTemplate(request.TemplateId)
+	templateBody := e.getTemplate(ctx, request.TemplateId)
 	body := parseTemplate(templateBody, request.Params)
 	slog.Info("send email with body", "body", body)
 
@@ -100,22 +109,83 @@ func (e *Email) SendEmailByTemplate(ctx context.Context, request *domain.SendEma
 	e.emailClient.Cc = []string{request.Cc}
 	e.emailClient.Bcc = []string{}
 
-	smtpAuth := smtp.PlainAuth("", e.cfg.Email, e.cfg.Password, smtpAuthAddress)
-	if err := e.emailClient.Send(smtpServerAddress, smtpAuth); err != nil {
-		return &domain.SendEmailByTemplateResponse{
-			Success: false,
-			Payload: "fail",
-		}, err
-	}
+	// smtpAuth := smtp.PlainAuth("", e.cfg.Email, e.cfg.Password, smtpAuthAddress)
+	// if err := e.emailClient.Send(smtpServerAddress, smtpAuth); err != nil {
+	// 	return &domain.SendEmailByTemplateResponse{
+	// 		Success: false,
+	// 		Payload: "fail",
+	// 	}, err
+	// }
 	return &domain.SendEmailByTemplateResponse{
 		Success: true,
 		Payload: "success",
 	}, nil
 }
 
-func getTemplate(templateId string) string {
-	// get template by template id in DB
-	return "<b>Hi {{.full_name}} this is your OTP: {{.otp}}, please don't publish this OTP to another people"
+func (e *Email) GetEmailTemplateById(ctx context.Context, req *domain.GetEmailTemplateRequest) (*domain.GetEmailTemplateResponse, error) {
+	result, err := e.emailRepo.GetEmailTemplateById(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	emailTemplates := make([]*domain.GetEmailTemplate, 0, len(result))
+	for _, template := range result {
+		emailTemplates = append(emailTemplates, &domain.GetEmailTemplate{
+			Id:         uint64(template.Id),
+			TemplateId: template.TemplateId,
+			Template:   template.Template,
+		})
+	}
+	return &domain.GetEmailTemplateResponse{
+		Response: emailTemplates,
+	}, nil
+}
+
+func (e *Email) GetEmailTemplateByTemplateId(ctx context.Context, req *domain.GetEmailTemplateByTemplateIdRequest) (*domain.GetEmailTemplateResponse, error) {
+	result, err := e.emailRepo.GetEmailTemplateByTemplateId(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	emailTemplates := make([]*domain.GetEmailTemplate, 0, len(result))
+	for _, template := range result {
+		emailTemplates = append(emailTemplates, &domain.GetEmailTemplate{
+			Id:         uint64(template.Id),
+			TemplateId: template.TemplateId,
+			Template:   template.Template,
+		})
+	}
+	return &domain.GetEmailTemplateResponse{
+		Response: emailTemplates,
+	}, nil
+}
+
+func (e *Email) AddEmailTemplate(ctx context.Context, req *domain.AddEmailTemplateRequest) (*domain.AddEmailTemplateResponse, error) {
+	result, err := e.emailRepo.AddEmailTemplate(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	return &domain.AddEmailTemplateResponse{
+		Status: result,
+	}, nil
+}
+
+func (e *Email) UpdateEmailTemplate(ctx context.Context, req *domain.UpdateEmailTemplateRequest) (*domain.UpdateEmailTemplateResponse, error) {
+	result, err := e.emailRepo.UpdateEmailTemplate(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	return &domain.UpdateEmailTemplateResponse{
+		Status: result,
+	}, nil
+}
+
+func (e *Email) getTemplate(ctx context.Context, templateId string) string {
+	result, err := e.emailRepo.GetEmailTemplateByTemplateId(ctx, &domain.GetEmailTemplateByTemplateIdRequest{
+		TemplateId: templateId,
+	})
+	if err != nil {
+		return ""
+	}
+	return result[0].Template
 }
 
 func parseTemplate(templateformat string, input map[string]string) string {

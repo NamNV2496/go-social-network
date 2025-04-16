@@ -1,4 +1,4 @@
-package database
+package migrations
 
 import (
 	"context"
@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	//go:embed migrations/mysql/*
+	//go:embed mysql/*
 	migrationDirectoryMySQL embed.FS
 )
 
@@ -35,7 +35,7 @@ func (m migrator) migrate(ctx context.Context, direction migrate.MigrationDirect
 
 	_, err := migrate.ExecContext(ctx, m.db, "mysql", migrate.EmbedFileSystemMigrationSource{
 		FileSystem: migrationDirectoryMySQL,
-		Root:       "migrations/mysql",
+		Root:       "mysql",
 	}, direction)
 	if err != nil {
 		fmt.Println("failed to execute migration: ", err)

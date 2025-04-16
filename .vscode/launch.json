@@ -11,7 +11,7 @@
             "mode": "auto",
             "program": "${workspaceFolder}/user-service/main.go",
             // "envFile": "${workspaceFolder}/user-service/.env",
-            // "args": ["service"]
+            // "args": ["migrate"]
         }
     ]
 }
