@@ -45,7 +45,7 @@ func (c *OTP) SendOTP(ctx context.Context, phone string, userId string) error {
 
 func (c *OTP) GenerateOTP(ctx context.Context, userId string) string {
 	otp := rand.Intn(9000) + 1000
-	cacheOTP, err := c.redisClient.Get(ctx, userId)
+	cacheOTP, err := c.redisClient.Get(ctx, userId+"_otp")
 	if err == nil {
 		return cacheOTP.(string)
 	}
@@ -54,7 +54,7 @@ func (c *OTP) GenerateOTP(ctx context.Context, userId string) string {
 }
 
 func (c *OTP) VerifyOTP(ctx context.Context, userId string, otp string) bool {
-	cacheOTP, err := c.redisClient.Get(ctx, userId)
+	cacheOTP, err := c.redisClient.Get(ctx, userId+"_otp")
 	if err != nil {
 		return false
 	}

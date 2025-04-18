@@ -80,7 +80,7 @@ type NewsfeedPostMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m NewsfeedPostMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -182,7 +182,7 @@ type GetNewsfeedRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m GetNewsfeedRequestMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -318,7 +318,7 @@ type GetNewsfeedResponseMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m GetNewsfeedResponseMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}

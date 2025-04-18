@@ -32,7 +32,6 @@ func newSaramaConfig(clientId string) *sarama.Config {
 func NewClient(
 	mqConfig configs.Kafka,
 ) Client {
-
 	kafkaBroker := os.Getenv("KAFKA_BROKER")
 	if kafkaBroker == "" {
 		kafkaBroker = mqConfig.Addresses
@@ -54,12 +53,11 @@ func NewClient(
 }
 
 func (c client) Produce(ctx context.Context, queueName string, payload []byte) error {
-
 	if _, _, err := c.saramaSyncProducer.SendMessage(&sarama.ProducerMessage{
 		Topic: queueName,
 		Value: sarama.ByteEncoder(payload),
 	}); err != nil {
-		return status.Error(codes.Internal, "failed to produce message")
+		return status.Error(codes.Internal, err.Error())
 	}
 	return nil
 }

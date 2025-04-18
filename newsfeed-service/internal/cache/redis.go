@@ -3,6 +3,7 @@ package cache
 import (
 	"context"
 	"errors"
+	"log"
 	"os"
 	"time"
 
@@ -29,15 +30,16 @@ type redisClient struct {
 }
 
 func NewRedisClient(
-	cacheConfig configs.Redis,
+	conf configs.Config,
 ) Client {
-
+	cacheConfig := conf.Redis
 	var redisAddr string
 	if value := os.Getenv("REDIS_URL"); value != "" {
 		redisAddr = value
 	} else {
 		redisAddr = cacheConfig.Address
 	}
+	log.Println("connect to redis: ", redisAddr)
 	return &redisClient{
 		redisConfig: cacheConfig,
 		redisClient: redis.NewClient(&redis.Options{
@@ -50,7 +52,6 @@ func NewRedisClient(
 }
 
 func (c redisClient) Set(ctx context.Context, key string, data any, ttl ...time.Duration) error {
-
 	var ttlValue time.Duration
 	if len(ttl) > 0 {
 		ttlValue = ttl[0]
@@ -58,15 +59,15 @@ func (c redisClient) Set(ctx context.Context, key string, data any, ttl ...time.
 		ttlValue = time.Duration(c.redisConfig.TTL * int(time.Second))
 	}
 	if err := c.redisClient.Set(ctx, key, data, ttlValue).Err(); err != nil {
-		return status.Error(codes.Internal, "failed to set data into cache")
+		return status.Error(codes.Internal, err.Error())
 	}
 
 	return nil
 }
 
 func (c redisClient) Get(ctx context.Context, key string) (any, error) {
-
 	data, err := c.redisClient.Get(ctx, key).Result()
+	log.Println("get newsfeed from redis ", key, data, err)
 	if err != nil {
 		if errors.Is(err, redis.Nil) {
 			return nil, ErrCacheMiss
@@ -78,7 +79,6 @@ func (c redisClient) Get(ctx context.Context, key string) (any, error) {
 }
 
 func (c redisClient) AddToSet(ctx context.Context, key string, data ...any) error {
-
 	if err := c.redisClient.SAdd(ctx, key, data...).Err(); err != nil {
 		return status.Error(codes.Internal, "failed to set data into set inside cache")
 	}
@@ -87,7 +87,6 @@ func (c redisClient) AddToSet(ctx context.Context, key string, data ...any) erro
 }
 
 func (c redisClient) IsDataInSet(ctx context.Context, key string, data any) (bool, error) {
-
 	result, err := c.redisClient.SIsMember(ctx, key, data).Result()
 	if err != nil {
 		return false, status.Error(codes.Internal, "failed to check if data is member of set inside cache")

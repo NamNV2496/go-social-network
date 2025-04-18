@@ -32,8 +32,7 @@ func Initilize() (*app.App, func(), error) {
 	goquDatabase := database.InitializeGoquDB(db)
 	kafka := config.Kafka
 	consumerConsumer := consumer.NewConsumer(kafka)
-	redis := config.Redis
-	client := cache.NewRedisClient(redis)
+	client := cache.NewRedisClient(config)
 	newsfeedService := logic.NewUserService(goquDatabase, consumerConsumer, client)
 	newsfeedServiceServer := grpc.NewGrpcHander(newsfeedService)
 	server := grpc.NewServer(newsfeedServiceServer)

@@ -15,6 +15,8 @@ services:
         image: redis:7-alpine
         ports:
             - "6379:6379"
+        networks:
+            - social
 
     zookeeper:
         image: "bitnami/zookeeper:3.8.4-debian-12-r8"
@@ -58,34 +60,34 @@ services:
             - esdata:/usr/share/elasticsearch/data
     
     # grafana
-    grafana:
-        image: grafana/grafana
-        ports:
-            - "3000:3000"
-        container_name: grafana
-        restart: unless-stopped
-        networks:
-            - social
-        environment:
-            - GF_SECURITY_ADMIN_USER=admin
-            - GF_SECURITY_ADMIN_PASSWORD=admin
-        depends_on:
-            - prometheus
+    # grafana:
+    #     image: grafana/grafana
+    #     ports:
+    #         - "3000:3000"
+    #     container_name: grafana
+    #     restart: unless-stopped
+    #     networks:
+    #         - social
+    #     environment:
+    #         - GF_SECURITY_ADMIN_USER=admin
+    #         - GF_SECURITY_ADMIN_PASSWORD=admin
+    #     depends_on:
+    #         - prometheus
         # volumes:
         #     - grafana-data:/var/lib/grafana
         #     - ./grafana.ini:/etc/grafana/grafana.ini
 
     # Install prometheus and node-exporter
-    prometheus:
-        image: prom/prometheus
-        container_name: prometheus
-        ports:
-            - "9090:9090"
-        networks:
-            - social
-        volumes:
-            - prometheus:/prometheus
-            - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    # prometheus:
+    #     image: prom/prometheus
+    #     container_name: prometheus
+    #     ports:
+    #         - "9090:9090"
+    #     networks:
+    #         - social
+    #     volumes:
+    #         - prometheus:/prometheus
+    #         - ./prometheus.yml:/etc/prometheus/prometheus.yml
         
     # A Prometheus exporter that collects hardware and OS-level metrics from Linux and other Unix-like systems. Node Exporter enables monitoring of host-level resources and performance metrics.
     # exporter:
@@ -143,7 +145,7 @@ services:
         environment:
             - DATABASE_URL=root:root@tcp(mysql:3306)/network?parseTime=true
             - KAFKA_BROKER=kafka:29092
-            - REDIS_URL=redis:6379
+            - REDIS_URL=redis:6379 # Add this line to point to the Redis service
             - USER_URL=user:5610
             - NEWSFEED_URL=newsfeed:5612
         networks:
@@ -151,6 +153,7 @@ services:
         depends_on:
             - mysql
             - kafka
+            - redis
 
     post:
         build:
@@ -195,6 +198,8 @@ services:
             dockerfile: user-service/Dockerfile
         command: sh -c "/app/user-service migrate"
         # or command: ["/app/user-service", "migrate"]
+        environment:
+            - DATABASE_URL=root:root@tcp(mysql:3306)/network?parseTime=true
         depends_on:
             - mysql
             - redis
@@ -211,13 +216,13 @@ services:
             - ./web:/usr/share/nginx/html:ro
 
 volumes:
-  esdata:
-      driver: local
-  grafana-data: # Added volume for Grafana
-    driver: local
-  prometheus:
-    driver: local
+    esdata:
+        driver: local
+    grafana-data: # Added volume for Grafana
+        driver: local
+    prometheus:
+        driver: local
 
 networks:
-  social:
-    driver: bridge
+    social:
+        driver: bridge
