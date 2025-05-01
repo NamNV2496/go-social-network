@@ -19,8 +19,8 @@
 ## How to build protobuf
 
 ```
-    cd http_gateway
-    make generate
+cd http_gateway
+make generate
 
 then copy to target service
 ```
@@ -29,38 +29,8 @@ then copy to target service
 
 access each service
 ```
-    make generate
+make generate
 ```
-
-## Grafana custom
-
-after login, you can setup dashboard for monitoring
-
-![grafana1](docs/grafana1.png)
-
-![grafana2](docs/grafana2.png)
-
-![grafana3](docs/grafana3.png)
-
-![grafana4](docs/grafana4.png)
-
-![grafana5](docs/grafana5.png)
-
-access to download dashboard template
-
-https://grafana.com/grafana/dashboards/1860-node-exporter-full/
-
-![grafana6](docs/grafana6.png)
-
-import template by id or json
-
-![grafana7](docs/grafana7.png)
-
-![grafana8](docs/grafana8.png)
-
-![grafana9](docs/grafana9.png)
-
-
 
 
 # 3. How to start
@@ -156,4 +126,32 @@ Create new chat room private with friend from newsfeed. Only 2 member of chat ca
 
 # Monitoring
 
-![monitoring1](monitoring1.png)
+![monitoring1](docs/monitoring1.png)
+
+## Grafana custom
+
+after login, you can setup dashboard for monitoring
+
+![grafana1](docs/grafana1.png)
+
+![grafana2](docs/grafana2.png)
+
+![grafana3](docs/grafana3.png)
+
+![grafana4](docs/grafana4.png)
+
+![grafana5](docs/grafana5.png)
+
+access to download dashboard template
+
+https://grafana.com/grafana/dashboards/1860-node-exporter-full/
+
+![grafana6](docs/grafana6.png)
+
+import template by id or json
+
+![grafana7](docs/grafana7.png)
+
+![grafana8](docs/grafana8.png)
+
+![grafana9](docs/grafana9.png)
