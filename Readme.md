@@ -14,6 +14,8 @@
     10. email - "github.com/jordan-wright/email"
     11. sms - "github.com/twilio/twilio-go"
 
+![alt text](docs/flow.png)
+
 # 2. Prerequisite
 
 ## How to build protobuf
@@ -53,8 +55,6 @@ make generate
     5. run newsfeed-service "cd newsfeed-service/" and "go run cmd/main.go"
     6. run message-service "cd message-service/" and "go run cmd/main.go"
     7. run FE "cd web/" and "start index.html"
-
-![flow](docs/flow.png)
 
 ## User
 
