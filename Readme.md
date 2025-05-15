@@ -27,13 +27,10 @@ make generate
 then copy to target service
 ```
 
-
-
 access each service
 ```
 make generate
 ```
-
 
 # 3. How to start
 
@@ -128,8 +125,8 @@ Create new chat room private with friend from newsfeed. Only 2 member of chat ca
 
 ![monitoring1](docs/monitoring1.png)
 
-## Grafana custom
-
+<details>
+  <summary>Grafana custom</summary>
 after login, you can setup dashboard for monitoring
 
 ![grafana1](docs/grafana1.png)
@@ -155,3 +152,4 @@ import template by id or json
 ![grafana8](docs/grafana8.png)
 
 ![grafana9](docs/grafana9.png)
+</details>
