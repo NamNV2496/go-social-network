@@ -178,7 +178,7 @@ func (es *elasticSearch) SearchDataFromIndex(
 	// Check for errors in the response
 	if res.IsError() {
 		log.Println("Error response: ", res.String())
-		return nil, fmt.Errorf("Error response: %w", res.String())
+		return nil, fmt.Errorf("Error response: %s", res.String())
 	}
 
 	// Decode the JSON response body

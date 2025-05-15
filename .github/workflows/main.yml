@@ -7,8 +7,8 @@ on:
     branches: [ master ]
 
 jobs:
-  test:
-    name: Run Tests
+  build-and-test:
+    name: Build and Test
     runs-on: ubuntu-latest
     
     steps:
@@ -27,6 +27,14 @@ jobs:
         cd ../newsfeed-service && go mod download
         cd ../http_gateway && go mod download
         cd ../message-service && go mod download
+
+    - name: Build services
+      run: |
+        cd user-service && go build ./...
+        cd ../post-service && go build ./...
+        cd ../newsfeed-service && go build ./...
+        cd ../http_gateway && go build ./...
+        cd ../message-service && go build ./...
 
     - name: Run tests
       run: |
