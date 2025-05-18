@@ -62,7 +62,9 @@ message GetPostResponse {
 message CreateCommentRequest {
     uint64 post_id = 1;
     Comment comment = 2;
+    repeated string application = 3;
 }
+
 message CreateCommentResponse {
     uint64 comment_id = 1;
 }
@@ -75,6 +77,52 @@ message GetCommentRequest {
 
 message GetCommentResponse {
     repeated Comment comment = 1;
+}
+
+message Rule {
+    int64 id = 1;
+    string application = 2;
+    string comment_text = 3;
+    bool visible = 4;	
+}
+
+message CreateCommentRuleRequest {
+    Rule rule = 1;
+}
+
+message CreateCommentRuleResponse {
+    int64 rule_id = 1;
+    string status = 2;
+}
+
+message GetCommentRuleByIdRequest {
+    int64 rule_id = 1;
+    repeated string application = 2;
+    uint32 page_number = 3;
+    uint32 page_size = 4;
+}
+
+message GetCommentRuleByIdResponse {
+    Rule rule = 1;
+}
+
+message GetCommentRulesRequest {
+    repeated string application = 2;
+    uint32 page_number = 3;
+    uint32 page_size = 4;
+}
+
+message GetCommentRulesResponse {
+    repeated Rule rules = 1;
+}
+
+message UpdateCommentRuleRequest {
+    int64 rule_id = 1;
+    Rule rule = 2;
+}
+
+message UpdateCommentRuleResponse {
+    string status = 1;
 }
 
 // like
@@ -122,6 +170,30 @@ service PostService {
 			get: "/api/v1/comment"
 		};
     }
+
+    rpc CreateCommentRule(CreateCommentRuleRequest) returns (CreateCommentRuleResponse) {
+        option (google.api.http) = {
+			post: "/api/v1/comment_rule"
+            body: "*"
+		};
+    }
+    rpc GetCommentRules(GetCommentRulesRequest) returns (GetCommentRulesResponse) {
+        option (google.api.http) = {
+			get: "/api/v1/comment_rule"
+		};
+    }
+    rpc GetCommentRuleById(GetCommentRuleByIdRequest) returns (GetCommentRuleByIdResponse) {
+        option (google.api.http) = {
+			get: "/api/v1/comment_rule/{rule_id}"
+		};
+    }
+    rpc UpdateCommentRule(UpdateCommentRuleRequest) returns (UpdateCommentRuleResponse) {
+        option (google.api.http) = {
+			put: "/api/v1/comment_rule/{rule_id}"
+            body: "*"
+		};
+    }
+
     // like
     rpc LikeAction(LikeRequest) returns (LikeResponse) {
         option (google.api.http) = {

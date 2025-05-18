@@ -586,6 +586,7 @@ type CreateCommentRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	PostId        uint64                 `protobuf:"varint,1,opt,name=post_id,json=postId,proto3" json:"post_id,omitempty"`
 	Comment       *Comment               `protobuf:"bytes,2,opt,name=comment,proto3" json:"comment,omitempty"`
+	Application   []string               `protobuf:"bytes,3,rep,name=application,proto3" json:"application,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -630,6 +631,13 @@ func (x *CreateCommentRequest) GetPostId() uint64 {
 func (x *CreateCommentRequest) GetComment() *Comment {
 	if x != nil {
 		return x.Comment
+	}
+	return nil
+}
+
+func (x *CreateCommentRequest) GetApplication() []string {
+	if x != nil {
+		return x.Application
 	}
 	return nil
 }
@@ -782,6 +790,482 @@ func (x *GetCommentResponse) GetComment() []*Comment {
 	return nil
 }
 
+type Rule struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Application   string                 `protobuf:"bytes,2,opt,name=application,proto3" json:"application,omitempty"`
+	CommentText   string                 `protobuf:"bytes,3,opt,name=comment_text,json=commentText,proto3" json:"comment_text,omitempty"`
+	Visible       bool                   `protobuf:"varint,4,opt,name=visible,proto3" json:"visible,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Rule) Reset() {
+	*x = Rule{}
+	mi := &file_post_core_v1_post_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Rule) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Rule) ProtoMessage() {}
+
+func (x *Rule) ProtoReflect() protoreflect.Message {
+	mi := &file_post_core_v1_post_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Rule.ProtoReflect.Descriptor instead.
+func (*Rule) Descriptor() ([]byte, []int) {
+	return file_post_core_v1_post_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *Rule) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *Rule) GetApplication() string {
+	if x != nil {
+		return x.Application
+	}
+	return ""
+}
+
+func (x *Rule) GetCommentText() string {
+	if x != nil {
+		return x.CommentText
+	}
+	return ""
+}
+
+func (x *Rule) GetVisible() bool {
+	if x != nil {
+		return x.Visible
+	}
+	return false
+}
+
+type CreateCommentRuleRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Rule          *Rule                  `protobuf:"bytes,1,opt,name=rule,proto3" json:"rule,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateCommentRuleRequest) Reset() {
+	*x = CreateCommentRuleRequest{}
+	mi := &file_post_core_v1_post_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateCommentRuleRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateCommentRuleRequest) ProtoMessage() {}
+
+func (x *CreateCommentRuleRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_post_core_v1_post_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateCommentRuleRequest.ProtoReflect.Descriptor instead.
+func (*CreateCommentRuleRequest) Descriptor() ([]byte, []int) {
+	return file_post_core_v1_post_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *CreateCommentRuleRequest) GetRule() *Rule {
+	if x != nil {
+		return x.Rule
+	}
+	return nil
+}
+
+type CreateCommentRuleResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RuleId        int64                  `protobuf:"varint,1,opt,name=rule_id,json=ruleId,proto3" json:"rule_id,omitempty"`
+	Status        string                 `protobuf:"bytes,2,opt,name=status,proto3" json:"status,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateCommentRuleResponse) Reset() {
+	*x = CreateCommentRuleResponse{}
+	mi := &file_post_core_v1_post_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateCommentRuleResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateCommentRuleResponse) ProtoMessage() {}
+
+func (x *CreateCommentRuleResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_post_core_v1_post_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateCommentRuleResponse.ProtoReflect.Descriptor instead.
+func (*CreateCommentRuleResponse) Descriptor() ([]byte, []int) {
+	return file_post_core_v1_post_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *CreateCommentRuleResponse) GetRuleId() int64 {
+	if x != nil {
+		return x.RuleId
+	}
+	return 0
+}
+
+func (x *CreateCommentRuleResponse) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+type GetCommentRuleByIdRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RuleId        int64                  `protobuf:"varint,1,opt,name=rule_id,json=ruleId,proto3" json:"rule_id,omitempty"`
+	Application   []string               `protobuf:"bytes,2,rep,name=application,proto3" json:"application,omitempty"`
+	PageNumber    uint32                 `protobuf:"varint,3,opt,name=page_number,json=pageNumber,proto3" json:"page_number,omitempty"`
+	PageSize      uint32                 `protobuf:"varint,4,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetCommentRuleByIdRequest) Reset() {
+	*x = GetCommentRuleByIdRequest{}
+	mi := &file_post_core_v1_post_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetCommentRuleByIdRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetCommentRuleByIdRequest) ProtoMessage() {}
+
+func (x *GetCommentRuleByIdRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_post_core_v1_post_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetCommentRuleByIdRequest.ProtoReflect.Descriptor instead.
+func (*GetCommentRuleByIdRequest) Descriptor() ([]byte, []int) {
+	return file_post_core_v1_post_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *GetCommentRuleByIdRequest) GetRuleId() int64 {
+	if x != nil {
+		return x.RuleId
+	}
+	return 0
+}
+
+func (x *GetCommentRuleByIdRequest) GetApplication() []string {
+	if x != nil {
+		return x.Application
+	}
+	return nil
+}
+
+func (x *GetCommentRuleByIdRequest) GetPageNumber() uint32 {
+	if x != nil {
+		return x.PageNumber
+	}
+	return 0
+}
+
+func (x *GetCommentRuleByIdRequest) GetPageSize() uint32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+type GetCommentRuleByIdResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Rule          *Rule                  `protobuf:"bytes,1,opt,name=rule,proto3" json:"rule,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetCommentRuleByIdResponse) Reset() {
+	*x = GetCommentRuleByIdResponse{}
+	mi := &file_post_core_v1_post_proto_msgTypes[16]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetCommentRuleByIdResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetCommentRuleByIdResponse) ProtoMessage() {}
+
+func (x *GetCommentRuleByIdResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_post_core_v1_post_proto_msgTypes[16]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetCommentRuleByIdResponse.ProtoReflect.Descriptor instead.
+func (*GetCommentRuleByIdResponse) Descriptor() ([]byte, []int) {
+	return file_post_core_v1_post_proto_rawDescGZIP(), []int{16}
+}
+
+func (x *GetCommentRuleByIdResponse) GetRule() *Rule {
+	if x != nil {
+		return x.Rule
+	}
+	return nil
+}
+
+type GetCommentRulesRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Application   []string               `protobuf:"bytes,2,rep,name=application,proto3" json:"application,omitempty"`
+	PageNumber    uint32                 `protobuf:"varint,3,opt,name=page_number,json=pageNumber,proto3" json:"page_number,omitempty"`
+	PageSize      uint32                 `protobuf:"varint,4,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetCommentRulesRequest) Reset() {
+	*x = GetCommentRulesRequest{}
+	mi := &file_post_core_v1_post_proto_msgTypes[17]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetCommentRulesRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetCommentRulesRequest) ProtoMessage() {}
+
+func (x *GetCommentRulesRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_post_core_v1_post_proto_msgTypes[17]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetCommentRulesRequest.ProtoReflect.Descriptor instead.
+func (*GetCommentRulesRequest) Descriptor() ([]byte, []int) {
+	return file_post_core_v1_post_proto_rawDescGZIP(), []int{17}
+}
+
+func (x *GetCommentRulesRequest) GetApplication() []string {
+	if x != nil {
+		return x.Application
+	}
+	return nil
+}
+
+func (x *GetCommentRulesRequest) GetPageNumber() uint32 {
+	if x != nil {
+		return x.PageNumber
+	}
+	return 0
+}
+
+func (x *GetCommentRulesRequest) GetPageSize() uint32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+type GetCommentRulesResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Rules         []*Rule                `protobuf:"bytes,1,rep,name=rules,proto3" json:"rules,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetCommentRulesResponse) Reset() {
+	*x = GetCommentRulesResponse{}
+	mi := &file_post_core_v1_post_proto_msgTypes[18]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetCommentRulesResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetCommentRulesResponse) ProtoMessage() {}
+
+func (x *GetCommentRulesResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_post_core_v1_post_proto_msgTypes[18]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetCommentRulesResponse.ProtoReflect.Descriptor instead.
+func (*GetCommentRulesResponse) Descriptor() ([]byte, []int) {
+	return file_post_core_v1_post_proto_rawDescGZIP(), []int{18}
+}
+
+func (x *GetCommentRulesResponse) GetRules() []*Rule {
+	if x != nil {
+		return x.Rules
+	}
+	return nil
+}
+
+type UpdateCommentRuleRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RuleId        int64                  `protobuf:"varint,1,opt,name=rule_id,json=ruleId,proto3" json:"rule_id,omitempty"`
+	Rule          *Rule                  `protobuf:"bytes,2,opt,name=rule,proto3" json:"rule,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateCommentRuleRequest) Reset() {
+	*x = UpdateCommentRuleRequest{}
+	mi := &file_post_core_v1_post_proto_msgTypes[19]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateCommentRuleRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateCommentRuleRequest) ProtoMessage() {}
+
+func (x *UpdateCommentRuleRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_post_core_v1_post_proto_msgTypes[19]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateCommentRuleRequest.ProtoReflect.Descriptor instead.
+func (*UpdateCommentRuleRequest) Descriptor() ([]byte, []int) {
+	return file_post_core_v1_post_proto_rawDescGZIP(), []int{19}
+}
+
+func (x *UpdateCommentRuleRequest) GetRuleId() int64 {
+	if x != nil {
+		return x.RuleId
+	}
+	return 0
+}
+
+func (x *UpdateCommentRuleRequest) GetRule() *Rule {
+	if x != nil {
+		return x.Rule
+	}
+	return nil
+}
+
+type UpdateCommentRuleResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Status        string                 `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateCommentRuleResponse) Reset() {
+	*x = UpdateCommentRuleResponse{}
+	mi := &file_post_core_v1_post_proto_msgTypes[20]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateCommentRuleResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateCommentRuleResponse) ProtoMessage() {}
+
+func (x *UpdateCommentRuleResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_post_core_v1_post_proto_msgTypes[20]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateCommentRuleResponse.ProtoReflect.Descriptor instead.
+func (*UpdateCommentRuleResponse) Descriptor() ([]byte, []int) {
+	return file_post_core_v1_post_proto_rawDescGZIP(), []int{20}
+}
+
+func (x *UpdateCommentRuleResponse) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
 // like
 type LikeRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -792,7 +1276,7 @@ type LikeRequest struct {
 
 func (x *LikeRequest) Reset() {
 	*x = LikeRequest{}
-	mi := &file_post_core_v1_post_proto_msgTypes[12]
+	mi := &file_post_core_v1_post_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -804,7 +1288,7 @@ func (x *LikeRequest) String() string {
 func (*LikeRequest) ProtoMessage() {}
 
 func (x *LikeRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_post_core_v1_post_proto_msgTypes[12]
+	mi := &file_post_core_v1_post_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -817,7 +1301,7 @@ func (x *LikeRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LikeRequest.ProtoReflect.Descriptor instead.
 func (*LikeRequest) Descriptor() ([]byte, []int) {
-	return file_post_core_v1_post_proto_rawDescGZIP(), []int{12}
+	return file_post_core_v1_post_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *LikeRequest) GetLike() *Like {
@@ -836,7 +1320,7 @@ type LikeResponse struct {
 
 func (x *LikeResponse) Reset() {
 	*x = LikeResponse{}
-	mi := &file_post_core_v1_post_proto_msgTypes[13]
+	mi := &file_post_core_v1_post_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -848,7 +1332,7 @@ func (x *LikeResponse) String() string {
 func (*LikeResponse) ProtoMessage() {}
 
 func (x *LikeResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_post_core_v1_post_proto_msgTypes[13]
+	mi := &file_post_core_v1_post_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -861,7 +1345,7 @@ func (x *LikeResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LikeResponse.ProtoReflect.Descriptor instead.
 func (*LikeResponse) Descriptor() ([]byte, []int) {
-	return file_post_core_v1_post_proto_rawDescGZIP(), []int{13}
+	return file_post_core_v1_post_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *LikeResponse) GetResponse() *LikePostResponse {
@@ -881,7 +1365,7 @@ type GetLikeRequest struct {
 
 func (x *GetLikeRequest) Reset() {
 	*x = GetLikeRequest{}
-	mi := &file_post_core_v1_post_proto_msgTypes[14]
+	mi := &file_post_core_v1_post_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -893,7 +1377,7 @@ func (x *GetLikeRequest) String() string {
 func (*GetLikeRequest) ProtoMessage() {}
 
 func (x *GetLikeRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_post_core_v1_post_proto_msgTypes[14]
+	mi := &file_post_core_v1_post_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -906,7 +1390,7 @@ func (x *GetLikeRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetLikeRequest.ProtoReflect.Descriptor instead.
 func (*GetLikeRequest) Descriptor() ([]byte, []int) {
-	return file_post_core_v1_post_proto_rawDescGZIP(), []int{14}
+	return file_post_core_v1_post_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *GetLikeRequest) GetPostId() []uint64 {
@@ -932,7 +1416,7 @@ type GetLikeResponse struct {
 
 func (x *GetLikeResponse) Reset() {
 	*x = GetLikeResponse{}
-	mi := &file_post_core_v1_post_proto_msgTypes[15]
+	mi := &file_post_core_v1_post_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -944,7 +1428,7 @@ func (x *GetLikeResponse) String() string {
 func (*GetLikeResponse) ProtoMessage() {}
 
 func (x *GetLikeResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_post_core_v1_post_proto_msgTypes[15]
+	mi := &file_post_core_v1_post_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -957,7 +1441,7 @@ func (x *GetLikeResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetLikeResponse.ProtoReflect.Descriptor instead.
 func (*GetLikeResponse) Descriptor() ([]byte, []int) {
-	return file_post_core_v1_post_proto_rawDescGZIP(), []int{15}
+	return file_post_core_v1_post_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *GetLikeResponse) GetResponse() []*LikePostResponse {
@@ -1010,10 +1494,11 @@ const file_post_core_v1_post_proto_rawDesc = "" +
 	"pageNumber\x12\x1b\n" +
 	"\tpage_size\x18\x03 \x01(\rR\bpageSize\"4\n" +
 	"\x0fGetPostResponse\x12!\n" +
-	"\x04post\x18\x01 \x03(\v2\r.post.v1.PostR\x04post\"[\n" +
+	"\x04post\x18\x01 \x03(\v2\r.post.v1.PostR\x04post\"}\n" +
 	"\x14CreateCommentRequest\x12\x17\n" +
 	"\apost_id\x18\x01 \x01(\x04R\x06postId\x12*\n" +
-	"\acomment\x18\x02 \x01(\v2\x10.post.v1.CommentR\acomment\"6\n" +
+	"\acomment\x18\x02 \x01(\v2\x10.post.v1.CommentR\acomment\x12 \n" +
+	"\vapplication\x18\x03 \x03(\tR\vapplication\"6\n" +
 	"\x15CreateCommentResponse\x12\x1d\n" +
 	"\n" +
 	"comment_id\x18\x01 \x01(\x04R\tcommentId\"j\n" +
@@ -1023,7 +1508,37 @@ const file_post_core_v1_post_proto_rawDesc = "" +
 	"pageNumber\x12\x1b\n" +
 	"\tpage_size\x18\x03 \x01(\rR\bpageSize\"@\n" +
 	"\x12GetCommentResponse\x12*\n" +
-	"\acomment\x18\x01 \x03(\v2\x10.post.v1.CommentR\acomment\"0\n" +
+	"\acomment\x18\x01 \x03(\v2\x10.post.v1.CommentR\acomment\"u\n" +
+	"\x04Rule\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12 \n" +
+	"\vapplication\x18\x02 \x01(\tR\vapplication\x12!\n" +
+	"\fcomment_text\x18\x03 \x01(\tR\vcommentText\x12\x18\n" +
+	"\avisible\x18\x04 \x01(\bR\avisible\"=\n" +
+	"\x18CreateCommentRuleRequest\x12!\n" +
+	"\x04rule\x18\x01 \x01(\v2\r.post.v1.RuleR\x04rule\"L\n" +
+	"\x19CreateCommentRuleResponse\x12\x17\n" +
+	"\arule_id\x18\x01 \x01(\x03R\x06ruleId\x12\x16\n" +
+	"\x06status\x18\x02 \x01(\tR\x06status\"\x94\x01\n" +
+	"\x19GetCommentRuleByIdRequest\x12\x17\n" +
+	"\arule_id\x18\x01 \x01(\x03R\x06ruleId\x12 \n" +
+	"\vapplication\x18\x02 \x03(\tR\vapplication\x12\x1f\n" +
+	"\vpage_number\x18\x03 \x01(\rR\n" +
+	"pageNumber\x12\x1b\n" +
+	"\tpage_size\x18\x04 \x01(\rR\bpageSize\"?\n" +
+	"\x1aGetCommentRuleByIdResponse\x12!\n" +
+	"\x04rule\x18\x01 \x01(\v2\r.post.v1.RuleR\x04rule\"x\n" +
+	"\x16GetCommentRulesRequest\x12 \n" +
+	"\vapplication\x18\x02 \x03(\tR\vapplication\x12\x1f\n" +
+	"\vpage_number\x18\x03 \x01(\rR\n" +
+	"pageNumber\x12\x1b\n" +
+	"\tpage_size\x18\x04 \x01(\rR\bpageSize\">\n" +
+	"\x17GetCommentRulesResponse\x12#\n" +
+	"\x05rules\x18\x01 \x03(\v2\r.post.v1.RuleR\x05rules\"V\n" +
+	"\x18UpdateCommentRuleRequest\x12\x17\n" +
+	"\arule_id\x18\x01 \x01(\x03R\x06ruleId\x12!\n" +
+	"\x04rule\x18\x02 \x01(\v2\r.post.v1.RuleR\x04rule\"3\n" +
+	"\x19UpdateCommentRuleResponse\x12\x16\n" +
+	"\x06status\x18\x01 \x01(\tR\x06status\"0\n" +
 	"\vLikeRequest\x12!\n" +
 	"\x04like\x18\x01 \x01(\v2\r.post.v1.LikeR\x04like\"E\n" +
 	"\fLikeResponse\x125\n" +
@@ -1036,14 +1551,18 @@ const file_post_core_v1_post_proto_rawDesc = "" +
 	"\tLike_Enum\x12\n" +
 	"\n" +
 	"\x06UNLIKE\x10\x00\x12\b\n" +
-	"\x04LIKE\x10\x012\xb9\x04\n" +
+	"\x04LIKE\x10\x012\xba\b\n" +
 	"\vPostService\x12^\n" +
 	"\n" +
 	"CreatePost\x12\x1a.post.v1.CreatePostRequest\x1a\x1b.post.v1.CreatePostResponse\"\x17\x82\xd3\xe4\x93\x02\x11:\x01*\"\f/api/v1/post\x12S\n" +
 	"\aGetPost\x12\x17.post.v1.GetPostRequest\x1a\x18.post.v1.GetPostResponse\"\x15\x82\xd3\xe4\x93\x02\x0f\x12\r/api/v1/posts\x12j\n" +
 	"\rCreateComment\x12\x1d.post.v1.CreateCommentRequest\x1a\x1e.post.v1.CreateCommentResponse\"\x1a\x82\xd3\xe4\x93\x02\x14:\x01*\"\x0f/api/v1/comment\x12^\n" +
 	"\n" +
-	"GetComment\x12\x1a.post.v1.GetCommentRequest\x1a\x1b.post.v1.GetCommentResponse\"\x17\x82\xd3\xe4\x93\x02\x11\x12\x0f/api/v1/comment\x12R\n" +
+	"GetComment\x12\x1a.post.v1.GetCommentRequest\x1a\x1b.post.v1.GetCommentResponse\"\x17\x82\xd3\xe4\x93\x02\x11\x12\x0f/api/v1/comment\x12{\n" +
+	"\x11CreateCommentRule\x12!.post.v1.CreateCommentRuleRequest\x1a\".post.v1.CreateCommentRuleResponse\"\x1f\x82\xd3\xe4\x93\x02\x19:\x01*\"\x14/api/v1/comment_rule\x12r\n" +
+	"\x0fGetCommentRules\x12\x1f.post.v1.GetCommentRulesRequest\x1a .post.v1.GetCommentRulesResponse\"\x1c\x82\xd3\xe4\x93\x02\x16\x12\x14/api/v1/comment_rule\x12\x85\x01\n" +
+	"\x12GetCommentRuleById\x12\".post.v1.GetCommentRuleByIdRequest\x1a#.post.v1.GetCommentRuleByIdResponse\"&\x82\xd3\xe4\x93\x02 \x12\x1e/api/v1/comment_rule/{rule_id}\x12\x85\x01\n" +
+	"\x11UpdateCommentRule\x12!.post.v1.UpdateCommentRuleRequest\x1a\".post.v1.UpdateCommentRuleResponse\")\x82\xd3\xe4\x93\x02#:\x01*\x1a\x1e/api/v1/comment_rule/{rule_id}\x12R\n" +
 	"\n" +
 	"LikeAction\x12\x14.post.v1.LikeRequest\x1a\x15.post.v1.LikeResponse\"\x17\x82\xd3\xe4\x93\x02\x11:\x01*\"\f/api/v1/like\x12U\n" +
 	"\aGetlike\x12\x17.post.v1.GetLikeRequest\x1a\x18.post.v1.GetLikeResponse\"\x17\x82\xd3\xe4\x93\x02\x11:\x01*\x1a\f/api/v1/likeBy\n" +
@@ -1062,25 +1581,34 @@ func file_post_core_v1_post_proto_rawDescGZIP() []byte {
 }
 
 var file_post_core_v1_post_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_post_core_v1_post_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
+var file_post_core_v1_post_proto_msgTypes = make([]protoimpl.MessageInfo, 25)
 var file_post_core_v1_post_proto_goTypes = []any{
-	(Like_Enum)(0),                // 0: post.v1.Like_Enum
-	(*Post)(nil),                  // 1: post.v1.Post
-	(*Comment)(nil),               // 2: post.v1.Comment
-	(*Like)(nil),                  // 3: post.v1.Like
-	(*LikePostResponse)(nil),      // 4: post.v1.LikePostResponse
-	(*CreatePostRequest)(nil),     // 5: post.v1.CreatePostRequest
-	(*CreatePostResponse)(nil),    // 6: post.v1.CreatePostResponse
-	(*GetPostRequest)(nil),        // 7: post.v1.GetPostRequest
-	(*GetPostResponse)(nil),       // 8: post.v1.GetPostResponse
-	(*CreateCommentRequest)(nil),  // 9: post.v1.CreateCommentRequest
-	(*CreateCommentResponse)(nil), // 10: post.v1.CreateCommentResponse
-	(*GetCommentRequest)(nil),     // 11: post.v1.GetCommentRequest
-	(*GetCommentResponse)(nil),    // 12: post.v1.GetCommentResponse
-	(*LikeRequest)(nil),           // 13: post.v1.LikeRequest
-	(*LikeResponse)(nil),          // 14: post.v1.LikeResponse
-	(*GetLikeRequest)(nil),        // 15: post.v1.GetLikeRequest
-	(*GetLikeResponse)(nil),       // 16: post.v1.GetLikeResponse
+	(Like_Enum)(0),                     // 0: post.v1.Like_Enum
+	(*Post)(nil),                       // 1: post.v1.Post
+	(*Comment)(nil),                    // 2: post.v1.Comment
+	(*Like)(nil),                       // 3: post.v1.Like
+	(*LikePostResponse)(nil),           // 4: post.v1.LikePostResponse
+	(*CreatePostRequest)(nil),          // 5: post.v1.CreatePostRequest
+	(*CreatePostResponse)(nil),         // 6: post.v1.CreatePostResponse
+	(*GetPostRequest)(nil),             // 7: post.v1.GetPostRequest
+	(*GetPostResponse)(nil),            // 8: post.v1.GetPostResponse
+	(*CreateCommentRequest)(nil),       // 9: post.v1.CreateCommentRequest
+	(*CreateCommentResponse)(nil),      // 10: post.v1.CreateCommentResponse
+	(*GetCommentRequest)(nil),          // 11: post.v1.GetCommentRequest
+	(*GetCommentResponse)(nil),         // 12: post.v1.GetCommentResponse
+	(*Rule)(nil),                       // 13: post.v1.Rule
+	(*CreateCommentRuleRequest)(nil),   // 14: post.v1.CreateCommentRuleRequest
+	(*CreateCommentRuleResponse)(nil),  // 15: post.v1.CreateCommentRuleResponse
+	(*GetCommentRuleByIdRequest)(nil),  // 16: post.v1.GetCommentRuleByIdRequest
+	(*GetCommentRuleByIdResponse)(nil), // 17: post.v1.GetCommentRuleByIdResponse
+	(*GetCommentRulesRequest)(nil),     // 18: post.v1.GetCommentRulesRequest
+	(*GetCommentRulesResponse)(nil),    // 19: post.v1.GetCommentRulesResponse
+	(*UpdateCommentRuleRequest)(nil),   // 20: post.v1.UpdateCommentRuleRequest
+	(*UpdateCommentRuleResponse)(nil),  // 21: post.v1.UpdateCommentRuleResponse
+	(*LikeRequest)(nil),                // 22: post.v1.LikeRequest
+	(*LikeResponse)(nil),               // 23: post.v1.LikeResponse
+	(*GetLikeRequest)(nil),             // 24: post.v1.GetLikeRequest
+	(*GetLikeResponse)(nil),            // 25: post.v1.GetLikeResponse
 }
 var file_post_core_v1_post_proto_depIdxs = []int32{
 	0,  // 0: post.v1.Like.action:type_name -> post.v1.Like_Enum
@@ -1088,26 +1616,38 @@ var file_post_core_v1_post_proto_depIdxs = []int32{
 	1,  // 2: post.v1.GetPostResponse.post:type_name -> post.v1.Post
 	2,  // 3: post.v1.CreateCommentRequest.comment:type_name -> post.v1.Comment
 	2,  // 4: post.v1.GetCommentResponse.comment:type_name -> post.v1.Comment
-	3,  // 5: post.v1.LikeRequest.like:type_name -> post.v1.Like
-	4,  // 6: post.v1.LikeResponse.response:type_name -> post.v1.LikePostResponse
-	4,  // 7: post.v1.GetLikeResponse.response:type_name -> post.v1.LikePostResponse
-	5,  // 8: post.v1.PostService.CreatePost:input_type -> post.v1.CreatePostRequest
-	7,  // 9: post.v1.PostService.GetPost:input_type -> post.v1.GetPostRequest
-	9,  // 10: post.v1.PostService.CreateComment:input_type -> post.v1.CreateCommentRequest
-	11, // 11: post.v1.PostService.GetComment:input_type -> post.v1.GetCommentRequest
-	13, // 12: post.v1.PostService.LikeAction:input_type -> post.v1.LikeRequest
-	15, // 13: post.v1.PostService.Getlike:input_type -> post.v1.GetLikeRequest
-	6,  // 14: post.v1.PostService.CreatePost:output_type -> post.v1.CreatePostResponse
-	8,  // 15: post.v1.PostService.GetPost:output_type -> post.v1.GetPostResponse
-	10, // 16: post.v1.PostService.CreateComment:output_type -> post.v1.CreateCommentResponse
-	12, // 17: post.v1.PostService.GetComment:output_type -> post.v1.GetCommentResponse
-	14, // 18: post.v1.PostService.LikeAction:output_type -> post.v1.LikeResponse
-	16, // 19: post.v1.PostService.Getlike:output_type -> post.v1.GetLikeResponse
-	14, // [14:20] is the sub-list for method output_type
-	8,  // [8:14] is the sub-list for method input_type
-	8,  // [8:8] is the sub-list for extension type_name
-	8,  // [8:8] is the sub-list for extension extendee
-	0,  // [0:8] is the sub-list for field type_name
+	13, // 5: post.v1.CreateCommentRuleRequest.rule:type_name -> post.v1.Rule
+	13, // 6: post.v1.GetCommentRuleByIdResponse.rule:type_name -> post.v1.Rule
+	13, // 7: post.v1.GetCommentRulesResponse.rules:type_name -> post.v1.Rule
+	13, // 8: post.v1.UpdateCommentRuleRequest.rule:type_name -> post.v1.Rule
+	3,  // 9: post.v1.LikeRequest.like:type_name -> post.v1.Like
+	4,  // 10: post.v1.LikeResponse.response:type_name -> post.v1.LikePostResponse
+	4,  // 11: post.v1.GetLikeResponse.response:type_name -> post.v1.LikePostResponse
+	5,  // 12: post.v1.PostService.CreatePost:input_type -> post.v1.CreatePostRequest
+	7,  // 13: post.v1.PostService.GetPost:input_type -> post.v1.GetPostRequest
+	9,  // 14: post.v1.PostService.CreateComment:input_type -> post.v1.CreateCommentRequest
+	11, // 15: post.v1.PostService.GetComment:input_type -> post.v1.GetCommentRequest
+	14, // 16: post.v1.PostService.CreateCommentRule:input_type -> post.v1.CreateCommentRuleRequest
+	18, // 17: post.v1.PostService.GetCommentRules:input_type -> post.v1.GetCommentRulesRequest
+	16, // 18: post.v1.PostService.GetCommentRuleById:input_type -> post.v1.GetCommentRuleByIdRequest
+	20, // 19: post.v1.PostService.UpdateCommentRule:input_type -> post.v1.UpdateCommentRuleRequest
+	22, // 20: post.v1.PostService.LikeAction:input_type -> post.v1.LikeRequest
+	24, // 21: post.v1.PostService.Getlike:input_type -> post.v1.GetLikeRequest
+	6,  // 22: post.v1.PostService.CreatePost:output_type -> post.v1.CreatePostResponse
+	8,  // 23: post.v1.PostService.GetPost:output_type -> post.v1.GetPostResponse
+	10, // 24: post.v1.PostService.CreateComment:output_type -> post.v1.CreateCommentResponse
+	12, // 25: post.v1.PostService.GetComment:output_type -> post.v1.GetCommentResponse
+	15, // 26: post.v1.PostService.CreateCommentRule:output_type -> post.v1.CreateCommentRuleResponse
+	19, // 27: post.v1.PostService.GetCommentRules:output_type -> post.v1.GetCommentRulesResponse
+	17, // 28: post.v1.PostService.GetCommentRuleById:output_type -> post.v1.GetCommentRuleByIdResponse
+	21, // 29: post.v1.PostService.UpdateCommentRule:output_type -> post.v1.UpdateCommentRuleResponse
+	23, // 30: post.v1.PostService.LikeAction:output_type -> post.v1.LikeResponse
+	25, // 31: post.v1.PostService.Getlike:output_type -> post.v1.GetLikeResponse
+	22, // [22:32] is the sub-list for method output_type
+	12, // [12:22] is the sub-list for method input_type
+	12, // [12:12] is the sub-list for extension type_name
+	12, // [12:12] is the sub-list for extension extendee
+	0,  // [0:12] is the sub-list for field type_name
 }
 
 func init() { file_post_core_v1_post_proto_init() }
@@ -1121,7 +1661,7 @@ func file_post_core_v1_post_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_post_core_v1_post_proto_rawDesc), len(file_post_core_v1_post_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   16,
+			NumMessages:   25,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

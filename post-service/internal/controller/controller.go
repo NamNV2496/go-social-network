@@ -9,7 +9,7 @@ import (
 	"net"
 	"os"
 
-	"github.com/namnv2496/post-service/internal/configs"
+	"github.com/namnv2496/post-service/configs"
 	postv1 "github.com/namnv2496/post-service/internal/handler/generated/post_core/v1"
 	"github.com/namnv2496/post-service/internal/pkg/logger"
 	"github.com/namnv2496/post-service/internal/pkg/metric"
@@ -26,7 +26,7 @@ type IController interface {
 }
 
 type Controller struct {
-	postv1.UnimplementedPostServiceServer
+	postv1.PostServiceServer
 	logger         *logger.Logger
 	likeService    service.ILikeService
 	postService    service.IPostService

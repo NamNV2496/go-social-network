@@ -5,8 +5,9 @@ package wiring
 import (
 	"github.com/google/wire"
 	"github.com/namnv2496/post-service/app"
-	"github.com/namnv2496/post-service/internal/configs"
+	"github.com/namnv2496/post-service/configs"
 	"github.com/namnv2496/post-service/internal/controller"
+	"github.com/namnv2496/post-service/internal/pkg"
 	"github.com/namnv2496/post-service/internal/repository"
 	"github.com/namnv2496/post-service/internal/service"
 )
@@ -18,6 +19,7 @@ func Initilize() (*app.App, error) {
 		service.ServiceWireSet,
 		controller.ControllerWireSet,
 		app.NewApp,
+		pkg.TrieNodeSet,
 	)
 	return nil, nil
 }

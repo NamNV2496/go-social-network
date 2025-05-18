@@ -37,6 +37,8 @@ func NewPostService(
 	}
 }
 
+var _ IPostService = &postService{}
+
 func (p postService) AddPost(
 	ctx context.Context,
 	req *postv1.CreatePostRequest,

@@ -14,4 +14,7 @@ var RepositoryWireSet = wire.NewSet(
 	NewCommentRepository,
 	NewPostRepository,
 	NewTransaction,
+	NewCommentRuleRepository,
+	wire.Bind(new(ICommentRuleRepository), new(*CommentRuleRepository)),
+	wire.Bind(new(ICommentRepository), new(*CommentRepository)),
 )

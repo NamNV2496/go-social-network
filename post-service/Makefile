@@ -4,10 +4,7 @@ update:
 .PHONY: generate
 
 generate:
-	cp ./buf.gen.yaml ../api 
-	buf generate ../api/post_core/v1/post.proto
-	wire ./internal/wiring/ 
-	rm ../api/buf.gen.yaml
+	wire ./internal/wiring/
 
 run:
 	go run cmd/main.go

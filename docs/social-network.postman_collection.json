@@ -1,8 +1,9 @@
 {
 	"info": {
-		"_postman_id": "5a87fed8-c4af-4192-8b6a-3efa32651aca",
+		"_postman_id": "d71058c9-e536-4e45-b314-44fcbf8c8638",
 		"name": "social-network",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25126155"
 	},
 	"item": [
 		{
@@ -624,6 +625,128 @@
 						"api",
 						"v1",
 						"like"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "18. get comment rule by id",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/comment_rule/2?application=post",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"comment_rule",
+						"2"
+					],
+					"query": [
+						{
+							"key": "application",
+							"value": "post"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "19. get all comment rules",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/comment_rule",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"comment_rule"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "20. net comment rule",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"rule\": {\n        \"application\": \"post\",\n        \"comment_text\": \"ma tuy\",\n        \"visible\": true\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/comment_rule",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"comment_rule"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "21. update comment rule",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"rule\": {\n        \"id\": \"2\",\n        \"application\": \"post\",\n        \"commentText\": \"ma tuy\",\n        \"visible\": true\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/comment_rule/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"comment_rule",
+						"2"
 					]
 				}
 			},

@@ -45,9 +45,11 @@ func (m migrator) migrate(ctx context.Context, direction migrate.MigrationDirect
 }
 
 func (m migrator) Down(ctx context.Context) error {
-	return m.migrate(ctx, migrate.Down)
+	// return m.migrate(ctx, migrate.Down)
+	return nil
 }
 
 func (m migrator) Up(ctx context.Context) error {
-	return m.migrate(ctx, migrate.Up)
+	// return m.migrate(ctx, migrate.Up)
+	return nil
 }

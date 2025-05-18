@@ -8,8 +8,9 @@ package wiring
 
 import (
 	"github.com/namnv2496/post-service/app"
-	"github.com/namnv2496/post-service/internal/configs"
+	"github.com/namnv2496/post-service/configs"
 	"github.com/namnv2496/post-service/internal/controller"
+	"github.com/namnv2496/post-service/internal/pkg"
 	"github.com/namnv2496/post-service/internal/repository"
 	"github.com/namnv2496/post-service/internal/repository/database"
 	"github.com/namnv2496/post-service/internal/repository/mq/producer"
@@ -42,11 +43,16 @@ func Initilize() (*app.App, error) {
 		return nil, err
 	}
 	iPostService := service.NewPostService(iPostRepository, client)
-	iCommentRepository, err := repository.NewCommentRepository(db, configsDatabase)
+	commentRepository, err := repository.NewCommentRepository(db, configsDatabase)
 	if err != nil {
 		return nil, err
 	}
-	iCommentService := service.NewCommentService(iCommentRepository, client)
+	commentRuleRepository, err := repository.NewCommentRuleRepository(db, configsDatabase)
+	if err != nil {
+		return nil, err
+	}
+	trie := pkg.NewTrie()
+	iCommentService := service.NewCommentService(commentRepository, commentRuleRepository, trie, client)
 	iController := controller.NewController(config, iLikeService, iPostService, iCommentService)
 	appApp := app.NewApp(iController)
 	return appApp, nil

@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/namnv2496/post-service/internal/configs"
+	"github.com/namnv2496/post-service/configs"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )

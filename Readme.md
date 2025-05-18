@@ -13,6 +13,7 @@
     9. grafana for monitoring
     10. email - "github.com/jordan-wright/email"
     11. sms - "github.com/twilio/twilio-go"
+    12. DSA: Trie - for violent comment rule checking
 
 ![alt text](docs/flow.png)
 
@@ -29,6 +30,7 @@ then copy to target service
 
 access each service
 ```
+buf generate ../api/ # option for generate protobuf
 make generate
 ```
 
@@ -87,6 +89,10 @@ sql files location:
 ## View comment
 
 ![alt text](docs/viewComment.png)
+
+Comment validation violet rule
+![alt text](docs/comment_violent_rule.png)
+
 ## View followers post
 
 if `namnv` posted a post. `knm` and `baobq` will see it in their newsfeed.

@@ -92,6 +92,176 @@
         ]
       }
     },
+    "/api/v1/comment_rule": {
+      "get": {
+        "operationId": "PostService_GetCommentRules",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetCommentRulesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "application",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "PostService"
+        ]
+      },
+      "post": {
+        "operationId": "PostService_CreateCommentRule",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CreateCommentRuleResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CreateCommentRuleRequest"
+            }
+          }
+        ],
+        "tags": [
+          "PostService"
+        ]
+      }
+    },
+    "/api/v1/comment_rule/{ruleId}": {
+      "get": {
+        "operationId": "PostService_GetCommentRuleById",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetCommentRuleByIdResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "ruleId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "application",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "PostService"
+        ]
+      },
+      "put": {
+        "operationId": "PostService_UpdateCommentRule",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1UpdateCommentRuleResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "ruleId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PostServiceUpdateCommentRuleBody"
+            }
+          }
+        ],
+        "tags": [
+          "PostService"
+        ]
+      }
+    },
     "/api/v1/like": {
       "post": {
         "summary": "like",
@@ -234,6 +404,14 @@
     }
   },
   "definitions": {
+    "PostServiceUpdateCommentRuleBody": {
+      "type": "object",
+      "properties": {
+        "rule": {
+          "$ref": "#/definitions/v1Rule"
+        }
+      }
+    },
     "protobufAny": {
       "type": "object",
       "properties": {
@@ -309,6 +487,12 @@
         },
         "comment": {
           "$ref": "#/definitions/v1Comment"
+        },
+        "application": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       },
       "title": "Comment"
@@ -319,6 +503,26 @@
         "commentId": {
           "type": "string",
           "format": "uint64"
+        }
+      }
+    },
+    "v1CreateCommentRuleRequest": {
+      "type": "object",
+      "properties": {
+        "rule": {
+          "$ref": "#/definitions/v1Rule"
+        }
+      }
+    },
+    "v1CreateCommentRuleResponse": {
+      "type": "object",
+      "properties": {
+        "ruleId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "status": {
+          "type": "string"
         }
       }
     },
@@ -348,6 +552,26 @@
           "items": {
             "type": "object",
             "$ref": "#/definitions/v1Comment"
+          }
+        }
+      }
+    },
+    "v1GetCommentRuleByIdResponse": {
+      "type": "object",
+      "properties": {
+        "rule": {
+          "$ref": "#/definitions/v1Rule"
+        }
+      }
+    },
+    "v1GetCommentRulesResponse": {
+      "type": "object",
+      "properties": {
+        "rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Rule"
           }
         }
       }
@@ -479,6 +703,32 @@
           "type": "boolean"
         },
         "date": {
+          "type": "string"
+        }
+      }
+    },
+    "v1Rule": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "application": {
+          "type": "string"
+        },
+        "commentText": {
+          "type": "string"
+        },
+        "visible": {
+          "type": "boolean"
+        }
+      }
+    },
+    "v1UpdateCommentRuleResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
           "type": "string"
         }
       }

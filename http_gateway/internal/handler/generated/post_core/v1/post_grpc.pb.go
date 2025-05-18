@@ -19,12 +19,16 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	PostService_CreatePost_FullMethodName    = "/post.v1.PostService/CreatePost"
-	PostService_GetPost_FullMethodName       = "/post.v1.PostService/GetPost"
-	PostService_CreateComment_FullMethodName = "/post.v1.PostService/CreateComment"
-	PostService_GetComment_FullMethodName    = "/post.v1.PostService/GetComment"
-	PostService_LikeAction_FullMethodName    = "/post.v1.PostService/LikeAction"
-	PostService_Getlike_FullMethodName       = "/post.v1.PostService/Getlike"
+	PostService_CreatePost_FullMethodName         = "/post.v1.PostService/CreatePost"
+	PostService_GetPost_FullMethodName            = "/post.v1.PostService/GetPost"
+	PostService_CreateComment_FullMethodName      = "/post.v1.PostService/CreateComment"
+	PostService_GetComment_FullMethodName         = "/post.v1.PostService/GetComment"
+	PostService_CreateCommentRule_FullMethodName  = "/post.v1.PostService/CreateCommentRule"
+	PostService_GetCommentRules_FullMethodName    = "/post.v1.PostService/GetCommentRules"
+	PostService_GetCommentRuleById_FullMethodName = "/post.v1.PostService/GetCommentRuleById"
+	PostService_UpdateCommentRule_FullMethodName  = "/post.v1.PostService/UpdateCommentRule"
+	PostService_LikeAction_FullMethodName         = "/post.v1.PostService/LikeAction"
+	PostService_Getlike_FullMethodName            = "/post.v1.PostService/Getlike"
 )
 
 // PostServiceClient is the client API for PostService service.
@@ -37,6 +41,10 @@ type PostServiceClient interface {
 	// comment
 	CreateComment(ctx context.Context, in *CreateCommentRequest, opts ...grpc.CallOption) (*CreateCommentResponse, error)
 	GetComment(ctx context.Context, in *GetCommentRequest, opts ...grpc.CallOption) (*GetCommentResponse, error)
+	CreateCommentRule(ctx context.Context, in *CreateCommentRuleRequest, opts ...grpc.CallOption) (*CreateCommentRuleResponse, error)
+	GetCommentRules(ctx context.Context, in *GetCommentRulesRequest, opts ...grpc.CallOption) (*GetCommentRulesResponse, error)
+	GetCommentRuleById(ctx context.Context, in *GetCommentRuleByIdRequest, opts ...grpc.CallOption) (*GetCommentRuleByIdResponse, error)
+	UpdateCommentRule(ctx context.Context, in *UpdateCommentRuleRequest, opts ...grpc.CallOption) (*UpdateCommentRuleResponse, error)
 	// like
 	LikeAction(ctx context.Context, in *LikeRequest, opts ...grpc.CallOption) (*LikeResponse, error)
 	Getlike(ctx context.Context, in *GetLikeRequest, opts ...grpc.CallOption) (*GetLikeResponse, error)
@@ -90,6 +98,46 @@ func (c *postServiceClient) GetComment(ctx context.Context, in *GetCommentReques
 	return out, nil
 }
 
+func (c *postServiceClient) CreateCommentRule(ctx context.Context, in *CreateCommentRuleRequest, opts ...grpc.CallOption) (*CreateCommentRuleResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateCommentRuleResponse)
+	err := c.cc.Invoke(ctx, PostService_CreateCommentRule_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *postServiceClient) GetCommentRules(ctx context.Context, in *GetCommentRulesRequest, opts ...grpc.CallOption) (*GetCommentRulesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetCommentRulesResponse)
+	err := c.cc.Invoke(ctx, PostService_GetCommentRules_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *postServiceClient) GetCommentRuleById(ctx context.Context, in *GetCommentRuleByIdRequest, opts ...grpc.CallOption) (*GetCommentRuleByIdResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetCommentRuleByIdResponse)
+	err := c.cc.Invoke(ctx, PostService_GetCommentRuleById_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *postServiceClient) UpdateCommentRule(ctx context.Context, in *UpdateCommentRuleRequest, opts ...grpc.CallOption) (*UpdateCommentRuleResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateCommentRuleResponse)
+	err := c.cc.Invoke(ctx, PostService_UpdateCommentRule_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *postServiceClient) LikeAction(ctx context.Context, in *LikeRequest, opts ...grpc.CallOption) (*LikeResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(LikeResponse)
@@ -120,6 +168,10 @@ type PostServiceServer interface {
 	// comment
 	CreateComment(context.Context, *CreateCommentRequest) (*CreateCommentResponse, error)
 	GetComment(context.Context, *GetCommentRequest) (*GetCommentResponse, error)
+	CreateCommentRule(context.Context, *CreateCommentRuleRequest) (*CreateCommentRuleResponse, error)
+	GetCommentRules(context.Context, *GetCommentRulesRequest) (*GetCommentRulesResponse, error)
+	GetCommentRuleById(context.Context, *GetCommentRuleByIdRequest) (*GetCommentRuleByIdResponse, error)
+	UpdateCommentRule(context.Context, *UpdateCommentRuleRequest) (*UpdateCommentRuleResponse, error)
 	// like
 	LikeAction(context.Context, *LikeRequest) (*LikeResponse, error)
 	Getlike(context.Context, *GetLikeRequest) (*GetLikeResponse, error)
@@ -144,6 +196,18 @@ func (UnimplementedPostServiceServer) CreateComment(context.Context, *CreateComm
 }
 func (UnimplementedPostServiceServer) GetComment(context.Context, *GetCommentRequest) (*GetCommentResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetComment not implemented")
+}
+func (UnimplementedPostServiceServer) CreateCommentRule(context.Context, *CreateCommentRuleRequest) (*CreateCommentRuleResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateCommentRule not implemented")
+}
+func (UnimplementedPostServiceServer) GetCommentRules(context.Context, *GetCommentRulesRequest) (*GetCommentRulesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCommentRules not implemented")
+}
+func (UnimplementedPostServiceServer) GetCommentRuleById(context.Context, *GetCommentRuleByIdRequest) (*GetCommentRuleByIdResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCommentRuleById not implemented")
+}
+func (UnimplementedPostServiceServer) UpdateCommentRule(context.Context, *UpdateCommentRuleRequest) (*UpdateCommentRuleResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateCommentRule not implemented")
 }
 func (UnimplementedPostServiceServer) LikeAction(context.Context, *LikeRequest) (*LikeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LikeAction not implemented")
@@ -244,6 +308,78 @@ func _PostService_GetComment_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _PostService_CreateCommentRule_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateCommentRuleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PostServiceServer).CreateCommentRule(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PostService_CreateCommentRule_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PostServiceServer).CreateCommentRule(ctx, req.(*CreateCommentRuleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PostService_GetCommentRules_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCommentRulesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PostServiceServer).GetCommentRules(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PostService_GetCommentRules_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PostServiceServer).GetCommentRules(ctx, req.(*GetCommentRulesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PostService_GetCommentRuleById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCommentRuleByIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PostServiceServer).GetCommentRuleById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PostService_GetCommentRuleById_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PostServiceServer).GetCommentRuleById(ctx, req.(*GetCommentRuleByIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PostService_UpdateCommentRule_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateCommentRuleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PostServiceServer).UpdateCommentRule(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PostService_UpdateCommentRule_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PostServiceServer).UpdateCommentRule(ctx, req.(*UpdateCommentRuleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _PostService_LikeAction_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(LikeRequest)
 	if err := dec(in); err != nil {
@@ -302,6 +438,22 @@ var PostService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetComment",
 			Handler:    _PostService_GetComment_Handler,
+		},
+		{
+			MethodName: "CreateCommentRule",
+			Handler:    _PostService_CreateCommentRule_Handler,
+		},
+		{
+			MethodName: "GetCommentRules",
+			Handler:    _PostService_GetCommentRules_Handler,
+		},
+		{
+			MethodName: "GetCommentRuleById",
+			Handler:    _PostService_GetCommentRuleById_Handler,
+		},
+		{
+			MethodName: "UpdateCommentRule",
+			Handler:    _PostService_UpdateCommentRule_Handler,
 		},
 		{
 			MethodName: "LikeAction",

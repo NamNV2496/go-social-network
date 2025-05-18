@@ -103,14 +103,17 @@ func (_self *CRUDBase[T]) Find(ctx context.Context, queryOpts ...QueryOption) ([
 	return entities, err
 }
 
+// upsert
 func (_self *CRUDBase[T]) Update(ctx context.Context, entity T, queryOpts ...QueryOption) error {
-	tx := _self.Database(ctx)
+	tx := _self.Database(ctx).WithContext(ctx)
 	if _self.debug {
 		tx = tx.Debug()
 	}
-	tx = tx.WithContext(ctx).Model(&entity)
 	setOptToQuery(tx, queryOpts...)
-	return tx.Save(&entity).Error
+	return tx.Clauses(clause.OnConflict{
+		Columns:   []clause.Column{{Name: "id"}},
+		UpdateAll: true,
+	}).Create(&entity).Error
 }
 
 func (_self *CRUDBase[T]) Updates(ctx context.Context, entities []T, queryOpts ...QueryOption) error {

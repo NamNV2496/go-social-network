@@ -8,7 +8,7 @@ import (
 	// "github.com/opentracing/opentracing-go"
 )
 
-func (c Controller) CreatePost(
+func (c *Controller) CreatePost(
 	ctx context.Context,
 	req *postv1.CreatePostRequest,
 ) (*postv1.CreatePostResponse, error) {
@@ -18,7 +18,7 @@ func (c Controller) CreatePost(
 	return c.postService.AddPost(ctx, req)
 }
 
-func (c Controller) GetPost(
+func (c *Controller) GetPost(
 	ctx context.Context,
 	req *postv1.GetPostRequest,
 ) (*postv1.GetPostResponse, error) {

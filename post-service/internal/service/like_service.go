@@ -34,6 +34,8 @@ func NewLikeService(
 	}
 }
 
+var _ ILikeService = &likeService{}
+
 func (l *likeService) LikeAction(
 	ctx context.Context,
 	req *postv1.LikeRequest,

@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/IBM/sarama"
-	"github.com/namnv2496/post-service/internal/configs"
+	"github.com/namnv2496/post-service/configs"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )

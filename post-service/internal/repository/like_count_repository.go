@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	"github.com/namnv2496/post-service/internal/configs"
+	"github.com/namnv2496/post-service/configs"
 	"github.com/namnv2496/post-service/internal/domain"
 	"github.com/namnv2496/post-service/internal/repository/database"
 	"gorm.io/gorm"

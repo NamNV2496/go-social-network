@@ -2,36 +2,57 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"strings"
 
 	"github.com/namnv2496/post-service/internal/domain"
-	postv1 "github.com/namnv2496/post-service/internal/handler/generated/post_core/v1"
+	"github.com/namnv2496/post-service/internal/entity"
+	"github.com/namnv2496/post-service/internal/pkg"
 	"github.com/namnv2496/post-service/internal/repository"
 	"github.com/namnv2496/post-service/internal/repository/mq/producer"
 )
 
 type ICommentService interface {
-	AddComment(context.Context, *postv1.CreateCommentRequest) (*postv1.CreateCommentResponse, error)
-	GetComment(context.Context, *postv1.GetCommentRequest) (*postv1.GetCommentResponse, error)
+	AddComment(context.Context, *entity.CreateCommentRequest) (*entity.CreateCommentResponse, error)
+	GetComment(context.Context, *entity.GetCommentRequest) (*entity.GetCommentResponse, error)
+	CreateCommentRule(context.Context, *entity.CreateCommentRuleRequest) (int64, error)
+	GetCommentRules(context.Context, *entity.GetCommentRulesRequest) ([]*entity.GetCommentRulesResponse, error)
+	UpdateCommentRule(context.Context, *entity.UpdateCommentRuleRequest) (*entity.UpdateCommentRuleResponse, error)
 }
 
 type commentService struct {
-	commentRepository repository.ICommentRepository
+	commentRepository     repository.ICommentRepository
+	commentRuleRepository repository.ICommentRuleRepository
+	trie                  pkg.ITrie
 }
 
 func NewCommentService(
 	commentRepository repository.ICommentRepository,
+	commentRuleRepository repository.ICommentRuleRepository,
+	trie pkg.ITrie,
 	kafkaClient producer.Client,
 ) ICommentService {
 	return &commentService{
-		commentRepository: commentRepository,
+		commentRepository:     commentRepository,
+		commentRuleRepository: commentRuleRepository,
+		trie:                  trie,
 	}
 }
 
-func (c commentService) AddComment(
-	ctx context.Context,
-	req *postv1.CreateCommentRequest,
-) (*postv1.CreateCommentResponse, error) {
+var _ ICommentService = &commentService{}
+
+func (c *commentService) AddComment(ctx context.Context, req *entity.CreateCommentRequest) (*entity.CreateCommentResponse, error) {
+	// comment rule check
+	violation, violenWords, err := c.commentRuleCheck(ctx, &entity.CommentRuleCheckRequest{
+		CommentText: req.Comment.CommentText,
+		Application: req.Application,
+	})
+	if err != nil {
+		return nil, err
+	}
+	if violation {
+		return nil, fmt.Errorf("Comment rule violation with word: %s", violenWords)
+	}
 	comment := domain.Comment{
 		PostId:        int64(req.PostId),
 		UserId:        req.Comment.UserId,
@@ -41,22 +62,20 @@ func (c commentService) AddComment(
 		Images:        strings.Join(req.Comment.Images, ","),
 		Tags:          strings.Join(req.Comment.Tags, ","),
 	}
-	c.commentRepository.AddComment(ctx, comment)
-
+	if err := c.commentRepository.AddComment(ctx, comment); err != nil {
+		return nil, err
+	}
 	return nil, nil
 }
 
-func (c commentService) GetComment(
-	ctx context.Context,
-	req *postv1.GetCommentRequest,
-) (*postv1.GetCommentResponse, error) {
+func (c *commentService) GetComment(ctx context.Context, req *entity.GetCommentRequest) (*entity.GetCommentResponse, error) {
 	comments, err := c.commentRepository.GetComment(ctx, domain.CommentByPostId(int64(req.PostId)))
 	if err != nil {
 		return nil, err
 	}
-	var resp []*postv1.Comment
+	var resp []*entity.Comment
 	for _, comment := range comments {
-		resp = append(resp, &postv1.Comment{
+		resp = append(resp, &entity.Comment{
 			CommentId:     uint64(comment.Id),
 			UserId:        comment.UserId,
 			CommentText:   comment.CommentText,
@@ -67,72 +86,87 @@ func (c commentService) GetComment(
 			Date:          comment.CreatedAt.String(),
 		})
 	}
-	return &postv1.GetCommentResponse{
+	return &entity.GetCommentResponse{
 		Comment: resp,
 	}, nil
-	// 	// Create the raw SQL query
-	// 	sql := `
-	// 	WITH top_comments AS (
-	// 		SELECT id
-	// 		FROM comment
-	// 		WHERE comment_level = 0
-	// 			AND post_id = ?
-	// 		ORDER BY created_at DESC
-	// 		LIMIT ? OFFSET ?
-	// 	)
-	// 	SELECT
-	// 		sc.id AS sc_id,
-	// 		sc.user_id AS sc_user_id,
-	// 		sc.comment_text AS sc_comment_text,
-	// 		sc.comment_level AS sc_comment_level,
-	// 		sc.comment_parent AS sc_comment_parent,
-	// 		sc.images AS sc_images,
-	// 		sc.tags AS sc_tags,
-	// 		sc.created_at AS sc_created_at
-	// 	FROM top_comments tc
-	// 	LEFT JOIN comment sc ON sc.comment_parent = tc.id or sc.id = tc.id
-	// 	ORDER BY sc.comment_parent ASC, sc.created_at DESC
-	// 	`
-	// 	offset := (req.PageNumber - 1) * req.PageSize
-	// 	// Execute the raw SQL query with the parameters
-	// 	rows, err := c.commentRepository.Query(sql, req.PostId, req.PageSize, offset)
-	// 	if err != nil {
-	// 		log.Fatalf("Error executing query: %v", err)
-	// 	}
-	// 	defer rows.Close()
+}
 
-	// 	var commentRes []*postv1.Comment
-	// 	// Process the results
-	// 	for rows.Next() {
-	// 		var scId uint64
-	// 		var scUserId string
-	// 		var scCommentText string
-	// 		var scCommentLevel int
-	// 		var scCommentParent uint64
-	// 		var scImages string
-	// 		var scTags string
-	// 		var scCreatedAt time.Time
+func (c *commentService) CreateCommentRule(ctx context.Context, req *entity.CreateCommentRuleRequest) (int64, error) {
+	commentRule := domain.CommentRule{
+		CommentText: req.Rule.CommentText,
+		Application: req.Rule.Application,
+		Visible:     req.Rule.Visible,
+	}
+	return c.commentRuleRepository.AddCommentRule(ctx, commentRule)
+}
 
-	// 		err := rows.Scan(&scId, &scUserId, &scCommentText, &scCommentLevel, &scCommentParent, &scImages, &scTags, &scCreatedAt)
-	// 		if err != nil {
-	// 			log.Fatalf("Error scanning row: %v", err)
-	// 		}
+func (c *commentService) GetCommentRules(ctx context.Context, req *entity.GetCommentRulesRequest) ([]*entity.GetCommentRulesResponse, error) {
+	if req.RuleId != 0 {
+		commentRules, err := c.commentRuleRepository.GetCommentRuleById(ctx, req.RuleId, req.Application)
+		if err != nil {
+			return nil, err
+		}
+		return []*entity.GetCommentRulesResponse{{
+			Rule: entity.Rule{
+				Id:          commentRules.Id,
+				CommentText: commentRules.CommentText,
+				Application: commentRules.Application,
+				Visible:     commentRules.Visible,
+			},
+		},
+		}, nil
+	}
+	commentRules, err := c.commentRuleRepository.GetCommentRules(ctx, req.Application)
+	if err != nil {
+		return nil, err
+	}
+	var resp []*entity.GetCommentRulesResponse
+	for _, commentRule := range commentRules {
+		resp = append(resp, &entity.GetCommentRulesResponse{
+			Rule: entity.Rule{
+				Id:          commentRule.Id,
+				CommentText: commentRule.CommentText,
+				Application: commentRule.Application,
+				Visible:     commentRule.Visible,
+			},
+		})
+	}
+	return resp, nil
+}
 
-	// 		element := &postv1.Comment{
-	// 			CommentId:     scId,
-	// 			UserId:        scUserId,
-	// 			CommentText:   scCommentText,
-	// 			CommentLevel:  uint32(scCommentLevel),
-	// 			CommentParent: uint64(scCommentParent),
-	// 			Images:        []string{scImages},
-	// 			Tags:          []string{scTags},
-	// 			Date:          scCreatedAt.String(),
-	// 		}
-	// 		commentRes = append(commentRes, element)
-	// 	}
+func (c *commentService) UpdateCommentRule(ctx context.Context, req *entity.UpdateCommentRuleRequest) (*entity.UpdateCommentRuleResponse, error) {
+	commentRule := domain.CommentRule{
+		Id:          req.RuleId,
+		CommentText: req.Rule.CommentText,
+		Application: req.Rule.Application,
+		Visible:     req.Rule.Visible,
+	}
+	if err := c.commentRuleRepository.UpdateCommentRule(ctx, commentRule); err != nil {
+		return nil, err
+	}
+	return nil, nil
+}
 
-	//	return &postv1.GetCommentResponse{
-	//		Comment: commentRes,
-	//	}, nil
-	// return nil, nil
+func (c *commentService) commentRuleCheck(ctx context.Context, req *entity.CommentRuleCheckRequest) (bool, string, error) {
+	trieRoot, err := c.buildRuleTrie(ctx, req)
+	if err != nil {
+		return false, "", err
+	}
+	isViolent, violentWord := trieRoot.SearchSubstring(req.CommentText)
+	if isViolent {
+		return true, violentWord, nil
+	}
+	return false, "", nil
+}
+
+func (c *commentService) buildRuleTrie(ctx context.Context, req *entity.CommentRuleCheckRequest) (*pkg.Trie, error) {
+	commentRules, err := c.commentRuleRepository.GetCommentRules(ctx, req.Application)
+	if err != nil {
+		return nil, err
+	}
+	trie := pkg.NewTrie()
+	for _, commentRule := range commentRules {
+		trie.Insert(commentRule.CommentText)
+	}
+	return trie, nil
 }
