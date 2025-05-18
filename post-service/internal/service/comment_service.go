@@ -10,6 +10,8 @@ import (
 	"github.com/namnv2496/post-service/internal/pkg"
 	"github.com/namnv2496/post-service/internal/repository"
 	"github.com/namnv2496/post-service/internal/repository/mq/producer"
+	"golang.org/x/text/transform"
+	"golang.org/x/text/unicode/norm"
 )
 
 type ICommentService interface {
@@ -43,8 +45,13 @@ var _ ICommentService = &commentService{}
 
 func (c *commentService) AddComment(ctx context.Context, req *entity.CreateCommentRequest) (*entity.CreateCommentResponse, error) {
 	// comment rule check
+	lowercaseCommentText := strings.ToLower(req.Comment.CommentText)
+	lowercaseCommentText, _, err := transform.String(transform.Chain(norm.NFKC), lowercaseCommentText)
+	if err != nil {
+		return nil, err
+	}
 	violation, violenWords, err := c.commentRuleCheck(ctx, &entity.CommentRuleCheckRequest{
-		CommentText: req.Comment.CommentText,
+		CommentText: lowercaseCommentText,
 		Application: req.Application,
 	})
 	if err != nil {
@@ -116,7 +123,7 @@ func (c *commentService) GetCommentRules(ctx context.Context, req *entity.GetCom
 		},
 		}, nil
 	}
-	commentRules, err := c.commentRuleRepository.GetCommentRules(ctx, req.Application)
+	commentRules, err := c.commentRuleRepository.GetCommentRules(ctx, req.Application, int32(req.PageNumber), int32(req.PageSize))
 	if err != nil {
 		return nil, err
 	}
@@ -148,6 +155,7 @@ func (c *commentService) UpdateCommentRule(ctx context.Context, req *entity.Upda
 }
 
 func (c *commentService) commentRuleCheck(ctx context.Context, req *entity.CommentRuleCheckRequest) (bool, string, error) {
+	// can cache this trie
 	trieRoot, err := c.buildRuleTrie(ctx, req)
 	if err != nil {
 		return false, "", err
@@ -160,13 +168,22 @@ func (c *commentService) commentRuleCheck(ctx context.Context, req *entity.Comme
 }
 
 func (c *commentService) buildRuleTrie(ctx context.Context, req *entity.CommentRuleCheckRequest) (*pkg.Trie, error) {
-	commentRules, err := c.commentRuleRepository.GetCommentRules(ctx, req.Application)
+	totalRules, err := c.commentRuleRepository.CountCommentRules(ctx, req.Application)
 	if err != nil {
 		return nil, err
 	}
+	if totalRules == 0 {
+		return nil, nil
+	}
 	trie := pkg.NewTrie()
-	for _, commentRule := range commentRules {
-		trie.Insert(commentRule.CommentText)
+	for i := 0; i < int(totalRules/20+1); i++ {
+		commentRules, err := c.commentRuleRepository.GetCommentRules(ctx, req.Application, int32(1000*i), 1000)
+		if err != nil {
+			return nil, err
+		}
+		for _, commentRule := range commentRules {
+			trie.Insert(commentRule.CommentText)
+		}
 	}
 	return trie, nil
 }

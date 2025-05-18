@@ -42,7 +42,8 @@ make generate
     2. Check status of services
     3. Access prometheus: [http://localhost:9090/targets](http://localhost:9090/targets)
     4. Access grafana: [http://localhost:3000/login](http://localhost:3000/login) (user: admin - password: admin)
-    5. Access `localhost:3001`
+    5. Access `localhost:3001` for web
+    6. Access `localhost:3001/comment_rule.html` for comment-rule
 
 
 ## Run on Local

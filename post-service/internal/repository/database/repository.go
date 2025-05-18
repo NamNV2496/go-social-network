@@ -16,6 +16,7 @@ type ICRUDBase[T Entity] interface {
 	Updates(ctx context.Context, entities []T, queryOpts ...QueryOption) error
 	Upsert(context.Context, []T, ...QueryOption) error
 	DeleteById(context.Context, int64) error
+	Count(ctx context.Context, queryOpts ...QueryOption) (int64, error)
 
 	EnableDebug(debug bool)
 	Debug()
@@ -163,6 +164,19 @@ func (_self *CRUDBase[T]) Debug() {
 	if _self.debug {
 		_self.database.Debug()
 	}
+}
+
+func (_self *CRUDBase[T]) Count(ctx context.Context, queryOpts ...QueryOption) (int64, error) {
+	tx := _self.Database(ctx)
+	if _self.debug {
+		tx = tx.Debug()
+	}
+	var _entity T
+	tx = tx.WithContext(ctx).Model(&_entity)
+	setOptToQuery(tx, queryOpts...)
+	var count int64
+	err := tx.Count(&count).Error
+	return count, err
 }
 
 func setOptToQuery(db *gorm.DB, queryOpts ...QueryOption) {

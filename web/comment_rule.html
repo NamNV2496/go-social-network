@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comment Rules Management</title>
+    <link rel="stylesheet" href="css/wall.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .rule-form {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        input[type="text"], select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+
+        .checkbox-group {
+            margin: 10px 0;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .rule-list {
+            margin-top: 20px;
+        }
+
+        .rule-item {
+            background-color: #fff;
+            padding: 15px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: box-shadow 0.3s ease-in-out; /* Add transition for hover effect */
+        }
+
+        .rule-item:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Add subtle shadow on hover */
+        }
+
+        .rule-info {
+            flex-grow: 1;
+            margin-right: 20px; /* Add some space between info and actions */
+            word-break: break-word; /* Prevent long text from overflowing */
+        }
+
+        .rule-info strong {
+            margin-right: 5px; /* Space after labels */
+            color: #555; /* Slightly darker color for labels */
+        }
+
+        .rule-actions {
+            display: flex;
+            gap: 10px;
+            flex-shrink: 0; /* Prevent actions from shrinking */
+        }
+
+        .rule-actions button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px; /* Slightly smaller font for buttons */
+            transition: background-color 0.3s ease; /* Add transition for button hover */
+        }
+
+        .rule-actions button:hover {
+            opacity: 0.9; /* Slight opacity change on hover */
+        }
+
+        .rule-actions button:first-child { /* Style for the first button (Edit) */
+            background-color: #2196F3; /* Blue color */
+            color: white;
+        }
+
+        .rule-actions button:first-child:hover {
+            background-color: #1976D2; /* Darker blue on hover */
+        }
+
+        .rule-actions button:last-child { /* Style for the last button (View Details) */
+            background-color: #FF9800; /* Orange color */
+            color: white;
+        }
+
+        .rule-actions button:last-child:hover {
+            background-color: #F57C00; /* Darker orange on hover */
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            align-items: center;
+        }
+
+        .success-message {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+
+        .error-message {
+            background-color: #ffebee;
+            color: #d32f2f;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Comment Rules Management</h1>
+
+        <!-- Create Rule Form -->
+        <div class="rule-form">
+            <h2>Create New Rule</h2>
+            <div class="form-group">
+                <input type="text" id="newRuleText" placeholder="Enter rule text">
+                <select id="newRuleApplication">
+                    <option value="post">Post</option>
+                    <option value="post">Livestream</option>
+                </select>
+                <div class="checkbox-group">
+                    <label>
+                        <input type="checkbox" id="newRuleVisible" checked>
+                        Visible
+                    </label>
+                </div>
+                <button onclick="createRule()">Create Rule</button>
+                <div id="createMessage"></div>
+            </div>
+        </div>
+
+        <!-- Rules List -->
+        <div class="rule-list">
+            <h2>Existing Rules</h2>
+            <div id="rulesList"></div>
+            <div class="pagination">
+                <button onclick="changePage(-1)">Previous</button>
+                <span id="currentPage">Page 1</span>
+                <button onclick="changePage(1)">Next</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentPageNumber = 0;
+        const PAGE_SIZE = 20;
+
+        // Load rules when page loads
+        window.onload = () => {
+            loadRules();
+        };
+
+        async function createRule() {
+            const ruleText = document.getElementById('newRuleText').value;
+            const application = document.getElementById('newRuleApplication').value;
+            const visible = document.getElementById('newRuleVisible').checked;
+            const messageDiv = document.getElementById('createMessage');
+
+            try {
+                const response = await fetch('http://localhost:8080/api/v1/comment_rule', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        rule: {
+                            application: application,
+                            comment_text: ruleText,
+                            visible: visible
+                        }
+                    })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    messageDiv.className = 'success-message';
+                    messageDiv.textContent = 'Rule created successfully';
+                    document.getElementById('newRuleText').value = '';
+                    loadRules();
+                } else {
+                    messageDiv.className = 'error-message';
+                    messageDiv.textContent = data.message || 'Failed to create rule';
+                }
+
+                setTimeout(() => {
+                    messageDiv.textContent = '';
+                }, 3000);
+            } catch (error) {
+                messageDiv.className = 'error-message';
+                messageDiv.textContent = 'Error creating rule: ' + error.message;
+            }
+        }
+
+        async function loadRules() {
+            try {
+                const response = await fetch(`http://localhost:8080/api/v1/comment_rule?page_number=${currentPageNumber}&page_size=${PAGE_SIZE}`);
+                const data = await response.json();
+                
+                const rulesListDiv = document.getElementById('rulesList');
+                rulesListDiv.innerHTML = '';
+                
+                data.rules.forEach(rule => {
+                    const ruleDiv = document.createElement('div');
+                    ruleDiv.className = 'rule-item';
+                    ruleDiv.innerHTML = `
+                        <div class="rule-info">
+                            <strong>ID:</strong> ${rule.id}
+                            <strong>Text:</strong> ${rule.commentText}
+                            <strong>Application:</strong> ${rule.application}
+                            <strong>Visible:</strong> ${rule.visible}
+                        </div>
+                        <div class="rule-actions">
+                            <button onclick="editRule(${rule.id})">Edit</button>
+                            <button onclick="viewRule(${rule.id})">View Details</button>
+                        </div>
+                    `;
+                    rulesListDiv.appendChild(ruleDiv);
+                });
+
+                document.getElementById('currentPage').textContent = `Page ${currentPageNumber + 1}`;
+            } catch (error) {
+                console.error('Error loading rules:', error);
+                const rulesListDiv = document.getElementById('rulesList');
+                rulesListDiv.innerHTML = '<div class="error-message">Error loading rules. Please try again.</div>';
+            }
+        }
+
+        async function viewRule(id) {
+            try {
+                const response = await fetch(`http://localhost:8080/api/v1/comment_rule/${id}?application=post`);
+                const data = await response.json();
+                
+                const modalContent = `
+                    Rule Details:\n\n
+                    ID: ${data.rule.id}\n
+                    Text: ${data.rule.comment_text}\n
+                    Application: ${data.rule.application}\n
+                    Visible: ${data.rule.visible}
+                `;
+                
+                const modalDiv = document.createElement('div');
+                modalDiv.className = 'modal';
+                modalDiv.innerHTML = `
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <h2>Rule Details</h2>
+                        <pre>${modalContent}</pre>
+                    </div>
+                `;
+                
+                document.body.appendChild(modalDiv);
+                modalDiv.style.display = 'block';
+                
+                const closeBtn = modalDiv.querySelector('.close');
+                closeBtn.onclick = () => {
+                    modalDiv.remove();
+                };
+                
+                window.onclick = (event) => {
+                    if (event.target === modalDiv) {
+                        modalDiv.remove();
+                    }
+                };
+            } catch (error) {
+                console.error('Error viewing rule:', error);
+                alert('Error viewing rule details');
+            }
+        }
+
+        async function editRule(id) {
+            const newText = prompt('Enter new rule text:');
+            if (newText === null) return;
+
+            try {
+                const response = await fetch(`http://localhost:8080/api/v1/comment_rule/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        rule: {
+                            id: id.toString(),
+                            application: 'post',
+                            commentText: newText,
+                            visible: true
+                        }
+                    })
+                });
+
+                if (response.ok) {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = 'success-message';
+                    messageDiv.textContent = 'Rule updated successfully';
+                    document.querySelector('.container').insertBefore(messageDiv, document.querySelector('.rule-list'));
+                    
+                    setTimeout(() => {
+                        messageDiv.remove();
+                    }, 3000);
+                    
+                    loadRules();
+                } else {
+                    const data = await response.json();
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = 'error-message';
+                    messageDiv.textContent = data.message || 'Failed to update rule';
+                    document.querySelector('.container').insertBefore(messageDiv, document.querySelector('.rule-list'));
+                    
+                    setTimeout(() => {
+                        messageDiv.remove();
+                    }, 3000);
+                }
+            } catch (error) {
+                console.error('Error updating rule:', error);
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'error-message';
+                messageDiv.textContent = 'Error updating rule: ' + error.message;
+                document.querySelector('.container').insertBefore(messageDiv, document.querySelector('.rule-list'));
+                
+                setTimeout(() => {
+                    messageDiv.remove();
+                }, 3000);
+            }
+        }
+
+        function changePage(delta) {
+            const newPage = currentPageNumber + delta;
+            if (newPage >= 0) {
+                currentPageNumber = newPage;
+                loadRules();
+            }
+        }
+    </script>
+</body>
+</html>

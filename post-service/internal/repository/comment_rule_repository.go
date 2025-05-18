@@ -13,8 +13,9 @@ import (
 type ICommentRuleRepository interface {
 	AddCommentRule(ctx context.Context, commentRule domain.CommentRule) (int64, error)
 	GetCommentRuleById(ctx context.Context, id int64, applications []string) (*domain.CommentRule, error)
-	GetCommentRules(ctx context.Context, applications []string) ([]*domain.CommentRule, error)
+	GetCommentRules(ctx context.Context, applications []string, page, limit int32) ([]*domain.CommentRule, error)
 	UpdateCommentRule(ctx context.Context, comment domain.CommentRule) error
+	CountCommentRules(ctx context.Context, applications []string) (int64, error)
 }
 
 type CommentRuleRepository struct {
@@ -56,8 +57,11 @@ func (_self *CommentRuleRepository) GetCommentRuleById(ctx context.Context, id i
 	return result[0], nil
 }
 
-func (_self *CommentRuleRepository) GetCommentRules(ctx context.Context, applications []string) ([]*domain.CommentRule, error) {
-	return _self.db.Find(ctx, domain.CommentRuleByApplications(applications))
+func (_self *CommentRuleRepository) GetCommentRules(ctx context.Context, applications []string, page, limit int32) ([]*domain.CommentRule, error) {
+	return _self.db.Find(ctx,
+		domain.CommentRuleByApplications(applications),
+		domain.PaginationCommentRule(int(page), int(limit)),
+	)
 }
 
 func (_self *CommentRuleRepository) UpdateCommentRule(ctx context.Context, commentRule domain.CommentRule) error {
@@ -71,4 +75,8 @@ func (_self *CommentRuleRepository) UpdateCommentRule(ctx context.Context, comme
 		return err
 	}
 	return nil
+}
+
+func (_self *CommentRuleRepository) CountCommentRules(ctx context.Context, applications []string) (int64, error) {
+	return _self.db.Count(ctx, domain.CommentRuleByApplications(applications))
 }

@@ -44,3 +44,11 @@ func CommentRuleByApplications(applications []string) database.QueryOption {
 		}
 	}
 }
+
+func PaginationCommentRule(page, limit int) database.QueryOption {
+	return func(tx *gorm.DB) {
+		if limit > 0 {
+			tx.Offset(page * limit).Limit(limit)
+		}
+	}
+}

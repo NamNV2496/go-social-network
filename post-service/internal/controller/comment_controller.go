@@ -81,6 +81,7 @@ func (c *Controller) GetCommentRuleById(ctx context.Context, req *postv1.GetComm
 			Id:          result[0].Rule.Id,
 			Application: result[0].Rule.Application,
 			CommentText: result[0].Rule.CommentText,
+			Visible:     result[0].Rule.Visible,
 		},
 	}, nil
 }
@@ -100,6 +101,7 @@ func (c *Controller) GetCommentRules(ctx context.Context, req *postv1.GetComment
 			Id:          rule.Rule.Id,
 			Application: rule.Rule.Application,
 			CommentText: rule.Rule.CommentText,
+			Visible:     rule.Rule.Visible,
 		})
 	}
 	return &postv1.GetCommentRulesResponse{

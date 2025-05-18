@@ -14,6 +14,7 @@ import (
 	userv1 "github.com/namnv2496/http_gateway/internal/handler/generated/user_core/v1"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	// "google.golang.org/protobuf/encoding/protojson"
 )
 
 type Server interface {
@@ -89,15 +90,22 @@ func (s *server) runGRPCServer() error {
 }
 
 func (s *server) runRESTServer() error {
+	// customMarshaler := &runtime.JSONPb{
+	// 	MarshalOptions: protojson.MarshalOptions{
+	// 		UseProtoNames: true, // This ensures snake_case in JSON
+	// 	},
+	// }
 
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
+	// Apply custom marshaler to gRPC-Gateway
 	mux := runtime.NewServeMux(
+		// runtime.WithMarshalerOption(runtime.MIMEWildcard, customMarshaler),
 		forwardHeaderToClient(),
 		withErrorHandler(),
 		withMetadata(),
 	)
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
 	// mux := runtime.NewServeMux()
 
 	var userServiceAddr string

@@ -50,4 +50,6 @@ type UpdateCommentRuleResponse struct {
 type CommentRuleCheckRequest struct {
 	Application []string `json:"application,omitempty"`
 	CommentText string   `json:"comment_text,omitempty"`
+	PageNumber  uint32   `json:"page_number,omitempty"`
+	PageSize    uint32   `json:"page_size,omitempty"`
 }

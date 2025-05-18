@@ -27,6 +27,9 @@ func NewTrie() *Trie {
 	}
 }
 
+func (_self *Trie) GetRoot() *TrieNode {
+	return _self.root
+}
 func (_self *Trie) Insert(word string) {
 	node := _self.root
 	for _, char := range word {
