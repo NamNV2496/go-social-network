@@ -9,9 +9,9 @@
             "type": "go",
             "request": "launch",
             "mode": "auto",
-            "program": "${workspaceFolder}/post-service/cmd/main.go",
+            "program": "${workspaceFolder}/post-service/main.go",
             // "envFile": "${workspaceFolder}/user-service/.env",
-            // "args": ["migrate"]
+            // "args": ["notification"]
         }
     ]
 }

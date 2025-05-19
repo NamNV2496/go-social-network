@@ -21,8 +21,9 @@ type PostRepository struct {
 
 func NewPostRepository(
 	db *gorm.DB,
-	dbConfig configs.Database,
+	config configs.Config,
 ) (IPostRepository, error) {
+	dbConfig := config.Database
 	postRepository := database.NewCRUDBase[*domain.Post](db)
 	if dbConfig.AutoMigrate {
 		if err := db.Debug().AutoMigrate(&domain.Post{}); err != nil {

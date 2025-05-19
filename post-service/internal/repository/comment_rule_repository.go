@@ -24,8 +24,9 @@ type CommentRuleRepository struct {
 
 func NewCommentRuleRepository(
 	db *gorm.DB,
-	dbConfig configs.Database,
+	config configs.Config,
 ) (*CommentRuleRepository, error) {
+	dbConfig := config.Database
 	commentRuleRepository := database.NewCRUDBase[*domain.CommentRule](db)
 	if dbConfig.AutoMigrate {
 		if err := db.Debug().AutoMigrate(&domain.CommentRule{}); err != nil {

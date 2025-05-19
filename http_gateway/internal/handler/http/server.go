@@ -159,6 +159,15 @@ func (s *server) runRESTServer() error {
 	if err != nil {
 		return err
 	}
+	err = postv1.RegisterNotificationServiceHandlerFromEndpoint(
+		ctx,
+		mux,
+		postServiceAddr,
+		opts,
+	)
+	if err != nil {
+		return err
+	}
 	// connect to newsfeed-service
 	err = newsfeedv1.RegisterNewsfeedServiceHandlerFromEndpoint(
 		ctx,

@@ -17,24 +17,7 @@
 
 ![alt text](docs/flow.png)
 
-# 2. Prerequisite
-
-## How to build protobuf
-
-```
-cd http_gateway
-make generate
-
-then copy to target service
-```
-
-access each service
-```
-buf generate ../api/ # option for generate protobuf
-make generate
-```
-
-# 3. How to start
+# 2. How to start
 
 ## Run by Docker
 
@@ -44,7 +27,6 @@ make generate
     4. Access grafana: [http://localhost:3000/login](http://localhost:3000/login) (user: admin - password: admin)
     5. Access `localhost:3001` for web
     6. Access `localhost:3001/comment_rule.html` for comment-rule
-
 
 ## Run on Local
 
@@ -56,7 +38,9 @@ make generate
     6. run message-service "cd message-service/" and "go run cmd/main.go"
     7. run FE "cd web/" and "start index.html"
 
-## User
+# 3. Information
+
+### User
 
     namnv - namnv
     knm - knm
@@ -64,37 +48,62 @@ make generate
 
 ![alt text](docs/login.png)
 
-## Follower
+### Follower
 
 ![alt text](docs/follower.png)
 
-# 4. Data migration
+### Data migration
 
 sql files location:
 
     user-service\internal\database\migrations\mysql
 
-# 5. Demo
-
-## Install wire to generate dependency injection
+### Install wire to generate dependency injection
 
     go install github.com/google/wire/cmd/wire@latest
 
-## Login
+# 4. Features
+
+```txt
+- Login / Register
+- Newsfeed
+- View and add new comment on post with comment rule
+- View followers post
+- Follow / Unfollow
+- View your wall and your friends post
+- Search another people
+- Chat with friends
+- Email / SMS notification
+```
+## 4.1 Login / Register
+
+- Login
+
+![alt text](docs/login.png)
+
+- Register
+
+![alt text](docs/register.png)
+
+- OTP
 
 ![alt text](docs/otp.png)
-## Newsfeed 
+
+## 4.2 Newsfeed 
 
 ![alt text](docs/newsfeed.png)
 
-## View comment
+## 4.3 View and add new comment on post with comment rule
+
+- View comment on post
 
 ![alt text](docs/viewComment.png)
 
-Comment validation violet rule
+- Comment violent rule checking
+
 ![alt text](docs/comment_violent_rule.png)
 
-## View followers post
+## 4.4 View followers post
 
 if `namnv` posted a post. `knm` and `baobq` will see it in their newsfeed.
 
@@ -105,27 +114,41 @@ if `baobq` posted a post. Only `namnv` will see it in his newsfeed `knm` will no
 
 ![alt text](docs/viewPost1.png)
 
-Here is redis
-![alt text](docs/viewPost2.png)
-
-## popup in newsfeed
-
-Create new chat room private with friend from newsfeed. Only 2 member of chat can see and join the chat
+## 4.5 Follow / Unfollow
 
 ![alt text](docs/popup.png)
 
+## 4.6 View your wall and your friends post
 
-## Your wall
-
-![alt text](docs/wall.png)
+- View your wall
 
 ![alt text](docs/wall1.png)
 
-## Search another people
+- View your friends post
+
+![alt text](docs/wall.png)
+
+## 4,.7 Search another people
+
+- Search by name
 
 ![alt text](docs/search.png)
 
+- Act when search
+
 ![alt text](docs/search1.png)
+
+## 4.8 Chat with friends
+
+- Chat room list
+
+![alt text](docs/chat.png)
+
+- Chat with friend
+
+![alt text](docs/chat1.png)
+
+## 4.8 Email / SMS notification
 
 
 # Monitoring

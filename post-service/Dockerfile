@@ -11,7 +11,7 @@ RUN go mod download
 COPY post-service/ ./
 
 # Build the binary
-RUN go build -o /post cmd/main.go
+RUN go build -o /post main.go
 
 # Run stage
 FROM alpine:3.20

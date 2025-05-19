@@ -30,8 +30,9 @@ func newSaramaConfig(clientId string) *sarama.Config {
 }
 
 func NewClient(
-	mqConfig configs.Kafka,
+	config configs.Config,
 ) Client {
+	mqConfig := config.Kafka
 	kafkaBroker := os.Getenv("KAFKA_BROKER")
 	if kafkaBroker == "" {
 		kafkaBroker = mqConfig.Addresses

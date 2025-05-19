@@ -12,6 +12,7 @@ type ICRUDBase[T Entity] interface {
 
 	Create(context.Context, T) error
 	Find(context.Context, ...QueryOption) ([]T, error)
+	First(context.Context, ...QueryOption) (T, error)
 	Update(ctx context.Context, entity T, queryOpts ...QueryOption) error
 	Updates(ctx context.Context, entities []T, queryOpts ...QueryOption) error
 	Upsert(context.Context, []T, ...QueryOption) error
@@ -102,6 +103,18 @@ func (_self *CRUDBase[T]) Find(ctx context.Context, queryOpts ...QueryOption) ([
 	setOptToQuery(tx, queryOpts...)
 	err := tx.Find(&entities).Error
 	return entities, err
+}
+
+func (_self *CRUDBase[T]) First(ctx context.Context, queryOpts ...QueryOption) (T, error) {
+	tx := _self.Database(ctx)
+	if _self.debug {
+		tx = tx.Debug()
+	}
+	var _entity T
+	tx = tx.WithContext(ctx).Model(&_entity)
+	setOptToQuery(tx, queryOpts...)
+	err := tx.First(&_entity).Error
+	return _entity, err
 }
 
 // upsert

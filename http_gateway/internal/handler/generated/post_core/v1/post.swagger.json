@@ -7,6 +7,9 @@
   "tags": [
     {
       "name": "PostService"
+    },
+    {
+      "name": "NotificationService"
     }
   ],
   "consumes": [
@@ -325,6 +328,145 @@
         ]
       }
     },
+    "/api/v1/notification": {
+      "get": {
+        "operationId": "NotificationService_GetNotifications",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetNotificationsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "NotificationService"
+        ]
+      },
+      "post": {
+        "operationId": "NotificationService_CreateNotification",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CreateNotificationResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CreateNotificationRequest"
+            }
+          }
+        ],
+        "tags": [
+          "NotificationService"
+        ]
+      }
+    },
+    "/api/v1/notification/notify": {
+      "post": {
+        "operationId": "NotificationService_Notify",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1NotifyResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1NotifyRequest"
+            }
+          }
+        ],
+        "tags": [
+          "NotificationService"
+        ]
+      }
+    },
+    "/api/v1/notification/{id}": {
+      "put": {
+        "operationId": "NotificationService_UpdateNotifications",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1UpdateNotificationsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/NotificationServiceUpdateNotificationsBody"
+            }
+          }
+        ],
+        "tags": [
+          "NotificationService"
+        ]
+      }
+    },
     "/api/v1/post": {
       "post": {
         "summary": "post",
@@ -404,6 +546,14 @@
     }
   },
   "definitions": {
+    "NotificationServiceUpdateNotificationsBody": {
+      "type": "object",
+      "properties": {
+        "notification": {
+          "$ref": "#/definitions/v1Notification"
+        }
+      }
+    },
     "PostServiceUpdateCommentRuleBody": {
       "type": "object",
       "properties": {
@@ -526,6 +676,22 @@
         }
       }
     },
+    "v1CreateNotificationRequest": {
+      "type": "object",
+      "properties": {
+        "notification": {
+          "$ref": "#/definitions/v1Notification"
+        }
+      }
+    },
+    "v1CreateNotificationResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        }
+      }
+    },
     "v1CreatePostRequest": {
       "type": "object",
       "properties": {
@@ -603,6 +769,18 @@
         }
       }
     },
+    "v1GetNotificationsResponse": {
+      "type": "object",
+      "properties": {
+        "notifications": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Notification"
+          }
+        }
+      }
+    },
     "v1GetPostResponse": {
       "type": "object",
       "properties": {
@@ -674,6 +852,66 @@
       ],
       "default": "UNLIKE"
     },
+    "v1Notification": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "template": {
+          "type": "string"
+        },
+        "image": {
+          "type": "string"
+        },
+        "application": {
+          "type": "string"
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "link": {
+          "type": "string"
+        }
+      },
+      "title": "notification"
+    },
+    "v1NotifyRequest": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "application": {
+          "type": "string"
+        }
+      }
+    },
+    "v1NotifyResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        }
+      }
+    },
     "v1Post": {
       "type": "object",
       "properties": {
@@ -726,6 +964,14 @@
       }
     },
     "v1UpdateCommentRuleResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        }
+      }
+    },
+    "v1UpdateNotificationsResponse": {
       "type": "object",
       "properties": {
         "status": {

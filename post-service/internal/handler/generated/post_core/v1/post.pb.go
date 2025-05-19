@@ -1451,6 +1451,499 @@ func (x *GetLikeResponse) GetResponse() []*LikePostResponse {
 	return nil
 }
 
+// notification
+type Notification struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Title         string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
+	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
+	Template      string                 `protobuf:"bytes,4,opt,name=template,proto3" json:"template,omitempty"`
+	Image         string                 `protobuf:"bytes,5,opt,name=image,proto3" json:"image,omitempty"`
+	Application   string                 `protobuf:"bytes,6,opt,name=application,proto3" json:"application,omitempty"`
+	Visible       bool                   `protobuf:"varint,7,opt,name=visible,proto3" json:"visible,omitempty"`
+	Link          string                 `protobuf:"bytes,8,opt,name=link,proto3" json:"link,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Notification) Reset() {
+	*x = Notification{}
+	mi := &file_post_core_v1_post_proto_msgTypes[25]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Notification) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Notification) ProtoMessage() {}
+
+func (x *Notification) ProtoReflect() protoreflect.Message {
+	mi := &file_post_core_v1_post_proto_msgTypes[25]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Notification.ProtoReflect.Descriptor instead.
+func (*Notification) Descriptor() ([]byte, []int) {
+	return file_post_core_v1_post_proto_rawDescGZIP(), []int{25}
+}
+
+func (x *Notification) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *Notification) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *Notification) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+func (x *Notification) GetTemplate() string {
+	if x != nil {
+		return x.Template
+	}
+	return ""
+}
+
+func (x *Notification) GetImage() string {
+	if x != nil {
+		return x.Image
+	}
+	return ""
+}
+
+func (x *Notification) GetApplication() string {
+	if x != nil {
+		return x.Application
+	}
+	return ""
+}
+
+func (x *Notification) GetVisible() bool {
+	if x != nil {
+		return x.Visible
+	}
+	return false
+}
+
+func (x *Notification) GetLink() string {
+	if x != nil {
+		return x.Link
+	}
+	return ""
+}
+
+type CreateNotificationRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Notification  *Notification          `protobuf:"bytes,1,opt,name=notification,proto3" json:"notification,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateNotificationRequest) Reset() {
+	*x = CreateNotificationRequest{}
+	mi := &file_post_core_v1_post_proto_msgTypes[26]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateNotificationRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateNotificationRequest) ProtoMessage() {}
+
+func (x *CreateNotificationRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_post_core_v1_post_proto_msgTypes[26]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateNotificationRequest.ProtoReflect.Descriptor instead.
+func (*CreateNotificationRequest) Descriptor() ([]byte, []int) {
+	return file_post_core_v1_post_proto_rawDescGZIP(), []int{26}
+}
+
+func (x *CreateNotificationRequest) GetNotification() *Notification {
+	if x != nil {
+		return x.Notification
+	}
+	return nil
+}
+
+type CreateNotificationResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Status        string                 `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateNotificationResponse) Reset() {
+	*x = CreateNotificationResponse{}
+	mi := &file_post_core_v1_post_proto_msgTypes[27]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateNotificationResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateNotificationResponse) ProtoMessage() {}
+
+func (x *CreateNotificationResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_post_core_v1_post_proto_msgTypes[27]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateNotificationResponse.ProtoReflect.Descriptor instead.
+func (*CreateNotificationResponse) Descriptor() ([]byte, []int) {
+	return file_post_core_v1_post_proto_rawDescGZIP(), []int{27}
+}
+
+func (x *CreateNotificationResponse) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+type GetNotificationsRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	PageNumber    uint32                 `protobuf:"varint,1,opt,name=page_number,json=pageNumber,proto3" json:"page_number,omitempty"`
+	PageSize      uint32                 `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetNotificationsRequest) Reset() {
+	*x = GetNotificationsRequest{}
+	mi := &file_post_core_v1_post_proto_msgTypes[28]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetNotificationsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetNotificationsRequest) ProtoMessage() {}
+
+func (x *GetNotificationsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_post_core_v1_post_proto_msgTypes[28]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetNotificationsRequest.ProtoReflect.Descriptor instead.
+func (*GetNotificationsRequest) Descriptor() ([]byte, []int) {
+	return file_post_core_v1_post_proto_rawDescGZIP(), []int{28}
+}
+
+func (x *GetNotificationsRequest) GetPageNumber() uint32 {
+	if x != nil {
+		return x.PageNumber
+	}
+	return 0
+}
+
+func (x *GetNotificationsRequest) GetPageSize() uint32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+type GetNotificationsResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Notifications []*Notification        `protobuf:"bytes,1,rep,name=notifications,proto3" json:"notifications,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetNotificationsResponse) Reset() {
+	*x = GetNotificationsResponse{}
+	mi := &file_post_core_v1_post_proto_msgTypes[29]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetNotificationsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetNotificationsResponse) ProtoMessage() {}
+
+func (x *GetNotificationsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_post_core_v1_post_proto_msgTypes[29]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetNotificationsResponse.ProtoReflect.Descriptor instead.
+func (*GetNotificationsResponse) Descriptor() ([]byte, []int) {
+	return file_post_core_v1_post_proto_rawDescGZIP(), []int{29}
+}
+
+func (x *GetNotificationsResponse) GetNotifications() []*Notification {
+	if x != nil {
+		return x.Notifications
+	}
+	return nil
+}
+
+type UpdateNotificationsRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Notification  *Notification          `protobuf:"bytes,2,opt,name=notification,proto3" json:"notification,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateNotificationsRequest) Reset() {
+	*x = UpdateNotificationsRequest{}
+	mi := &file_post_core_v1_post_proto_msgTypes[30]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateNotificationsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateNotificationsRequest) ProtoMessage() {}
+
+func (x *UpdateNotificationsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_post_core_v1_post_proto_msgTypes[30]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateNotificationsRequest.ProtoReflect.Descriptor instead.
+func (*UpdateNotificationsRequest) Descriptor() ([]byte, []int) {
+	return file_post_core_v1_post_proto_rawDescGZIP(), []int{30}
+}
+
+func (x *UpdateNotificationsRequest) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *UpdateNotificationsRequest) GetNotification() *Notification {
+	if x != nil {
+		return x.Notification
+	}
+	return nil
+}
+
+type UpdateNotificationsResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Status        string                 `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateNotificationsResponse) Reset() {
+	*x = UpdateNotificationsResponse{}
+	mi := &file_post_core_v1_post_proto_msgTypes[31]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateNotificationsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateNotificationsResponse) ProtoMessage() {}
+
+func (x *UpdateNotificationsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_post_core_v1_post_proto_msgTypes[31]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateNotificationsResponse.ProtoReflect.Descriptor instead.
+func (*UpdateNotificationsResponse) Descriptor() ([]byte, []int) {
+	return file_post_core_v1_post_proto_rawDescGZIP(), []int{31}
+}
+
+func (x *UpdateNotificationsResponse) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+type NotifyRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Data          map[string]string      `protobuf:"bytes,2,rep,name=data,proto3" json:"data,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	Id            int64                  `protobuf:"varint,3,opt,name=id,proto3" json:"id,omitempty"`
+	Application   string                 `protobuf:"bytes,4,opt,name=application,proto3" json:"application,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *NotifyRequest) Reset() {
+	*x = NotifyRequest{}
+	mi := &file_post_core_v1_post_proto_msgTypes[32]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *NotifyRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*NotifyRequest) ProtoMessage() {}
+
+func (x *NotifyRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_post_core_v1_post_proto_msgTypes[32]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use NotifyRequest.ProtoReflect.Descriptor instead.
+func (*NotifyRequest) Descriptor() ([]byte, []int) {
+	return file_post_core_v1_post_proto_rawDescGZIP(), []int{32}
+}
+
+func (x *NotifyRequest) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *NotifyRequest) GetData() map[string]string {
+	if x != nil {
+		return x.Data
+	}
+	return nil
+}
+
+func (x *NotifyRequest) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *NotifyRequest) GetApplication() string {
+	if x != nil {
+		return x.Application
+	}
+	return ""
+}
+
+type NotifyResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Status        string                 `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *NotifyResponse) Reset() {
+	*x = NotifyResponse{}
+	mi := &file_post_core_v1_post_proto_msgTypes[33]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *NotifyResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*NotifyResponse) ProtoMessage() {}
+
+func (x *NotifyResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_post_core_v1_post_proto_msgTypes[33]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use NotifyResponse.ProtoReflect.Descriptor instead.
+func (*NotifyResponse) Descriptor() ([]byte, []int) {
+	return file_post_core_v1_post_proto_rawDescGZIP(), []int{33}
+}
+
+func (x *NotifyResponse) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
 var File_post_core_v1_post_proto protoreflect.FileDescriptor
 
 const file_post_core_v1_post_proto_rawDesc = "" +
@@ -1547,7 +2040,41 @@ const file_post_core_v1_post_proto_rawDesc = "" +
 	"\apost_id\x18\x01 \x03(\x04R\x06postId\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\tR\x06userId\"H\n" +
 	"\x0fGetLikeResponse\x125\n" +
-	"\bresponse\x18\x01 \x03(\v2\x19.post.v1.LikePostResponseR\bresponse*!\n" +
+	"\bresponse\x18\x01 \x03(\v2\x19.post.v1.LikePostResponseR\bresponse\"\xd8\x01\n" +
+	"\fNotification\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x14\n" +
+	"\x05title\x18\x02 \x01(\tR\x05title\x12 \n" +
+	"\vdescription\x18\x03 \x01(\tR\vdescription\x12\x1a\n" +
+	"\btemplate\x18\x04 \x01(\tR\btemplate\x12\x14\n" +
+	"\x05image\x18\x05 \x01(\tR\x05image\x12 \n" +
+	"\vapplication\x18\x06 \x01(\tR\vapplication\x12\x18\n" +
+	"\avisible\x18\a \x01(\bR\avisible\x12\x12\n" +
+	"\x04link\x18\b \x01(\tR\x04link\"V\n" +
+	"\x19CreateNotificationRequest\x129\n" +
+	"\fnotification\x18\x01 \x01(\v2\x15.post.v1.NotificationR\fnotification\"4\n" +
+	"\x1aCreateNotificationResponse\x12\x16\n" +
+	"\x06status\x18\x01 \x01(\tR\x06status\"W\n" +
+	"\x17GetNotificationsRequest\x12\x1f\n" +
+	"\vpage_number\x18\x01 \x01(\rR\n" +
+	"pageNumber\x12\x1b\n" +
+	"\tpage_size\x18\x02 \x01(\rR\bpageSize\"W\n" +
+	"\x18GetNotificationsResponse\x12;\n" +
+	"\rnotifications\x18\x01 \x03(\v2\x15.post.v1.NotificationR\rnotifications\"g\n" +
+	"\x1aUpdateNotificationsRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x129\n" +
+	"\fnotification\x18\x02 \x01(\v2\x15.post.v1.NotificationR\fnotification\"5\n" +
+	"\x1bUpdateNotificationsResponse\x12\x16\n" +
+	"\x06status\x18\x01 \x01(\tR\x06status\"\xc9\x01\n" +
+	"\rNotifyRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x124\n" +
+	"\x04data\x18\x02 \x03(\v2 .post.v1.NotifyRequest.DataEntryR\x04data\x12\x0e\n" +
+	"\x02id\x18\x03 \x01(\x03R\x02id\x12 \n" +
+	"\vapplication\x18\x04 \x01(\tR\vapplication\x1a7\n" +
+	"\tDataEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"(\n" +
+	"\x0eNotifyResponse\x12\x16\n" +
+	"\x06status\x18\x01 \x01(\tR\x06status*!\n" +
 	"\tLike_Enum\x12\n" +
 	"\n" +
 	"\x06UNLIKE\x10\x00\x12\b\n" +
@@ -1565,7 +2092,12 @@ const file_post_core_v1_post_proto_rawDesc = "" +
 	"\x11UpdateCommentRule\x12!.post.v1.UpdateCommentRuleRequest\x1a\".post.v1.UpdateCommentRuleResponse\")\x82\xd3\xe4\x93\x02#:\x01*\x1a\x1e/api/v1/comment_rule/{rule_id}\x12R\n" +
 	"\n" +
 	"LikeAction\x12\x14.post.v1.LikeRequest\x1a\x15.post.v1.LikeResponse\"\x17\x82\xd3\xe4\x93\x02\x11:\x01*\"\f/api/v1/like\x12U\n" +
-	"\aGetlike\x12\x17.post.v1.GetLikeRequest\x1a\x18.post.v1.GetLikeResponse\"\x17\x82\xd3\xe4\x93\x02\x11:\x01*\x1a\f/api/v1/likeBy\n" +
+	"\aGetlike\x12\x17.post.v1.GetLikeRequest\x1a\x18.post.v1.GetLikeResponse\"\x17\x82\xd3\xe4\x93\x02\x11:\x01*\x1a\f/api/v1/like2\xf8\x03\n" +
+	"\x13NotificationService\x12~\n" +
+	"\x12CreateNotification\x12\".post.v1.CreateNotificationRequest\x1a#.post.v1.CreateNotificationResponse\"\x1f\x82\xd3\xe4\x93\x02\x19:\x01*\"\x14/api/v1/notification\x12u\n" +
+	"\x10GetNotifications\x12 .post.v1.GetNotificationsRequest\x1a!.post.v1.GetNotificationsResponse\"\x1c\x82\xd3\xe4\x93\x02\x16\x12\x14/api/v1/notification\x12\x86\x01\n" +
+	"\x13UpdateNotifications\x12#.post.v1.UpdateNotificationsRequest\x1a$.post.v1.UpdateNotificationsResponse\"$\x82\xd3\xe4\x93\x02\x1e:\x01*\x1a\x19/api/v1/notification/{id}\x12a\n" +
+	"\x06Notify\x12\x16.post.v1.NotifyRequest\x1a\x17.post.v1.NotifyResponse\"&\x82\xd3\xe4\x93\x02 :\x01*\"\x1b/api/v1/notification/notifyBy\n" +
 	"\vcom.post.v1B\tPostProtoP\x01Z\"gateway_sevice/post_core/v1;postv1\xa2\x02\x03PXX\xaa\x02\aPost.V1\xca\x02\aPost\\V1\xe2\x02\x13Post\\V1\\GPBMetadata\xea\x02\bPost::V1b\x06proto3"
 
 var (
@@ -1581,34 +2113,44 @@ func file_post_core_v1_post_proto_rawDescGZIP() []byte {
 }
 
 var file_post_core_v1_post_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_post_core_v1_post_proto_msgTypes = make([]protoimpl.MessageInfo, 25)
+var file_post_core_v1_post_proto_msgTypes = make([]protoimpl.MessageInfo, 35)
 var file_post_core_v1_post_proto_goTypes = []any{
-	(Like_Enum)(0),                     // 0: post.v1.Like_Enum
-	(*Post)(nil),                       // 1: post.v1.Post
-	(*Comment)(nil),                    // 2: post.v1.Comment
-	(*Like)(nil),                       // 3: post.v1.Like
-	(*LikePostResponse)(nil),           // 4: post.v1.LikePostResponse
-	(*CreatePostRequest)(nil),          // 5: post.v1.CreatePostRequest
-	(*CreatePostResponse)(nil),         // 6: post.v1.CreatePostResponse
-	(*GetPostRequest)(nil),             // 7: post.v1.GetPostRequest
-	(*GetPostResponse)(nil),            // 8: post.v1.GetPostResponse
-	(*CreateCommentRequest)(nil),       // 9: post.v1.CreateCommentRequest
-	(*CreateCommentResponse)(nil),      // 10: post.v1.CreateCommentResponse
-	(*GetCommentRequest)(nil),          // 11: post.v1.GetCommentRequest
-	(*GetCommentResponse)(nil),         // 12: post.v1.GetCommentResponse
-	(*Rule)(nil),                       // 13: post.v1.Rule
-	(*CreateCommentRuleRequest)(nil),   // 14: post.v1.CreateCommentRuleRequest
-	(*CreateCommentRuleResponse)(nil),  // 15: post.v1.CreateCommentRuleResponse
-	(*GetCommentRuleByIdRequest)(nil),  // 16: post.v1.GetCommentRuleByIdRequest
-	(*GetCommentRuleByIdResponse)(nil), // 17: post.v1.GetCommentRuleByIdResponse
-	(*GetCommentRulesRequest)(nil),     // 18: post.v1.GetCommentRulesRequest
-	(*GetCommentRulesResponse)(nil),    // 19: post.v1.GetCommentRulesResponse
-	(*UpdateCommentRuleRequest)(nil),   // 20: post.v1.UpdateCommentRuleRequest
-	(*UpdateCommentRuleResponse)(nil),  // 21: post.v1.UpdateCommentRuleResponse
-	(*LikeRequest)(nil),                // 22: post.v1.LikeRequest
-	(*LikeResponse)(nil),               // 23: post.v1.LikeResponse
-	(*GetLikeRequest)(nil),             // 24: post.v1.GetLikeRequest
-	(*GetLikeResponse)(nil),            // 25: post.v1.GetLikeResponse
+	(Like_Enum)(0),                      // 0: post.v1.Like_Enum
+	(*Post)(nil),                        // 1: post.v1.Post
+	(*Comment)(nil),                     // 2: post.v1.Comment
+	(*Like)(nil),                        // 3: post.v1.Like
+	(*LikePostResponse)(nil),            // 4: post.v1.LikePostResponse
+	(*CreatePostRequest)(nil),           // 5: post.v1.CreatePostRequest
+	(*CreatePostResponse)(nil),          // 6: post.v1.CreatePostResponse
+	(*GetPostRequest)(nil),              // 7: post.v1.GetPostRequest
+	(*GetPostResponse)(nil),             // 8: post.v1.GetPostResponse
+	(*CreateCommentRequest)(nil),        // 9: post.v1.CreateCommentRequest
+	(*CreateCommentResponse)(nil),       // 10: post.v1.CreateCommentResponse
+	(*GetCommentRequest)(nil),           // 11: post.v1.GetCommentRequest
+	(*GetCommentResponse)(nil),          // 12: post.v1.GetCommentResponse
+	(*Rule)(nil),                        // 13: post.v1.Rule
+	(*CreateCommentRuleRequest)(nil),    // 14: post.v1.CreateCommentRuleRequest
+	(*CreateCommentRuleResponse)(nil),   // 15: post.v1.CreateCommentRuleResponse
+	(*GetCommentRuleByIdRequest)(nil),   // 16: post.v1.GetCommentRuleByIdRequest
+	(*GetCommentRuleByIdResponse)(nil),  // 17: post.v1.GetCommentRuleByIdResponse
+	(*GetCommentRulesRequest)(nil),      // 18: post.v1.GetCommentRulesRequest
+	(*GetCommentRulesResponse)(nil),     // 19: post.v1.GetCommentRulesResponse
+	(*UpdateCommentRuleRequest)(nil),    // 20: post.v1.UpdateCommentRuleRequest
+	(*UpdateCommentRuleResponse)(nil),   // 21: post.v1.UpdateCommentRuleResponse
+	(*LikeRequest)(nil),                 // 22: post.v1.LikeRequest
+	(*LikeResponse)(nil),                // 23: post.v1.LikeResponse
+	(*GetLikeRequest)(nil),              // 24: post.v1.GetLikeRequest
+	(*GetLikeResponse)(nil),             // 25: post.v1.GetLikeResponse
+	(*Notification)(nil),                // 26: post.v1.Notification
+	(*CreateNotificationRequest)(nil),   // 27: post.v1.CreateNotificationRequest
+	(*CreateNotificationResponse)(nil),  // 28: post.v1.CreateNotificationResponse
+	(*GetNotificationsRequest)(nil),     // 29: post.v1.GetNotificationsRequest
+	(*GetNotificationsResponse)(nil),    // 30: post.v1.GetNotificationsResponse
+	(*UpdateNotificationsRequest)(nil),  // 31: post.v1.UpdateNotificationsRequest
+	(*UpdateNotificationsResponse)(nil), // 32: post.v1.UpdateNotificationsResponse
+	(*NotifyRequest)(nil),               // 33: post.v1.NotifyRequest
+	(*NotifyResponse)(nil),              // 34: post.v1.NotifyResponse
+	nil,                                 // 35: post.v1.NotifyRequest.DataEntry
 }
 var file_post_core_v1_post_proto_depIdxs = []int32{
 	0,  // 0: post.v1.Like.action:type_name -> post.v1.Like_Enum
@@ -1623,31 +2165,43 @@ var file_post_core_v1_post_proto_depIdxs = []int32{
 	3,  // 9: post.v1.LikeRequest.like:type_name -> post.v1.Like
 	4,  // 10: post.v1.LikeResponse.response:type_name -> post.v1.LikePostResponse
 	4,  // 11: post.v1.GetLikeResponse.response:type_name -> post.v1.LikePostResponse
-	5,  // 12: post.v1.PostService.CreatePost:input_type -> post.v1.CreatePostRequest
-	7,  // 13: post.v1.PostService.GetPost:input_type -> post.v1.GetPostRequest
-	9,  // 14: post.v1.PostService.CreateComment:input_type -> post.v1.CreateCommentRequest
-	11, // 15: post.v1.PostService.GetComment:input_type -> post.v1.GetCommentRequest
-	14, // 16: post.v1.PostService.CreateCommentRule:input_type -> post.v1.CreateCommentRuleRequest
-	18, // 17: post.v1.PostService.GetCommentRules:input_type -> post.v1.GetCommentRulesRequest
-	16, // 18: post.v1.PostService.GetCommentRuleById:input_type -> post.v1.GetCommentRuleByIdRequest
-	20, // 19: post.v1.PostService.UpdateCommentRule:input_type -> post.v1.UpdateCommentRuleRequest
-	22, // 20: post.v1.PostService.LikeAction:input_type -> post.v1.LikeRequest
-	24, // 21: post.v1.PostService.Getlike:input_type -> post.v1.GetLikeRequest
-	6,  // 22: post.v1.PostService.CreatePost:output_type -> post.v1.CreatePostResponse
-	8,  // 23: post.v1.PostService.GetPost:output_type -> post.v1.GetPostResponse
-	10, // 24: post.v1.PostService.CreateComment:output_type -> post.v1.CreateCommentResponse
-	12, // 25: post.v1.PostService.GetComment:output_type -> post.v1.GetCommentResponse
-	15, // 26: post.v1.PostService.CreateCommentRule:output_type -> post.v1.CreateCommentRuleResponse
-	19, // 27: post.v1.PostService.GetCommentRules:output_type -> post.v1.GetCommentRulesResponse
-	17, // 28: post.v1.PostService.GetCommentRuleById:output_type -> post.v1.GetCommentRuleByIdResponse
-	21, // 29: post.v1.PostService.UpdateCommentRule:output_type -> post.v1.UpdateCommentRuleResponse
-	23, // 30: post.v1.PostService.LikeAction:output_type -> post.v1.LikeResponse
-	25, // 31: post.v1.PostService.Getlike:output_type -> post.v1.GetLikeResponse
-	22, // [22:32] is the sub-list for method output_type
-	12, // [12:22] is the sub-list for method input_type
-	12, // [12:12] is the sub-list for extension type_name
-	12, // [12:12] is the sub-list for extension extendee
-	0,  // [0:12] is the sub-list for field type_name
+	26, // 12: post.v1.CreateNotificationRequest.notification:type_name -> post.v1.Notification
+	26, // 13: post.v1.GetNotificationsResponse.notifications:type_name -> post.v1.Notification
+	26, // 14: post.v1.UpdateNotificationsRequest.notification:type_name -> post.v1.Notification
+	35, // 15: post.v1.NotifyRequest.data:type_name -> post.v1.NotifyRequest.DataEntry
+	5,  // 16: post.v1.PostService.CreatePost:input_type -> post.v1.CreatePostRequest
+	7,  // 17: post.v1.PostService.GetPost:input_type -> post.v1.GetPostRequest
+	9,  // 18: post.v1.PostService.CreateComment:input_type -> post.v1.CreateCommentRequest
+	11, // 19: post.v1.PostService.GetComment:input_type -> post.v1.GetCommentRequest
+	14, // 20: post.v1.PostService.CreateCommentRule:input_type -> post.v1.CreateCommentRuleRequest
+	18, // 21: post.v1.PostService.GetCommentRules:input_type -> post.v1.GetCommentRulesRequest
+	16, // 22: post.v1.PostService.GetCommentRuleById:input_type -> post.v1.GetCommentRuleByIdRequest
+	20, // 23: post.v1.PostService.UpdateCommentRule:input_type -> post.v1.UpdateCommentRuleRequest
+	22, // 24: post.v1.PostService.LikeAction:input_type -> post.v1.LikeRequest
+	24, // 25: post.v1.PostService.Getlike:input_type -> post.v1.GetLikeRequest
+	27, // 26: post.v1.NotificationService.CreateNotification:input_type -> post.v1.CreateNotificationRequest
+	29, // 27: post.v1.NotificationService.GetNotifications:input_type -> post.v1.GetNotificationsRequest
+	31, // 28: post.v1.NotificationService.UpdateNotifications:input_type -> post.v1.UpdateNotificationsRequest
+	33, // 29: post.v1.NotificationService.Notify:input_type -> post.v1.NotifyRequest
+	6,  // 30: post.v1.PostService.CreatePost:output_type -> post.v1.CreatePostResponse
+	8,  // 31: post.v1.PostService.GetPost:output_type -> post.v1.GetPostResponse
+	10, // 32: post.v1.PostService.CreateComment:output_type -> post.v1.CreateCommentResponse
+	12, // 33: post.v1.PostService.GetComment:output_type -> post.v1.GetCommentResponse
+	15, // 34: post.v1.PostService.CreateCommentRule:output_type -> post.v1.CreateCommentRuleResponse
+	19, // 35: post.v1.PostService.GetCommentRules:output_type -> post.v1.GetCommentRulesResponse
+	17, // 36: post.v1.PostService.GetCommentRuleById:output_type -> post.v1.GetCommentRuleByIdResponse
+	21, // 37: post.v1.PostService.UpdateCommentRule:output_type -> post.v1.UpdateCommentRuleResponse
+	23, // 38: post.v1.PostService.LikeAction:output_type -> post.v1.LikeResponse
+	25, // 39: post.v1.PostService.Getlike:output_type -> post.v1.GetLikeResponse
+	28, // 40: post.v1.NotificationService.CreateNotification:output_type -> post.v1.CreateNotificationResponse
+	30, // 41: post.v1.NotificationService.GetNotifications:output_type -> post.v1.GetNotificationsResponse
+	32, // 42: post.v1.NotificationService.UpdateNotifications:output_type -> post.v1.UpdateNotificationsResponse
+	34, // 43: post.v1.NotificationService.Notify:output_type -> post.v1.NotifyResponse
+	30, // [30:44] is the sub-list for method output_type
+	16, // [16:30] is the sub-list for method input_type
+	16, // [16:16] is the sub-list for extension type_name
+	16, // [16:16] is the sub-list for extension extendee
+	0,  // [0:16] is the sub-list for field type_name
 }
 
 func init() { file_post_core_v1_post_proto_init() }
@@ -1661,9 +2215,9 @@ func file_post_core_v1_post_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_post_core_v1_post_proto_rawDesc), len(file_post_core_v1_post_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   25,
+			NumMessages:   35,
 			NumExtensions: 0,
-			NumServices:   1,
+			NumServices:   2,
 		},
 		GoTypes:           file_post_core_v1_post_proto_goTypes,
 		DependencyIndexes: file_post_core_v1_post_proto_depIdxs,

@@ -10,6 +10,7 @@ import (
 
 	"github.com/hashicorp/go-uuid"
 	"github.com/namnv2496/post-service/internal/domain"
+	"github.com/namnv2496/post-service/internal/entity"
 	postv1 "github.com/namnv2496/post-service/internal/handler/generated/post_core/v1"
 	"github.com/namnv2496/post-service/internal/pkg"
 	"github.com/namnv2496/post-service/internal/repository"
@@ -25,21 +26,24 @@ type IPostService interface {
 type postService struct {
 	postRepository repository.IPostRepository
 	kafkaClient    producer.Client
+	notiClient     INotificationService
 }
 
 func NewPostService(
 	postRepository repository.IPostRepository,
 	kafkaClient producer.Client,
+	notiClient INotificationService,
 ) IPostService {
 	return &postService{
 		postRepository: postRepository,
 		kafkaClient:    kafkaClient,
+		notiClient:     notiClient,
 	}
 }
 
 var _ IPostService = &postService{}
 
-func (p postService) AddPost(
+func (p *postService) AddPost(
 	ctx context.Context,
 	req *postv1.CreatePostRequest,
 ) (*postv1.CreatePostResponse, error) {
@@ -67,14 +71,27 @@ func (p postService) AddPost(
 	id := posts[0].Id
 	// public to kafka
 	if err := p.publishNewPost(ctx, *posts[0]); err != nil {
-		log.Println("err: ", err)
+		log.Println("publish new post err: ", err)
+	}
+
+	// Create notification: best practice is to create notification to kafka
+	if err := p.notiClient.Notify(ctx, &entity.NotifyRequest{
+		UserId:      req.Post.UserId,
+		Application: "post",
+		Id:          1,
+		Data: map[string]string{
+			"user":      "namnv",
+			"following": "knm",
+		},
+	}); err != nil {
+		log.Println("Notification err: ", err)
 	}
 	return &postv1.CreatePostResponse{
 		PostId: uint64(id),
 	}, nil
 }
 
-func (p postService) GetPosts(
+func (p *postService) GetPosts(
 	ctx context.Context,
 	req *postv1.GetPostRequest,
 ) (*postv1.GetPostResponse, error) {
@@ -100,7 +117,7 @@ func (p postService) GetPosts(
 	}, nil
 }
 
-func (p postService) publishNewPost(ctx context.Context, post domain.Post) error {
+func (p *postService) publishNewPost(ctx context.Context, post domain.Post) error {
 	data, err := json.Marshal(post)
 	if err != nil {
 		fmt.Println("Error marshall data to send newsfeed")

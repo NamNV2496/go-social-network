@@ -11,8 +11,9 @@ import (
 )
 
 func NewDatabaseConnection(
-	dbConfig configs.Database,
+	config configs.Config,
 ) *gorm.DB {
+	dbConfig := config.Database
 	var connectionString string
 	if value := os.Getenv("DATABASE_URL"); value != "" {
 		connectionString = value

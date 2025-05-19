@@ -21,8 +21,9 @@ type LikeCountRepository struct {
 
 func NewLikeCountRepository(
 	db *gorm.DB,
-	dbConfig configs.Database,
+	config configs.Config,
 ) (ILikeCountRepository, error) {
+	dbConfig := config.Database
 	likeCountRepository := database.NewCRUDBase[*domain.LikeCount](db)
 	if dbConfig.AutoMigrate {
 		if err := db.Debug().AutoMigrate(&domain.LikeCount{}); err != nil {

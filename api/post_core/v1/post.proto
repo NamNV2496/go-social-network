@@ -143,6 +143,49 @@ message GetLikeResponse {
     repeated LikePostResponse response = 1;
 }
 
+// notification
+message Notification {
+    int64 id = 1;
+    string title = 2;
+    string description = 3;
+    string template = 4;
+    string image = 5;
+    string application = 6;
+    bool visible = 7;
+    string link = 8;
+}
+
+message CreateNotificationRequest {
+    Notification notification = 1;
+}
+message CreateNotificationResponse {
+    string status = 1;
+}
+
+message GetNotificationsRequest {
+    uint32 page_number = 1;
+    uint32 page_size = 2;
+}
+message GetNotificationsResponse {
+    repeated Notification notifications = 1;
+}
+message UpdateNotificationsRequest {
+    int64 id = 1;
+    Notification notification = 2;
+}
+message UpdateNotificationsResponse {
+    string status = 1;
+}
+message NotifyRequest {
+    string user_id = 1;
+    map<string, string> data = 2;
+    int64 id = 3;
+    string application = 4;
+}
+message NotifyResponse {
+    string status = 1;
+}
+
 service PostService {
     // post
     rpc CreatePost(CreatePostRequest) returns (CreatePostResponse) {
@@ -205,6 +248,32 @@ service PostService {
     rpc Getlike(GetLikeRequest) returns (GetLikeResponse) {
         option (google.api.http) = {
 			put: "/api/v1/like"
+            body: "*"
+		};
+    }
+}
+
+service NotificationService {
+    rpc CreateNotification(CreateNotificationRequest) returns (CreateNotificationResponse) {
+        option (google.api.http) = {
+			post: "/api/v1/notification"
+            body: "*"
+		};
+    }
+    rpc GetNotifications(GetNotificationsRequest) returns (GetNotificationsResponse) {
+        option (google.api.http) = {
+			get: "/api/v1/notification"
+		};
+    }
+    rpc UpdateNotifications(UpdateNotificationsRequest) returns (UpdateNotificationsResponse) {
+        option (google.api.http) = {
+			put: "/api/v1/notification/{id}"
+            body: "*"
+		};
+    }
+    rpc Notify(NotifyRequest) returns (NotifyResponse) {
+        option (google.api.http) = {
+			post: "/api/v1/notification/notify"
             body: "*"
 		};
     }

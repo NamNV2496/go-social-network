@@ -21,8 +21,9 @@ type LikeRepository struct {
 
 func NewLikeRepository(
 	db *gorm.DB,
-	dbConfig configs.Database,
+	config configs.Config,
 ) (ILikeRepository, error) {
+	dbConfig := config.Database
 	likeRepository := database.NewCRUDBase[*domain.Like](db)
 	if dbConfig.AutoMigrate {
 		if err := db.Debug().AutoMigrate(&domain.Like{}); err != nil {
