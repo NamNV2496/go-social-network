@@ -13,7 +13,8 @@
     9. grafana for monitoring
     10. email - "github.com/jordan-wright/email"
     11. sms - "github.com/twilio/twilio-go"
-    12. DSA: Trie - for violent comment rule checking
+    12. template - "html/template"
+    13. DSA: Trie - for violent comment rule checking
 
 ![alt text](docs/flow.png)
 
@@ -73,7 +74,8 @@ sql files location:
 - View your wall and your friends post
 - Search another people
 - Chat with friends
-- Email / SMS notification
+- Email / SMS OTP
+- Notification
 ```
 ## 4.1 Login / Register
 
@@ -148,8 +150,11 @@ if `baobq` posted a post. Only `namnv` will see it in his newsfeed `knm` will no
 
 ![alt text](docs/chat1.png)
 
-## 4.8 Email / SMS notification
+## 4.8 Email / SMS OTP
 
+## 4.9 Notification
+
+<!-- ![alt text](docs/notification.png) -->
 
 # Monitoring
 
