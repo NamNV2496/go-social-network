@@ -60,34 +60,34 @@ services:
             - esdata:/usr/share/elasticsearch/data
     
     # grafana
-    # grafana:
-    #     image: grafana/grafana
-    #     ports:
-    #         - "3000:3000"
-    #     container_name: grafana
-    #     restart: unless-stopped
-    #     networks:
-    #         - social
-    #     environment:
-    #         - GF_SECURITY_ADMIN_USER=admin
-    #         - GF_SECURITY_ADMIN_PASSWORD=admin
-    #     depends_on:
-    #         - prometheus
-        # volumes:
-        #     - grafana-data:/var/lib/grafana
-        #     - ./grafana.ini:/etc/grafana/grafana.ini
+    grafana:
+        image: grafana/grafana
+        ports:
+            - "3000:3000"
+        container_name: grafana
+        restart: unless-stopped
+        networks:
+            - social
+        environment:
+            - GF_SECURITY_ADMIN_USER=admin
+            - GF_SECURITY_ADMIN_PASSWORD=admin
+        depends_on:
+            - prometheus
+        volumes:
+            - grafana-data:/var/lib/grafana
+            - ./grafana.ini:/etc/grafana/grafana.ini
 
     # Install prometheus and node-exporter
-    # prometheus:
-    #     image: prom/prometheus
-    #     container_name: prometheus
-    #     ports:
-    #         - "9090:9090"
-    #     networks:
-    #         - social
-    #     volumes:
-    #         - prometheus:/prometheus
-    #         - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    prometheus:
+        image: prom/prometheus
+        container_name: prometheus
+        ports:
+            - "9090:9090"
+        networks:
+            - social
+        volumes:
+            - prometheus:/prometheus
+            - ./prometheus.yml:/etc/prometheus/prometheus.yml
         
     # A Prometheus exporter that collects hardware and OS-level metrics from Linux and other Unix-like systems. Node Exporter enables monitoring of host-level resources and performance metrics.
     # exporter:
