@@ -1,0 +1,189 @@
+syntax = "proto3";
+
+package user.v1;
+
+import "google/api/annotations.proto";
+
+message Account {
+    uint64 id = 1;
+    string email = 2;
+    string name = 3;
+    string phone = 4;
+    string picture = 5;
+    string user_id = 6;
+    string password = 7;
+    string created_at = 99;
+    string updated_at = 100;
+}
+
+message LoginRequest {
+    string user_id = 1;
+    string password = 2;
+}
+
+message LoginResponse {
+    string status = 1;
+    string token = 2;
+}
+
+message CreateSessionRequest {
+    string user_id = 1;
+    string otp = 2;
+}
+
+message CreateSessionResponse {
+    string token = 2;
+}
+
+message CreateAccountRequest { Account account = 1; }
+
+message CreateAccountResponse { uint64 id = 1; }
+
+message UpdateAccountRequest {
+    Account account = 1; // must pass id, can only modify name, picture, role
+                         // TO DO: support modify email
+}
+
+message UpdateAccountResponse { Account account = 1; }
+
+message GetAccountRequest { string userId = 1; }
+
+message GetAccountResponse { Account account = 1; }
+
+message FindAccountRequest { string userId = 1; }
+
+message FindAccountResponse { repeated Account account = 1; }
+
+message AccountSession {
+    string token = 1;
+    uint64 expiry_time_ms = 2; // TIMESTAMP_MS
+    uint64 account_id = 3;
+}
+
+message CheckFollowingRequest {
+    string current_id = 1;
+    string user_id = 2;
+}
+
+message CheckFollowingResponse {
+    bool following = 1;
+}
+
+message GetFollowingRequest { string user_id = 1; }
+
+message GetFollowingResponse {
+    repeated string user_id = 1;
+}
+// email
+message GetEmailTemplate {
+    uint64 id = 1;
+    string template = 2;
+    string template_id = 3;
+}
+
+message GetEmailTemplateByTemplateIdRequest { string template_id = 1; }
+
+message GetEmailTemplateRequest { uint64 id = 1; }
+
+message GetEmailTemplateResponse {
+    repeated GetEmailTemplate response = 1;
+}
+
+message AddEmailTemplateRequest {
+    GetEmailTemplate template = 1;
+}
+
+message AddEmailTemplateResponse {
+    string status = 1;
+}
+
+message UpdateEmailTemplateRequest {
+    GetEmailTemplate template = 1;
+}
+
+message UpdateEmailTemplateResponse {
+    string status = 1;
+}
+
+service AccountService {
+    rpc CreateAccount(CreateAccountRequest) returns (CreateAccountResponse) {
+        option (google.api.http) = {
+			post: "/api/v1/account"
+            body: "*"
+		};
+    }
+
+    rpc GetAccount(GetAccountRequest) returns (GetAccountResponse) {
+        option (google.api.http) = {
+			get: "/api/v1/account/{userId}"
+		};
+    }
+
+    rpc FindAccount(FindAccountRequest) returns (FindAccountResponse) {
+        option (google.api.http) = {
+			get: "/api/v1/account"
+		};
+    }
+
+    rpc Login(LoginRequest) returns (LoginResponse) {
+        option (google.api.http) = {
+			post: "/api/v1/login"
+            body: "*"
+		};
+    }
+
+    rpc CreateSession(CreateSessionRequest) returns (CreateSessionResponse) {
+        option (google.api.http) = {
+			post: "/api/v1/create_session"
+            body: "*"
+		};
+    }
+
+    rpc GetFollowing(GetFollowingRequest) returns (GetFollowingResponse) {
+        option (google.api.http) = {
+			get: "/api/v1/following"
+		};
+    }
+
+    rpc CreateFollowing(CheckFollowingRequest) returns (CheckFollowingResponse) {
+        option (google.api.http) = {
+			post: "/api/v1/following"
+		};
+    }
+
+    rpc DeleteFollowing(CheckFollowingRequest) returns (CheckFollowingResponse) {
+        option (google.api.http) = {
+			delete: "/api/v1/following"
+		};
+    }
+
+    rpc CheckFollowing(CheckFollowingRequest) returns (CheckFollowingResponse) {
+        option (google.api.http) = {
+			get: "/api/v1/isFollowing"
+		};
+    }
+}
+
+
+service EmailTemplateService {
+    rpc GetEmailTemplateById(GetEmailTemplateRequest) returns (GetEmailTemplateResponse) {
+        option (google.api.http) = {
+			get: "/api/v1/email_template_by_id"
+		};
+    }
+    rpc GetEmailTemplateByTemplateId(GetEmailTemplateByTemplateIdRequest) returns (GetEmailTemplateResponse) {
+        option (google.api.http) = {
+			get: "/api/v1/email_template"
+		};
+    }
+    rpc AddEmailTemplate(AddEmailTemplateRequest) returns (AddEmailTemplateResponse) {
+        option (google.api.http) = {
+			post: "/api/v1/email_template"
+		};
+    }
+    rpc UpdateEmailTemplate(UpdateEmailTemplateRequest) returns (UpdateEmailTemplateResponse) {
+        option (google.api.http) = {
+			put: "/api/v1/email_template"
+		};
+    }
+}

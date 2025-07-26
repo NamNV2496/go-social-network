@@ -15,7 +15,6 @@
     11. sms - "github.com/twilio/twilio-go"
     12. template - "html/template"
     13. DSA: Trie - for violent comment rule checking
-    14. Grafana + prometheus - "github.com/prometheus/client_golang"
 
 ![alt text](docs/flow.png)
 
