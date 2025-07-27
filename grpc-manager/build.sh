@@ -7,14 +7,12 @@ set -e
 : ${ROOT_PATH:=${PWD}}
 : ${BUILD_PATH:=${PWD}/.build}
 : ${GRPC_GO_BUILT_OUTPUT:="go-built-gprc-output"}
-: ${DEFAULT_GRPC_LANGUAGES:=go}
 : ${BUF_CACHE_DIR:="/tmp/buf"}
 
 : ${GIT_HOST:="github.com"}
-: ${GIT_ORG:="NamNV2496"}
-: ${GIT_USER_NAME:="NamNV2496"}
-: ${GIT_USER_EMAIL:="NamNV2496@gmail.com"}
-
+: ${GIT_ORG:=""}
+: ${GIT_USER_NAME:=""}
+: ${GIT_USER_EMAIL:="@gmail.com"}
 
 GO_MODIFIED_PROTOS=()
 
@@ -89,13 +87,13 @@ build_proto_func(){
     [ -z "$proto_file_trigger" ] && return
 
     # scan all changed proto files
-    for proto in ${generate_proto_files[@]}; do
-        echo "generate for $proto"
-        eval generate_protoc_go $proto $lang || return
-        # cdir $ROOT_PATH
+    for service_path in ${generate_proto_files[@]}; do
+        echo "generate for $service_path"
+        eval generate_protoc_go $service_path $lang || return
     done
 
     echo "run build protobuf file done"
+    # commit_repo_on_git
 
 }
 
@@ -106,10 +104,10 @@ get_file_change() {
 }
 
 generate_protoc_go() {
-    local proto=$1
+    local service_path=$1
     local lang=$2
 
-    [ -z "$proto" ] && return
+    [ -z "$service_path" ] && return
     local build_dir
     build_dir=$(create_build_dir_with_nessary_files $build_dir) || return
     access_build_dir $build_dir
@@ -117,27 +115,38 @@ generate_protoc_go() {
     # backward 1 folder
     cd ..
     # run generate command
-    # buf generate --template ${BUILD_PATH}/buf.gen.go.yaml || return
+    buf generate --template ${BUILD_PATH}/buf.gen.go.yaml || return
 
-    cd $build_dir/protos/$proto
+    cd $build_dir/protos/$service_path
     echo pwd ${PWD}
-    echo proto $proto
-    local mod=$GIT_HOST/$GIT_ORG/$GRPC_GO_BUILT_OUTPUT/golang/$proto
+    echo service_path $service_path
+    local mod=$GIT_HOST/$GIT_ORG/$GRPC_GO_BUILT_OUTPUT/golang/$service_path
     echo mod ${mod}
-    version=$(basename "$proto")
+    version=$(basename "$service_path")
     echo "$version"
-    # mkdir -p "${BUILD_PATH}/go_generated/$proto"
     GO_MODULE=$mod envsubst '$GO_MODULE' < ${BUILD_PATH}/go.mod.tmpl > ./go.mod
 
     go mod tidy || return
     go test ./... || return
     go test -c || return
 
-    # GO_MODIFIED_PROTOS+=("$proto:$version")
-
+    GO_MODIFIED_PROTOS+=("$service_path:$version")
     echo built ${proto} done
 }
 
+
+commit_repo_on_git() {
+    local message="update grpc"
+    # git add .
+    for service_path in ${GO_MODIFIED_PROTOS[@]}; do
+        local service=$(echo "$entry" | cut -d':' -f1)
+        local major_version=$(echo "$entry" | cut -d':' -f2)
+        # git commit -m "$service_path upgraded"
+        local next_ver=major_version+1
+        local tag="golang/$service_path/$next_ver"
+        echo $tag
+    done
+}
 
 # start main
 main $@

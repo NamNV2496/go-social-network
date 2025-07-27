@@ -142,7 +142,7 @@ func (s *server) runRESTServer() error {
 	err = userv1.RegisterAccountServiceHandlerFromEndpoint(
 		ctx,
 		mux,
-		userServiceAddr,
+		userServiceAddr, //"localhost:8089", // connect to nginx
 		opts,
 	)
 	if err != nil {

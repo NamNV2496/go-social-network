@@ -3,6 +3,7 @@ package cmd
 import (
 	"context"
 	"log"
+	"log/slog"
 	"os"
 	"time"
 
@@ -62,6 +63,7 @@ func startServer(
 	} else {
 		userServiceAddr = "0.0.0.0:5610"
 	}
+	slog.Info("start with port: ", userServiceAddr)
 	config := gateway.NewServerConfig().
 		SetGRPCAddress(userServiceAddr).
 		SetHTTPAddress("localhost:9089").
