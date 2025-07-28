@@ -6,6 +6,7 @@ require (
 	github.com/doug-martin/goqu/v9 v9.19.0
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/google/wire v0.6.0
+	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.20.0
 	github.com/hashicorp/go-uuid v1.0.3
 	github.com/microcosm-cc/bluemonday v1.0.27

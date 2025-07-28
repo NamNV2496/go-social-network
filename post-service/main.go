@@ -11,9 +11,8 @@ import (
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/validator"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/spf13/cobra"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/reflection"
 
+	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
 	"github.com/namnv2496/post-service/configs"
 	"github.com/namnv2496/post-service/internal/controller"
 	postv1 "github.com/namnv2496/post-service/internal/handler/generated/post_core/v1"
@@ -24,6 +23,10 @@ import (
 	"github.com/namnv2496/post-service/internal/repository/mq/producer"
 	"github.com/namnv2496/post-service/internal/service"
 	"go.uber.org/fx"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/health"
+	"google.golang.org/grpc/health/grpc_health_v1"
+	"google.golang.org/grpc/reflection"
 )
 
 func main() {
@@ -105,28 +108,33 @@ func startServer(
 	metric.InitPrometheus()
 	var opts = []grpc.ServerOption{
 		grpc.ChainUnaryInterceptor(
+			grpc_prometheus.UnaryServerInterceptor,
 			validator.UnaryServerInterceptor(),
 			// interceptors.MetricsInterceptor(),
 		),
 		grpc.ChainStreamInterceptor(
 			validator.StreamServerInterceptor(),
+			grpc_prometheus.StreamServerInterceptor,
 		),
 	}
 	server := grpc.NewServer(opts...)
-	reflection.Register(server)
 	postv1.RegisterPostServiceServer(server, controllerClient)
 	postv1.RegisterNotificationServiceServer(server, notificationController)
+
+	grpc_health_v1.RegisterHealthServer(server, health.NewServer())
+	// register prometheus
+	grpc_prometheus.EnableHandlingTimeHistogram()
+	// Register Prometheus metrics handler.
+	grpc_prometheus.Register(server)
+	// reflection
+	reflection.Register(server)
 
 	fmt.Printf("gRPC server is running on %s\n", postServiceAddr)
 
 	// expose promethus for debugging
 	go func() {
-		http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-			fmt.Fprintf(w, "Hello, World!")
-		})
 		http.Handle("/metrics", promhttp.Handler())
-
-		log.Fatal(http.ListenAndServe(":8090", nil))
+		log.Fatal(http.ListenAndServe(":9998", nil))
 	}()
 
 	return server.Serve(listener)

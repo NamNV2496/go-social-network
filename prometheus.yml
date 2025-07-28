@@ -6,13 +6,13 @@ global:
   # scrape_timeout is set to the global default (10s).
 
 scrape_configs:
-  - job_name: 'grpc_server'
+  - job_name: 'user'
     static_configs:
       # - targets: ['host.docker.internal:9090']
       - targets: ['host.docker.internal:9999']
 
-  # - job_name: 'post'
-  #   static_configs:
-  #     - targets: ['post:8090']
+  - job_name: 'post'
+    static_configs:
+      - targets: ['host.docker.internal:9998']
 
   
