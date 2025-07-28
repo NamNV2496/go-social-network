@@ -2,8 +2,9 @@ package cmd
 
 import (
 	"context"
+	"fmt"
 	"log"
-	"log/slog"
+	"net/http"
 	"os"
 	"time"
 
@@ -18,6 +19,7 @@ import (
 	"github.com/namnv2496/user-service/internal/repository/sms"
 	"github.com/namnv2496/user-service/internal/service"
 	userv1 "github.com/namnv2496/user-service/pkg/user_core/v1"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.uber.org/fx"
 	"google.golang.org/grpc"
 )
@@ -63,12 +65,12 @@ func startServer(
 	} else {
 		userServiceAddr = "0.0.0.0:5610"
 	}
-	slog.Info("start with port: ", userServiceAddr)
+	fmt.Printf("start with port: %s\n", userServiceAddr)
 	config := gateway.NewServerConfig().
 		SetGRPCAddress(userServiceAddr).
 		SetHTTPAddress("localhost:9089").
 		SetGRPCEnable(true).
-		SetHTTPEnable(false).
+		SetHTTPEnable(true).
 		SetGRPCRegisterFunc(func(server *grpc.Server) {
 			userv1.RegisterAccountServiceServer(server, accountServer)
 			userv1.RegisterEmailTemplateServiceServer(server, emailServer)
@@ -81,6 +83,13 @@ func startServer(
 	if err != nil {
 		panic(err)
 	}
+	// metric.InitPrometheus()
+	// expose for prometheus. it will trigger every 15s config in prometheus.yaml
+	go func() {
+		http.Handle("/metrics", promhttp.Handler())
+		http.ListenAndServe(":9999", nil) // expose port 9090
+	}()
+
 	lc.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
 			err := server.Serve(ctx)

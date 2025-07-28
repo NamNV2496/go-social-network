@@ -25,7 +25,7 @@
 
     1. run `docker compose up`
     2. Check status of services
-    3. Access prometheus: [http://localhost:9090/targets](http://localhost:9090/targets)
+    3. Access prometheus: [http://localhost:9090/targets](http://localhost:9090/targets) to check is your service up successfully
     4. Access grafana: [http://localhost:3000/login](http://localhost:3000/login) (user: admin - password: admin)
     5. Access `localhost:3001` for web
     6. Access `localhost:3001/comment_rule.html` for comment-rule
@@ -159,7 +159,11 @@ if `baobq` posted a post. Only `namnv` will see it in his newsfeed `knm` will no
 
 # Monitoring
 
-![monitoring1](docs/monitoring1.png)
+![monitoring2](docs/monitoring2.png)
+![monitoring3](docs/monitoring3.png)
+![monitoring4](docs/monitoring4.png)
+
+prometheus read this [link](./user-service/readme.md)
 
 <details>
   <summary>Grafana custom</summary>

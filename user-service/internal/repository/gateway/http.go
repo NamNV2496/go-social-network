@@ -6,8 +6,17 @@ import (
 	"net/http"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"github.com/prometheus/client_golang/prometheus"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+)
+
+var httpRequestsTotal = prometheus.NewCounterVec(
+	prometheus.CounterOpts{
+		Name: "http_requests_total-test",
+		Help: "Total number of HTTP requests.",
+	},
+	[]string{"path", "method"},
 )
 
 type httpServerConfig struct {
@@ -23,6 +32,7 @@ type httpServer struct {
 }
 
 func newHTTPServer(conf *config) (*httpServer, error) {
+	prometheus.MustRegister(httpRequestsTotal)
 	if !conf.http.enable {
 		return nil, nil
 	}
@@ -37,6 +47,7 @@ func newHTTPServer(conf *config) (*httpServer, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	conf.http.registerFunc(mux, conn)
 	fmt.Println("start http server: ", conf.http.addr)
 	return &httpServer{

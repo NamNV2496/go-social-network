@@ -1,13 +1,15 @@
 package gateway
 
 import (
+	"context"
 	"fmt"
 	"net"
 
+	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/health"
+	"google.golang.org/grpc/health/grpc_health_v1"
 	"google.golang.org/grpc/reflection"
-
-	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/validator"
 )
 
 type grpcServerConfig struct {
@@ -29,17 +31,33 @@ func newGRPCServer(conf *config) (*grpcServer, error) {
 		return nil, fmt.Errorf("register GRPC Handler is required")
 	}
 	if conf.grpc.addr == "" {
+		return nil, fmt.Errorf("address GRPC Handler is required")
 	}
-	var grpcOpts = []grpc.ServerOption{
-		grpc.ChainUnaryInterceptor(
-			validator.UnaryServerInterceptor(),
-		),
-		grpc.ChainStreamInterceptor(
-			validator.StreamServerInterceptor(),
-		),
+
+	wrapped := grpc_prometheus.UnaryServerInterceptor
+
+	debugInterceptor := func(
+		ctx context.Context,
+		req interface{},
+		info *grpc.UnaryServerInfo,
+		handler grpc.UnaryHandler,
+	) (interface{}, error) {
+		fmt.Println("GRPC CALL:", info.FullMethod)
+		return wrapped(ctx, req, info, handler)
 	}
-	server := grpc.NewServer(grpcOpts...)
+	server := grpc.NewServer(
+		grpc.ChainUnaryInterceptor(debugInterceptor),
+		grpc.StreamInterceptor(grpc_prometheus.StreamServerInterceptor),
+	)
 	conf.grpc.registerFunc(server)
+
+	// register server to prometheus
+	grpc_health_v1.RegisterHealthServer(server, health.NewServer())
+	// register prometheus
+	grpc_prometheus.EnableHandlingTimeHistogram()
+	// Register Prometheus metrics handler.
+	grpc_prometheus.Register(server)
+	// reflection
 	reflection.Register(server)
 
 	lis, err := net.Listen("tcp", conf.grpc.addr)
