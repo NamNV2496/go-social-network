@@ -425,6 +425,146 @@ var AccountService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
+	LocationService_GetLocationMapping_FullMethodName       = "/user.v1.LocationService/GetLocationMapping"
+	LocationService_SearchLocationSuggestion_FullMethodName = "/user.v1.LocationService/SearchLocationSuggestion"
+)
+
+// LocationServiceClient is the client API for LocationService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type LocationServiceClient interface {
+	GetLocationMapping(ctx context.Context, in *GetLocationMappingRequest, opts ...grpc.CallOption) (*GetLocationMappingResponse, error)
+	SearchLocationSuggestion(ctx context.Context, in *SearchLocationSuggestionRequest, opts ...grpc.CallOption) (*SearchLocationSuggestionResponse, error)
+}
+
+type locationServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewLocationServiceClient(cc grpc.ClientConnInterface) LocationServiceClient {
+	return &locationServiceClient{cc}
+}
+
+func (c *locationServiceClient) GetLocationMapping(ctx context.Context, in *GetLocationMappingRequest, opts ...grpc.CallOption) (*GetLocationMappingResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetLocationMappingResponse)
+	err := c.cc.Invoke(ctx, LocationService_GetLocationMapping_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *locationServiceClient) SearchLocationSuggestion(ctx context.Context, in *SearchLocationSuggestionRequest, opts ...grpc.CallOption) (*SearchLocationSuggestionResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SearchLocationSuggestionResponse)
+	err := c.cc.Invoke(ctx, LocationService_SearchLocationSuggestion_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// LocationServiceServer is the server API for LocationService service.
+// All implementations must embed UnimplementedLocationServiceServer
+// for forward compatibility.
+type LocationServiceServer interface {
+	GetLocationMapping(context.Context, *GetLocationMappingRequest) (*GetLocationMappingResponse, error)
+	SearchLocationSuggestion(context.Context, *SearchLocationSuggestionRequest) (*SearchLocationSuggestionResponse, error)
+	mustEmbedUnimplementedLocationServiceServer()
+}
+
+// UnimplementedLocationServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedLocationServiceServer struct{}
+
+func (UnimplementedLocationServiceServer) GetLocationMapping(context.Context, *GetLocationMappingRequest) (*GetLocationMappingResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetLocationMapping not implemented")
+}
+func (UnimplementedLocationServiceServer) SearchLocationSuggestion(context.Context, *SearchLocationSuggestionRequest) (*SearchLocationSuggestionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SearchLocationSuggestion not implemented")
+}
+func (UnimplementedLocationServiceServer) mustEmbedUnimplementedLocationServiceServer() {}
+func (UnimplementedLocationServiceServer) testEmbeddedByValue()                         {}
+
+// UnsafeLocationServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to LocationServiceServer will
+// result in compilation errors.
+type UnsafeLocationServiceServer interface {
+	mustEmbedUnimplementedLocationServiceServer()
+}
+
+func RegisterLocationServiceServer(s grpc.ServiceRegistrar, srv LocationServiceServer) {
+	// If the following call pancis, it indicates UnimplementedLocationServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&LocationService_ServiceDesc, srv)
+}
+
+func _LocationService_GetLocationMapping_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetLocationMappingRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LocationServiceServer).GetLocationMapping(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: LocationService_GetLocationMapping_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LocationServiceServer).GetLocationMapping(ctx, req.(*GetLocationMappingRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _LocationService_SearchLocationSuggestion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SearchLocationSuggestionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LocationServiceServer).SearchLocationSuggestion(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: LocationService_SearchLocationSuggestion_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LocationServiceServer).SearchLocationSuggestion(ctx, req.(*SearchLocationSuggestionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// LocationService_ServiceDesc is the grpc.ServiceDesc for LocationService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var LocationService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "user.v1.LocationService",
+	HandlerType: (*LocationServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetLocationMapping",
+			Handler:    _LocationService_GetLocationMapping_Handler,
+		},
+		{
+			MethodName: "SearchLocationSuggestion",
+			Handler:    _LocationService_SearchLocationSuggestion_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "user_core/v1/user.proto",
+}
+
+const (
 	EmailTemplateService_GetEmailTemplateById_FullMethodName         = "/user.v1.EmailTemplateService/GetEmailTemplateById"
 	EmailTemplateService_GetEmailTemplateByTemplateId_FullMethodName = "/user.v1.EmailTemplateService/GetEmailTemplateByTemplateId"
 	EmailTemplateService_AddEmailTemplate_FullMethodName             = "/user.v1.EmailTemplateService/AddEmailTemplate"

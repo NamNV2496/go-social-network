@@ -105,6 +105,40 @@ message UpdateEmailTemplateResponse {
     string status = 1;
 }
 
+message GetLocationMappingRequest {
+    string city_v1 = 1;
+    string city_v2 = 2;
+    string district = 3;
+    string ward_v1 = 4;
+    string ward_v2 = 5;
+    bool is_new = 6;
+}
+
+message GetLocationMappingResponse {
+    LocationInfo location = 1;
+}
+
+message SearchLocationSuggestionRequest {
+    string word = 1;
+    int64 limit = 2;
+}
+
+message LocationInfo {
+    string city_v1 = 1;
+    string city_v1_name = 2;
+    string city_v2 = 3;
+    string city_v2_name = 4;
+    string district = 5;
+    string district_name = 6;
+    string ward_v1 = 7;
+    string ward_v1_name = 8;
+    string ward_v2 = 9;
+    string ward_v2_name = 10;
+}
+message SearchLocationSuggestionResponse {
+    repeated LocationInfo location = 1;
+}
+
 service AccountService {
     rpc CreateAccount(CreateAccountRequest) returns (CreateAccountResponse) {
         option (google.api.http) = {
@@ -164,6 +198,18 @@ service AccountService {
     }
 }
 
+service LocationService {
+    rpc GetLocationMapping(GetLocationMappingRequest) returns (GetLocationMappingResponse) {
+        option (google.api.http) = {
+			get: "/api/v1/get-location-mapping"
+		};
+    }
+    rpc SearchLocationSuggestion(SearchLocationSuggestionRequest) returns (SearchLocationSuggestionResponse) {
+        option (google.api.http) = {
+			get: "/api/v1/search-location-suggestion"
+		};
+    }
+}
 
 service EmailTemplateService {
     rpc GetEmailTemplateById(GetEmailTemplateRequest) returns (GetEmailTemplateResponse) {

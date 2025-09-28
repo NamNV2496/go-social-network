@@ -14,6 +14,7 @@ type Config struct {
 	ElasticSearch ElasticSearch
 	Email         Email
 	SMS           SMS
+	Location      Location
 }
 
 func NewConfig() (*Config, error) {

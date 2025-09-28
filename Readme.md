@@ -1,5 +1,27 @@
 # This is a basic social network demo by Golang.
 
+
+
+
+
+
+
+- add region and ward to search
+- add trie build for search location
+- add CDC for new post
+- map reducing for postdata
+
+
+
+
+
+
+
+
+
+
+
+
 # 1. Technologies
 
     1. grpc - "google.golang.org/grpc"

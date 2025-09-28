@@ -44,6 +44,9 @@ func Invoke(invokers ...any) *fx.App {
 			fx.Annotate(service.NewOTPService, fx.As(new(service.IOTP))),
 			fx.Annotate(sms.NewSms, fx.As(new(sms.ISms))),
 			fx.Annotate(repo.NewEmailTemplateRepository, fx.As(new(repo.IEmailTemplateRepo))),
+			fx.Annotate(service.NewLocation, fx.As(new(service.ILocation))),
+			fx.Annotate(service.NewTrie, fx.As(new(service.ITrie))),
+			fx.Annotate(controller.NewLocationHander, fx.As(new(userv1.LocationServiceServer))),
 		),
 		fx.Supply(
 			conf,
@@ -58,6 +61,7 @@ func startServer(
 	lc fx.Lifecycle,
 	accountServer userv1.AccountServiceServer,
 	emailServer userv1.EmailTemplateServiceServer,
+	locationServerr userv1.LocationServiceServer,
 ) {
 	var userServiceAddr string
 	if value := os.Getenv("USER_URL"); value != "" {
@@ -74,10 +78,12 @@ func startServer(
 		SetGRPCRegisterFunc(func(server *grpc.Server) {
 			userv1.RegisterAccountServiceServer(server, accountServer)
 			userv1.RegisterEmailTemplateServiceServer(server, emailServer)
+			userv1.RegisterLocationServiceServer(server, locationServerr)
 		}).
 		SetHTTPRegisterFunc(func(mux *runtime.ServeMux, conn *grpc.ClientConn) {
 			userv1.RegisterAccountServiceHandler(context.Background(), mux, conn)
 			userv1.RegisterEmailTemplateServiceHandler(context.Background(), mux, conn)
+			userv1.RegisterLocationServiceHandler(context.Background(), mux, conn)
 		})
 	server, err := gateway.NewServer(config)
 	if err != nil {

@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.9
 // 	protoc        (unknown)
-// source: protos/newsfeed_core/v1/newsfeed.proto
+// source: newsfeed_core/v1/newsfeed.proto
 
 package newsfeedv1
 
@@ -37,7 +37,7 @@ type NewsfeedPost struct {
 
 func (x *NewsfeedPost) Reset() {
 	*x = NewsfeedPost{}
-	mi := &file_protos_newsfeed_core_v1_newsfeed_proto_msgTypes[0]
+	mi := &file_newsfeed_core_v1_newsfeed_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -49,7 +49,7 @@ func (x *NewsfeedPost) String() string {
 func (*NewsfeedPost) ProtoMessage() {}
 
 func (x *NewsfeedPost) ProtoReflect() protoreflect.Message {
-	mi := &file_protos_newsfeed_core_v1_newsfeed_proto_msgTypes[0]
+	mi := &file_newsfeed_core_v1_newsfeed_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -62,7 +62,7 @@ func (x *NewsfeedPost) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use NewsfeedPost.ProtoReflect.Descriptor instead.
 func (*NewsfeedPost) Descriptor() ([]byte, []int) {
-	return file_protos_newsfeed_core_v1_newsfeed_proto_rawDescGZIP(), []int{0}
+	return file_newsfeed_core_v1_newsfeed_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *NewsfeedPost) GetUserId() string {
@@ -123,7 +123,7 @@ type GetNewsfeedRequest struct {
 
 func (x *GetNewsfeedRequest) Reset() {
 	*x = GetNewsfeedRequest{}
-	mi := &file_protos_newsfeed_core_v1_newsfeed_proto_msgTypes[1]
+	mi := &file_newsfeed_core_v1_newsfeed_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -135,7 +135,7 @@ func (x *GetNewsfeedRequest) String() string {
 func (*GetNewsfeedRequest) ProtoMessage() {}
 
 func (x *GetNewsfeedRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_protos_newsfeed_core_v1_newsfeed_proto_msgTypes[1]
+	mi := &file_newsfeed_core_v1_newsfeed_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -148,7 +148,7 @@ func (x *GetNewsfeedRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetNewsfeedRequest.ProtoReflect.Descriptor instead.
 func (*GetNewsfeedRequest) Descriptor() ([]byte, []int) {
-	return file_protos_newsfeed_core_v1_newsfeed_proto_rawDescGZIP(), []int{1}
+	return file_newsfeed_core_v1_newsfeed_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *GetNewsfeedRequest) GetUserId() string {
@@ -167,7 +167,7 @@ type GetNewsfeedResponse struct {
 
 func (x *GetNewsfeedResponse) Reset() {
 	*x = GetNewsfeedResponse{}
-	mi := &file_protos_newsfeed_core_v1_newsfeed_proto_msgTypes[2]
+	mi := &file_newsfeed_core_v1_newsfeed_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -179,7 +179,7 @@ func (x *GetNewsfeedResponse) String() string {
 func (*GetNewsfeedResponse) ProtoMessage() {}
 
 func (x *GetNewsfeedResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_protos_newsfeed_core_v1_newsfeed_proto_msgTypes[2]
+	mi := &file_newsfeed_core_v1_newsfeed_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -192,7 +192,7 @@ func (x *GetNewsfeedResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetNewsfeedResponse.ProtoReflect.Descriptor instead.
 func (*GetNewsfeedResponse) Descriptor() ([]byte, []int) {
-	return file_protos_newsfeed_core_v1_newsfeed_proto_rawDescGZIP(), []int{2}
+	return file_newsfeed_core_v1_newsfeed_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *GetNewsfeedResponse) GetPosts() []*NewsfeedPost {
@@ -202,11 +202,11 @@ func (x *GetNewsfeedResponse) GetPosts() []*NewsfeedPost {
 	return nil
 }
 
-var File_protos_newsfeed_core_v1_newsfeed_proto protoreflect.FileDescriptor
+var File_newsfeed_core_v1_newsfeed_proto protoreflect.FileDescriptor
 
-const file_protos_newsfeed_core_v1_newsfeed_proto_rawDesc = "" +
+const file_newsfeed_core_v1_newsfeed_proto_rawDesc = "" +
 	"\n" +
-	"&protos/newsfeed_core/v1/newsfeed.proto\x12\vnewsfeed.v1\x1a\x1cgoogle/api/annotations.proto\"\xbd\x01\n" +
+	"\x1fnewsfeed_core/v1/newsfeed.proto\x12\vnewsfeed.v1\x1a\x1cgoogle/api/annotations.proto\"\xbd\x01\n" +
 	"\fNewsfeedPost\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x17\n" +
 	"\apost_id\x18\x02 \x01(\x04R\x06postId\x12!\n" +
@@ -220,28 +220,28 @@ const file_protos_newsfeed_core_v1_newsfeed_proto_rawDesc = "" +
 	"\x13GetNewsfeedResponse\x12/\n" +
 	"\x05posts\x18\x01 \x03(\v2\x19.newsfeed.v1.NewsfeedPostR\x05posts2}\n" +
 	"\x0fNewsfeedService\x12j\n" +
-	"\vGetNewsfeed\x12\x1f.newsfeed.v1.GetNewsfeedRequest\x1a .newsfeed.v1.GetNewsfeedResponse\"\x18\x82\xd3\xe4\x93\x02\x12\x12\x10/api/v1/newsfeedB\x9d\x01\n" +
-	"\x0fcom.newsfeed.v1B\rNewsfeedProtoP\x01Z.post_sevice/protos/newsfeed_core/v1;newsfeedv1\xa2\x02\x03NXX\xaa\x02\vNewsfeed.V1\xca\x02\vNewsfeed\\V1\xe2\x02\x17Newsfeed\\V1\\GPBMetadata\xea\x02\fNewsfeed::V1b\x06proto3"
+	"\vGetNewsfeed\x12\x1f.newsfeed.v1.GetNewsfeedRequest\x1a .newsfeed.v1.GetNewsfeedResponse\"\x18\x82\xd3\xe4\x93\x02\x12\x12\x10/api/v1/newsfeedB\x96\x01\n" +
+	"\x0fcom.newsfeed.v1B\rNewsfeedProtoP\x01Z'post_sevice/newsfeed_core/v1;newsfeedv1\xa2\x02\x03NXX\xaa\x02\vNewsfeed.V1\xca\x02\vNewsfeed\\V1\xe2\x02\x17Newsfeed\\V1\\GPBMetadata\xea\x02\fNewsfeed::V1b\x06proto3"
 
 var (
-	file_protos_newsfeed_core_v1_newsfeed_proto_rawDescOnce sync.Once
-	file_protos_newsfeed_core_v1_newsfeed_proto_rawDescData []byte
+	file_newsfeed_core_v1_newsfeed_proto_rawDescOnce sync.Once
+	file_newsfeed_core_v1_newsfeed_proto_rawDescData []byte
 )
 
-func file_protos_newsfeed_core_v1_newsfeed_proto_rawDescGZIP() []byte {
-	file_protos_newsfeed_core_v1_newsfeed_proto_rawDescOnce.Do(func() {
-		file_protos_newsfeed_core_v1_newsfeed_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_protos_newsfeed_core_v1_newsfeed_proto_rawDesc), len(file_protos_newsfeed_core_v1_newsfeed_proto_rawDesc)))
+func file_newsfeed_core_v1_newsfeed_proto_rawDescGZIP() []byte {
+	file_newsfeed_core_v1_newsfeed_proto_rawDescOnce.Do(func() {
+		file_newsfeed_core_v1_newsfeed_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_newsfeed_core_v1_newsfeed_proto_rawDesc), len(file_newsfeed_core_v1_newsfeed_proto_rawDesc)))
 	})
-	return file_protos_newsfeed_core_v1_newsfeed_proto_rawDescData
+	return file_newsfeed_core_v1_newsfeed_proto_rawDescData
 }
 
-var file_protos_newsfeed_core_v1_newsfeed_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
-var file_protos_newsfeed_core_v1_newsfeed_proto_goTypes = []any{
+var file_newsfeed_core_v1_newsfeed_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_newsfeed_core_v1_newsfeed_proto_goTypes = []any{
 	(*NewsfeedPost)(nil),        // 0: newsfeed.v1.NewsfeedPost
 	(*GetNewsfeedRequest)(nil),  // 1: newsfeed.v1.GetNewsfeedRequest
 	(*GetNewsfeedResponse)(nil), // 2: newsfeed.v1.GetNewsfeedResponse
 }
-var file_protos_newsfeed_core_v1_newsfeed_proto_depIdxs = []int32{
+var file_newsfeed_core_v1_newsfeed_proto_depIdxs = []int32{
 	0, // 0: newsfeed.v1.GetNewsfeedResponse.posts:type_name -> newsfeed.v1.NewsfeedPost
 	1, // 1: newsfeed.v1.NewsfeedService.GetNewsfeed:input_type -> newsfeed.v1.GetNewsfeedRequest
 	2, // 2: newsfeed.v1.NewsfeedService.GetNewsfeed:output_type -> newsfeed.v1.GetNewsfeedResponse
@@ -252,26 +252,26 @@ var file_protos_newsfeed_core_v1_newsfeed_proto_depIdxs = []int32{
 	0, // [0:1] is the sub-list for field type_name
 }
 
-func init() { file_protos_newsfeed_core_v1_newsfeed_proto_init() }
-func file_protos_newsfeed_core_v1_newsfeed_proto_init() {
-	if File_protos_newsfeed_core_v1_newsfeed_proto != nil {
+func init() { file_newsfeed_core_v1_newsfeed_proto_init() }
+func file_newsfeed_core_v1_newsfeed_proto_init() {
+	if File_newsfeed_core_v1_newsfeed_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_protos_newsfeed_core_v1_newsfeed_proto_rawDesc), len(file_protos_newsfeed_core_v1_newsfeed_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_newsfeed_core_v1_newsfeed_proto_rawDesc), len(file_newsfeed_core_v1_newsfeed_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_protos_newsfeed_core_v1_newsfeed_proto_goTypes,
-		DependencyIndexes: file_protos_newsfeed_core_v1_newsfeed_proto_depIdxs,
-		MessageInfos:      file_protos_newsfeed_core_v1_newsfeed_proto_msgTypes,
+		GoTypes:           file_newsfeed_core_v1_newsfeed_proto_goTypes,
+		DependencyIndexes: file_newsfeed_core_v1_newsfeed_proto_depIdxs,
+		MessageInfos:      file_newsfeed_core_v1_newsfeed_proto_msgTypes,
 	}.Build()
-	File_protos_newsfeed_core_v1_newsfeed_proto = out.File
-	file_protos_newsfeed_core_v1_newsfeed_proto_goTypes = nil
-	file_protos_newsfeed_core_v1_newsfeed_proto_depIdxs = nil
+	File_newsfeed_core_v1_newsfeed_proto = out.File
+	file_newsfeed_core_v1_newsfeed_proto_goTypes = nil
+	file_newsfeed_core_v1_newsfeed_proto_depIdxs = nil
 }

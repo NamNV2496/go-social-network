@@ -18,6 +18,11 @@ type User struct {
 	Picture   string    `db:"picture" goqu:"omitnil" esMapping:"key:picture,type:-"`
 	UserId    string    `db:"user_id" goqu:"omitnil" esMapping:"key:user_id,type:string"`
 	Password  string    `db:"password" goqu:"omitnil" esMapping:"key:password,type:-"`
+	CityV1    string    `db:"city_v1" goqu:"omitnil" esMapping:"key:city_v1,type:-"`
+	CityV2    string    `db:"city_v2" goqu:"omitnil" esMapping:"key:city_v2,type:-"`
+	District  string    `db:"district" goqu:"omitnil" esMapping:"key:district,type:-"`
+	WardV1    string    `db:"ward_v1" goqu:"omitnil" esMapping:"key:ward_v1,type:-"`
+	WardV2    string    `db:"ward_v2" goqu:"omitnil" esMapping:"key:ward_v2,type:-"`
 	CreatedAt time.Time `db:"created_at" goqu:"omitnil" esMapping:"key:created_at,type:date,format:yyyy-MM-dd HH:mm:ss"`
 	UpdatedAt time.Time `db:"updated_at" goqu:"omitnil" esMapping:"key:updated_at,type:date,format:yyyy-MM-dd HH:mm:ss"`
 }

@@ -2985,3 +2985,613 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = UpdateEmailTemplateResponseValidationError{}
+
+// Validate checks the field values on GetLocationMappingRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetLocationMappingRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetLocationMappingRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetLocationMappingRequestMultiError, or nil if none found.
+func (m *GetLocationMappingRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetLocationMappingRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for CityV1
+
+	// no validation rules for CityV2
+
+	// no validation rules for District
+
+	// no validation rules for WardV1
+
+	// no validation rules for WardV2
+
+	// no validation rules for IsNew
+
+	if len(errors) > 0 {
+		return GetLocationMappingRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetLocationMappingRequestMultiError is an error wrapping multiple validation
+// errors returned by GetLocationMappingRequest.ValidateAll() if the
+// designated constraints aren't met.
+type GetLocationMappingRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetLocationMappingRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetLocationMappingRequestMultiError) AllErrors() []error { return m }
+
+// GetLocationMappingRequestValidationError is the validation error returned by
+// GetLocationMappingRequest.Validate if the designated constraints aren't met.
+type GetLocationMappingRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetLocationMappingRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetLocationMappingRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetLocationMappingRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetLocationMappingRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetLocationMappingRequestValidationError) ErrorName() string {
+	return "GetLocationMappingRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetLocationMappingRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetLocationMappingRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetLocationMappingRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetLocationMappingRequestValidationError{}
+
+// Validate checks the field values on GetLocationMappingResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetLocationMappingResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetLocationMappingResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetLocationMappingResponseMultiError, or nil if none found.
+func (m *GetLocationMappingResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetLocationMappingResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if all {
+		switch v := interface{}(m.GetLocation()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, GetLocationMappingResponseValidationError{
+					field:  "Location",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, GetLocationMappingResponseValidationError{
+					field:  "Location",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetLocation()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return GetLocationMappingResponseValidationError{
+				field:  "Location",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return GetLocationMappingResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetLocationMappingResponseMultiError is an error wrapping multiple
+// validation errors returned by GetLocationMappingResponse.ValidateAll() if
+// the designated constraints aren't met.
+type GetLocationMappingResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetLocationMappingResponseMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetLocationMappingResponseMultiError) AllErrors() []error { return m }
+
+// GetLocationMappingResponseValidationError is the validation error returned
+// by GetLocationMappingResponse.Validate if the designated constraints aren't met.
+type GetLocationMappingResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetLocationMappingResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetLocationMappingResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetLocationMappingResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetLocationMappingResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetLocationMappingResponseValidationError) ErrorName() string {
+	return "GetLocationMappingResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetLocationMappingResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetLocationMappingResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetLocationMappingResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetLocationMappingResponseValidationError{}
+
+// Validate checks the field values on SearchLocationSuggestionRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *SearchLocationSuggestionRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on SearchLocationSuggestionRequest with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, the result is a list of violation errors wrapped in
+// SearchLocationSuggestionRequestMultiError, or nil if none found.
+func (m *SearchLocationSuggestionRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *SearchLocationSuggestionRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Word
+
+	// no validation rules for Limit
+
+	if len(errors) > 0 {
+		return SearchLocationSuggestionRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// SearchLocationSuggestionRequestMultiError is an error wrapping multiple
+// validation errors returned by SearchLocationSuggestionRequest.ValidateAll()
+// if the designated constraints aren't met.
+type SearchLocationSuggestionRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m SearchLocationSuggestionRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m SearchLocationSuggestionRequestMultiError) AllErrors() []error { return m }
+
+// SearchLocationSuggestionRequestValidationError is the validation error
+// returned by SearchLocationSuggestionRequest.Validate if the designated
+// constraints aren't met.
+type SearchLocationSuggestionRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e SearchLocationSuggestionRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e SearchLocationSuggestionRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e SearchLocationSuggestionRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e SearchLocationSuggestionRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e SearchLocationSuggestionRequestValidationError) ErrorName() string {
+	return "SearchLocationSuggestionRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e SearchLocationSuggestionRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sSearchLocationSuggestionRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = SearchLocationSuggestionRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = SearchLocationSuggestionRequestValidationError{}
+
+// Validate checks the field values on LocationInfo with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *LocationInfo) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on LocationInfo with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in LocationInfoMultiError, or
+// nil if none found.
+func (m *LocationInfo) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *LocationInfo) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for CityV1
+
+	// no validation rules for CityV1Name
+
+	// no validation rules for CityV2
+
+	// no validation rules for CityV2Name
+
+	// no validation rules for District
+
+	// no validation rules for DistrictName
+
+	// no validation rules for WardV1
+
+	// no validation rules for WardV1Name
+
+	// no validation rules for WardV2
+
+	// no validation rules for WardV2Name
+
+	if len(errors) > 0 {
+		return LocationInfoMultiError(errors)
+	}
+
+	return nil
+}
+
+// LocationInfoMultiError is an error wrapping multiple validation errors
+// returned by LocationInfo.ValidateAll() if the designated constraints aren't met.
+type LocationInfoMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m LocationInfoMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m LocationInfoMultiError) AllErrors() []error { return m }
+
+// LocationInfoValidationError is the validation error returned by
+// LocationInfo.Validate if the designated constraints aren't met.
+type LocationInfoValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e LocationInfoValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e LocationInfoValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e LocationInfoValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e LocationInfoValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e LocationInfoValidationError) ErrorName() string { return "LocationInfoValidationError" }
+
+// Error satisfies the builtin error interface
+func (e LocationInfoValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sLocationInfo.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = LocationInfoValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = LocationInfoValidationError{}
+
+// Validate checks the field values on SearchLocationSuggestionResponse with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, the first error encountered is returned, or nil if there are
+// no violations.
+func (m *SearchLocationSuggestionResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on SearchLocationSuggestionResponse with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, the result is a list of violation errors wrapped in
+// SearchLocationSuggestionResponseMultiError, or nil if none found.
+func (m *SearchLocationSuggestionResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *SearchLocationSuggestionResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	for idx, item := range m.GetLocation() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, SearchLocationSuggestionResponseValidationError{
+						field:  fmt.Sprintf("Location[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, SearchLocationSuggestionResponseValidationError{
+						field:  fmt.Sprintf("Location[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return SearchLocationSuggestionResponseValidationError{
+					field:  fmt.Sprintf("Location[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return SearchLocationSuggestionResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// SearchLocationSuggestionResponseMultiError is an error wrapping multiple
+// validation errors returned by
+// SearchLocationSuggestionResponse.ValidateAll() if the designated
+// constraints aren't met.
+type SearchLocationSuggestionResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m SearchLocationSuggestionResponseMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m SearchLocationSuggestionResponseMultiError) AllErrors() []error { return m }
+
+// SearchLocationSuggestionResponseValidationError is the validation error
+// returned by SearchLocationSuggestionResponse.Validate if the designated
+// constraints aren't met.
+type SearchLocationSuggestionResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e SearchLocationSuggestionResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e SearchLocationSuggestionResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e SearchLocationSuggestionResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e SearchLocationSuggestionResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e SearchLocationSuggestionResponseValidationError) ErrorName() string {
+	return "SearchLocationSuggestionResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e SearchLocationSuggestionResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sSearchLocationSuggestionResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = SearchLocationSuggestionResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = SearchLocationSuggestionResponseValidationError{}

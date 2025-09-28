@@ -9,6 +9,9 @@
       "name": "AccountService"
     },
     {
+      "name": "LocationService"
+    },
+    {
       "name": "EmailTemplateService"
     }
   ],
@@ -382,6 +385,66 @@
         ]
       }
     },
+    "/api/v1/get-location-mapping": {
+      "get": {
+        "operationId": "LocationService_GetLocationMapping",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetLocationMappingResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "cityV1",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "cityV2",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "district",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "wardV1",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "wardV2",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "isNew",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "tags": [
+          "LocationService"
+        ]
+      }
+    },
     "/api/v1/isFollowing": {
       "get": {
         "operationId": "AccountService_CheckFollowing",
@@ -447,6 +510,43 @@
         ],
         "tags": [
           "AccountService"
+        ]
+      }
+    },
+    "/api/v1/search-location-suggestion": {
+      "get": {
+        "operationId": "LocationService_SearchLocationSuggestion",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SearchLocationSuggestionResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "word",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "LocationService"
         ]
       }
     }
@@ -624,6 +724,49 @@
         }
       }
     },
+    "v1GetLocationMappingResponse": {
+      "type": "object",
+      "properties": {
+        "location": {
+          "$ref": "#/definitions/v1LocationInfo"
+        }
+      }
+    },
+    "v1LocationInfo": {
+      "type": "object",
+      "properties": {
+        "cityV1": {
+          "type": "string"
+        },
+        "cityV1Name": {
+          "type": "string"
+        },
+        "cityV2": {
+          "type": "string"
+        },
+        "cityV2Name": {
+          "type": "string"
+        },
+        "district": {
+          "type": "string"
+        },
+        "districtName": {
+          "type": "string"
+        },
+        "wardV1": {
+          "type": "string"
+        },
+        "wardV1Name": {
+          "type": "string"
+        },
+        "wardV2": {
+          "type": "string"
+        },
+        "wardV2Name": {
+          "type": "string"
+        }
+      }
+    },
     "v1LoginRequest": {
       "type": "object",
       "properties": {
@@ -643,6 +786,18 @@
         },
         "token": {
           "type": "string"
+        }
+      }
+    },
+    "v1SearchLocationSuggestionResponse": {
+      "type": "object",
+      "properties": {
+        "location": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1LocationInfo"
+          }
         }
       }
     },

@@ -727,14 +727,6 @@
     "v1GetLocationMappingResponse": {
       "type": "object",
       "properties": {
-        "location": {
-          "$ref": "#/definitions/v1LocationInfo"
-        }
-      }
-    },
-    "v1LocationInfo": {
-      "type": "object",
-      "properties": {
         "cityV1": {
           "type": "string"
         },
@@ -792,12 +784,35 @@
     "v1SearchLocationSuggestionResponse": {
       "type": "object",
       "properties": {
-        "location": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/v1LocationInfo"
-          }
+        "cityV1": {
+          "type": "string"
+        },
+        "cityV1Name": {
+          "type": "string"
+        },
+        "cityV2": {
+          "type": "string"
+        },
+        "cityV2Name": {
+          "type": "string"
+        },
+        "district": {
+          "type": "string"
+        },
+        "districtName": {
+          "type": "string"
+        },
+        "wardV1": {
+          "type": "string"
+        },
+        "wardV1Name": {
+          "type": "string"
+        },
+        "wardV2": {
+          "type": "string"
+        },
+        "wardV2Name": {
+          "type": "string"
         }
       }
     },
