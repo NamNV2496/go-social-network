@@ -1,27 +1,5 @@
 # This is a basic social network demo by Golang.
 
-
-
-
-
-
-
-- add region and ward to search
-- add trie build for search location
-- add CDC for new post
-- map reducing for postdata
-
-
-
-
-
-
-
-
-
-
-
-
 # 1. Technologies
 
     1. grpc - "google.golang.org/grpc"
@@ -37,6 +15,7 @@
     11. sms - "github.com/twilio/twilio-go"
     12. template - "html/template"
     13. DSA: Trie - for violent comment rule checking
+    13.1. DSA: Trie - for address auto suggestion (in user-service)
     14. Nginx: for load balancing
 
 ![alt text](docs/flow.png)
@@ -213,3 +192,11 @@ import template by id or json
 
 ![grafana9](docs/grafana9.png)
 </details>
+
+# What's next?
+
+- add region and ward to search
+- add trie build for search location
+- add CDC for new post
+- map reducing for postdata
+
