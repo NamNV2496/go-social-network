@@ -22,6 +22,7 @@ import (
 	"github.com/namnv2496/post-service/internal/repository/database"
 	"github.com/namnv2496/post-service/internal/repository/mq/producer"
 	"github.com/namnv2496/post-service/internal/service"
+	validation "github.com/namnv2496/post-service/internal/validator"
 	"go.uber.org/fx"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health"
@@ -72,6 +73,8 @@ func Invoke(invokers ...any) *fx.App {
 			fx.Annotate(service.NewPostService, fx.As(new(service.IPostService))),
 			fx.Annotate(service.NewCommentService, fx.As(new(service.ICommentService))),
 			fx.Annotate(service.NewLikeService, fx.As(new(service.ILikeService))),
+
+			fx.Annotate(validation.NewPostValidator, fx.As(new(validation.IPostValidator))),
 
 			fx.Annotate(pkg.NewTrie, fx.As(new(pkg.ITrie))),
 			// notification

@@ -26,6 +26,7 @@ type commentService struct {
 	commentRepository     repository.ICommentRepository
 	commentRuleRepository repository.ICommentRuleRepository
 	trie                  pkg.ITrie
+	trieRoot              *pkg.Trie
 }
 
 func NewCommentService(
@@ -155,12 +156,14 @@ func (c *commentService) UpdateCommentRule(ctx context.Context, req *entity.Upda
 }
 
 func (c *commentService) commentRuleCheck(ctx context.Context, req *entity.CommentRuleCheckRequest) (bool, string, error) {
-	// can cache this trie
-	trieRoot, err := c.buildRuleTrie(ctx, req)
-	if err != nil {
-		return false, "", err
+	if c.trieRoot == nil {
+		trieRoot, err := c.buildRuleTrie(ctx, req)
+		if err != nil {
+			return false, "", err
+		}
+		c.trieRoot = trieRoot
 	}
-	isViolent, violentWord := trieRoot.SearchSubstring(req.CommentText)
+	isViolent, violentWord := c.trieRoot.SearchSubstring(req.CommentText)
 	if isViolent {
 		return true, violentWord, nil
 	}

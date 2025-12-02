@@ -4,19 +4,20 @@
 
     1. grpc - "google.golang.org/grpc"
     2. goqu - "github.com/doug-martin/goqu/v9"
-    3. kafka - "github.com/IBM/sarama"
-    4. redis - "github.com/go-redis/redis/v8"
-    5. websocket - "github.com/gorilla/websocket"
-    6. gorm - "gorm.io/gorm" (post-service only)
+    3. gorm - "gorm.io/gorm" (post-service only)
+    4. kafka - "github.com/IBM/sarama"
+    5. redis - "github.com/go-redis/redis/v8"
+    6. websocket - "github.com/gorilla/websocket"
     7. Elastic search - "github.com/elastic/go-elasticsearch/v8"
     8. prometheus - "github.com/prometheus/client_golang/prometheus"
     9. grafana for monitoring
     10. email - "github.com/jordan-wright/email"
     11. sms - "github.com/twilio/twilio-go"
-    12. template - "html/template"
-    13. DSA: Trie - for violent comment rule checking
+    12. template - "html/template" for notification form
+    13. DSA: Trie - for violent comment rule checking (post-service)
     13.1. DSA: Trie - for address auto suggestion (in user-service)
     14. Nginx: for load balancing
+    15. Post validator - "github.com/go-playground/validator/v10"
 
 ![alt text](docs/flow.png)
 
