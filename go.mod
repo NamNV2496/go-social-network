@@ -2,7 +2,6 @@ module github.com/NamNV2496/go-built-gprc-output/golang/newsfeed_core/v1
 
 go 1.24.0
 
-toolchain go1.24.2
 
 require (
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.27.2
