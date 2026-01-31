@@ -28,8 +28,9 @@ func (c *LocationHanlder) GetLocationMapping(ctx context.Context, req *userv1.Ge
 
 func (c *LocationHanlder) SearchLocationSuggestion(ctx context.Context, req *userv1.SearchLocationSuggestionRequest) (*userv1.SearchLocationSuggestionResponse, error) {
 	result := c.trieService.SearchSuggestion(req.Word, req.Limit)
-	locations := make([]*userv1.LocationInfo, 0)
+	// result := c.trieService.SearchLocation(req.Word)
 
+	locations := make([]*userv1.LocationInfo, 0)
 	for _, location := range result {
 		locations = append(locations, &userv1.LocationInfo{
 			CityV1:       location.CityV1,

@@ -196,6 +196,16 @@ service AccountService {
 			get: "/api/v1/isFollowing"
 		};
     }
+    rpc GetLocationMapping(GetLocationMappingRequest) returns (GetLocationMappingResponse) {
+        option (google.api.http) = {
+			get: "/api/v1/get-location-mapping"
+		};
+    }
+    rpc SearchLocationSuggestion(SearchLocationSuggestionRequest) returns (SearchLocationSuggestionResponse) {
+        option (google.api.http) = {
+			get: "/api/v1/search-location-suggestion"
+		};
+    }
 }
 
 service LocationService {

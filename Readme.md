@@ -18,6 +18,7 @@
     13.1. DSA: Trie - for address auto suggestion (in user-service)
     14. Nginx: for load balancing
     15. Post validator - "github.com/go-playground/validator/v10"
+    16. Regex - "regexp"
 
 ![alt text](docs/flow.png)
 
@@ -155,6 +156,15 @@ if `baobq` posted a post. Only `namnv` will see it in his newsfeed `knm` will no
 
 ## 4.9 Notification
 
+## 4.10 Location searching
+
+Support search by ward and district (will support city in the future)
+
+![alt text](docs/search3.png)
+
+![alt text](docs/search2.png)
+
+
 <!-- ![alt text](docs/notification.png) -->
 
 # Monitoring
@@ -196,8 +206,6 @@ import template by id or json
 
 # What's next?
 
-- add region and ward to search
-- add trie build for search location
 - add CDC for new post
 - map reducing for postdata
 

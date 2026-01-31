@@ -3,6 +3,6 @@ auth:
 gateway:
   address: ":8080"
 grpc:
-  user_service_address: "0.0.0.0:5610"
+  user_service_address: "0.0.0.0:5619"
   post_service_address: "0.0.0.0:5611"
   newfeeds_service_address: "0.0.0.0:5612"

@@ -31,7 +31,7 @@ func Invoke(invokers ...any) *fx.App {
 		fx.StartTimeout(time.Second*10),
 		fx.StopTimeout(time.Second*10),
 		fx.Provide(
-			fx.Annotate(controller.NewGrpcHander, fx.As(new(userv1.AccountServiceServer))),
+			fx.Annotate(controller.NewAccountHander, fx.As(new(userv1.AccountServiceServer))),
 			fx.Annotate(controller.NewEmailTemplateHander, fx.As(new(userv1.EmailTemplateServiceServer))),
 			fx.Annotate(cache.NewRedisClient, fx.As(new(cache.Client))),
 			migrations.NewDatabase,
@@ -67,7 +67,7 @@ func startServer(
 	if value := os.Getenv("USER_URL"); value != "" {
 		userServiceAddr = value
 	} else {
-		userServiceAddr = "0.0.0.0:5610"
+		userServiceAddr = "0.0.0.0:5619"
 	}
 	fmt.Printf("start with port: %s\n", userServiceAddr)
 	config := gateway.NewServerConfig().
@@ -113,7 +113,7 @@ func startServer(
 // 	lc fx.Lifecycle,
 // 	grpcImpl userv1.AccountServiceServer,
 // ) {
-// 	lis, err := net.Listen("tcp", ":5610")
+// 	lis, err := net.Listen("tcp", ":5619")
 // 	if err != nil {
 // 		log.Fatalf("failed to listen: %v", err)
 // 	}
@@ -156,7 +156,7 @@ func startServer(
 // 				mux := runtime.NewServeMux()
 
 // 				// Establish a connection to the gRPC server
-// 				conn, err := grpc.NewClient(":5610", grpc.WithInsecure())
+// 				conn, err := grpc.NewClient(":5619", grpc.WithInsecure())
 // 				if err != nil {
 // 					log.Fatalf("failed to connect to gRPC server: %v", err)
 // 				}

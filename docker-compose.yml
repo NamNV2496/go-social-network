@@ -123,7 +123,7 @@ services:
         networks:
             - social
         environment:
-            - USER_URL=user:5610
+            - USER_URL=user:5619
             - POST_URL=post:5611
             - NEWSFEED_URL=newsfeed:5612
 
@@ -146,7 +146,7 @@ services:
             - DATABASE_URL=root:root@tcp(mysql:3306)/network?parseTime=true
             - KAFKA_BROKER=kafka:29092
             - REDIS_URL=redis:6379 # Add this line to point to the Redis service
-            - USER_URL=user:5610
+            - USER_URL=user:5619
             - NEWSFEED_URL=newsfeed:5612
         networks:
             - social
@@ -177,10 +177,10 @@ services:
             context: .
             dockerfile: user-service/Dockerfile
         ports:
-            - "5610:5610"
+            - "5619:5619"
         environment:
             - DATABASE_URL=root:root@tcp(mysql:3306)/network?parseTime=true
-            - USER_URL=user:5610
+            - USER_URL=user:5619
             - REDIS_URL=redis:6379
             - ELASTIC_SEARCH_URL=http://elasticsearch:9200
             - ELASTICSEARCH_USERNAME=elastic

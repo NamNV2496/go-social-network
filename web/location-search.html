@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Location Search</title>
+    <link rel="stylesheet" href="css/location-search.css" type="text/css">
+</head>
+<body>
+    <button id="logout" type="button">Logout</button>
+    
+    <div class="menu-bar">
+        <button onclick="window.location.href = 'newsfeed.html'">HOME</button>
+        <button onclick="window.location.href = 'messenger.html'">Messenger</button>
+        <button onclick="window.location.href = 'search.html'">Find friends</button>
+        <button onclick="window.location.href = 'location-search.html'">Find location</button>
+        <button onclick="goToProfile()">My Profile</button>
+    </div>
+
+    <div class="location-search-container">
+        <h1>Location Search</h1>
+        
+        <div class="search-box">
+            <input 
+                type="text" 
+                id="locationInput" 
+                placeholder="Enter location name (city, district, ward...)" 
+                onkeyup="searchLocation()"
+            >
+            <label for="limitInput">Limit results:</label>
+            <input 
+                type="number" 
+                id="limitInput" 
+                value="10" 
+                min="1" 
+                max="100"
+                onchange="searchLocation()"
+            >
+        </div>
+
+        <div id="results" class="results-container"></div>
+    </div>
+
+    <script>
+        const current_user = sessionStorage.getItem('userName');  
+        const token = sessionStorage.getItem('token');
+
+        if (!token || !current_user) {
+            alert('Token not found in session storage');
+            window.location.href = "index.html";
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            loadCurrentUser();
+        });
+
+        function goToProfile() {
+            const current_user = sessionStorage.getItem('userName');
+            if (current_user) {
+                window.location.href = `wall.html?userId=${current_user}`;
+            } else {
+                console.error('User name not found in session storage.');
+            }
+        }
+
+        function loadCurrentUser() {
+            const userElement = document.getElementById('logout');
+            userElement.textContent = "Logout: " + current_user;
+            userElement.addEventListener('click', function() {
+                sessionStorage.removeItem('userName');
+                sessionStorage.removeItem('token');
+                window.location.href = "index.html";
+            });
+        }
+
+        async function searchLocation() {
+            const locationInput = document.getElementById('locationInput').value.trim();
+            const limitInput = document.getElementById('limitInput').value;
+
+            if (!locationInput) {
+                document.getElementById('results').innerHTML = '';
+                return;
+            }
+
+            try {
+                const response = await fetch(
+                    `http://localhost:8080/api/v1/search-location-suggestion?word=${encodeURIComponent(locationInput)}&limit=${limitInput}`,
+                    {
+                        method: 'GET',
+                        headers: {
+                            'accept': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        }
+                    }
+                );
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                displayLocationResults(data.location || []);
+            } catch (error) {
+                console.error('Error searching locations:', error);
+                document.getElementById('results').innerHTML = '<p class="error">Error searching locations. Please try again.</p>';
+            }
+        }
+
+        function displayLocationResults(locations) {
+            const resultsDiv = document.getElementById('results');
+
+            if (!locations || locations.length === 0) {
+                resultsDiv.innerHTML = '<p class="no-results">No locations found. Try a different search term.</p>';
+                return;
+            }
+
+            resultsDiv.innerHTML = '';
+
+            locations.forEach((location, index) => {
+                const locationElement = document.createElement('div');
+                locationElement.className = 'location-card';
+
+                let locationText = '';
+                const parts = [];
+
+                if (location.wardV1Name) {
+                    parts.push(location.wardV1Name);
+                }
+                if (location.districtName) {
+                    parts.push(location.districtName);
+                }
+                if (location.cityV1Name) {
+                    parts.push(location.cityV1Name);
+                }
+
+                locationText = parts.join(', ');
+
+                const html = `
+                    <div class="location-header">
+                        <h3>${locationText || 'Unknown Location'}</h3>
+                    </div>
+                    <div class="location-details">
+                        <p><strong>City V1:</strong> ${location.cityV1 || 'N/A'} (${location.cityV1Name || 'N/A'})</p>
+                        <p><strong>City V2:</strong> ${location.cityV2 || 'N/A'} (${location.cityV2Name || 'N/A'})</p>
+                        <p><strong>District:</strong> ${location.district || 'N/A'} (${location.districtName || 'N/A'})</p>
+                        <p><strong>Ward V1:</strong> ${location.wardV1 || 'N/A'} (${location.wardV1Name || 'N/A'})</p>
+                        <p><strong>Ward V2:</strong> ${location.wardV2 || 'N/A'} (${location.wardV2Name || 'N/A'})</p>
+                    </div>
+                    <button class="select-btn" onclick="selectLocation('${locationText}')">Select Location</button>
+                `;
+
+                locationElement.innerHTML = html;
+                resultsDiv.appendChild(locationElement);
+            });
+        }
+
+        function selectLocation(location) {
+            alert(`Selected location: ${location}`);
+            // You can add logic here to store the selected location or perform other actions
+        }
+    </script>
+</body>
+</html>

@@ -20,8 +20,8 @@ func Execute() error {
 		},
 	}
 
-	// Default port is 5610
-	root.Flags().IntVar(&port, "port", 5610, "the server port")
+	// Default port is 5619
+	root.Flags().IntVar(&port, "port", 5619, "the server port")
 
 	root.AddCommand(createMappingIndex)
 	root.AddCommand(migrateDataCmd)

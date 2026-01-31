@@ -48,7 +48,7 @@ func NewServer(
 // 	if value := os.Getenv("USER_URL"); value != "" {
 // 		userServiceAddr = value
 // 	} else {
-// 		userServiceAddr = "0.0.0.0:5610"
+// 		userServiceAddr = "0.0.0.0:5619"
 // 	}
 
 // 	conn, err := grpc.NewClient(userServiceAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))

@@ -7,7 +7,7 @@ generate:
 wire:
 	wire ./internal/wiring/
 	
-PORT ?= 5610
+PORT ?= 5619
 
 run:
 	go run main.go --port $(PORT)
