@@ -102,6 +102,7 @@ func mapLocationInfo(records [][]string) ([]*entity.LocationInfo, *entity.Locati
 		if location.CityV1Name != "" {
 			normalizedCityV1Name := normalizeCity(location.CityV1Name)
 			index.NormalizedCityName[normalizeKey(normalizedCityV1Name)] = append(index.NormalizedCityName[normalizeKey(normalizedCityV1Name)], location)
+			index.NormalizedName[normalizeKey(normalizedCityV1Name)] = append(index.NormalizedName[normalizeKey(normalizedCityV1Name)], location)
 		}
 		for _, variant := range variants {
 			normalizedVariant := normalizeKey(variant)
@@ -221,6 +222,19 @@ func (_self *Location) extract(query string) []*entity.MatchResult {
 				if score >= bestScore {
 					for _, loc := range locs {
 						results = append(results, &entity.MatchResult{Location: loc, MatchedText: ngram, Score: score, MatchType: "dictionary"})
+					}
+				}
+			}
+
+			// 1b. Try matching abbreviation of the ngram
+			abbrev := extractAbbreviation(ngram)
+			if abbrev != "" && abbrev != ngram {
+				if locs, found := _self.dictionaryMatcher.Match(abbrev, "default"); found && len(locs) > 0 {
+					score := 1.0
+					if score >= bestScore {
+						for _, loc := range locs {
+							results = append(results, &entity.MatchResult{Location: loc, MatchedText: ngram, Score: score, MatchType: "dictionary"})
+						}
 					}
 				}
 			}

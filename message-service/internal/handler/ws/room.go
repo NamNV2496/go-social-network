@@ -1,4 +1,4 @@
-package logic
+package ws
 
 type Room struct {
 	ID      string             `json:"id"`

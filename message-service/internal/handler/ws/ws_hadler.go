@@ -1,4 +1,4 @@
-package wsHandler
+package ws
 
 import (
 	"fmt"
@@ -7,14 +7,13 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/namnv2496/message-service/internal/logic"
 )
 
 type Handler struct {
-	hub *logic.Hub
+	hub *Hub
 }
 
-func NewHandler(h *logic.Hub) *Handler {
+func NewHandler(h *Hub) *Handler {
 	return &Handler{
 		hub: h,
 	}
@@ -38,10 +37,10 @@ func (h *Handler) CreateRoom(c *gin.Context) {
 	if _, ok := h.hub.Rooms[roomRequest.RoomId]; ok {
 		return
 	}
-	h.hub.Rooms[roomRequest.RoomId] = &logic.Room{
+	h.hub.Rooms[roomRequest.RoomId] = &Room{
 		ID:      roomRequest.RoomId,
 		Name:    roomRequest.RoomName,
-		Clients: make(map[string]*logic.Client),
+		Clients: make(map[string]*Client),
 		LastMsg: fmt.Sprintf("Room was created at %v", time.Now()),
 		Public:  roomRequest.Public,
 		Members: roomRequest.Member,
@@ -49,7 +48,7 @@ func (h *Handler) CreateRoom(c *gin.Context) {
 }
 
 func (h *Handler) JoinRoom(c *gin.Context) {
-	newClient, err := logic.CreateNewClient(c)
+	newClient, err := CreateNewClient(c)
 	if err != nil {
 		log.Println("Error when create new client")
 		return

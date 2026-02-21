@@ -1,4 +1,4 @@
-package logic
+package ws
 
 type Message struct {
 	Content  string `json:"content"`
