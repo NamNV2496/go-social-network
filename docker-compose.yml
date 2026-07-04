@@ -63,7 +63,7 @@ services:
     grafana:
         image: grafana/grafana
         ports:
-            - "3000:3000"
+            - "3100:3000"
         container_name: grafana
         restart: unless-stopped
         networks:
@@ -106,114 +106,236 @@ services:
     #         - "--path.sysfs=/host/sys"
     #         - "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
 
-    http:
-        build:
-            context: .
-            dockerfile: http_gateway/Dockerfile
-        ports:
-            - "8080:8080"
-        depends_on:
-            - newsfeed
-            - post
-            - user
-            - message
-            - mysql
-            - redis
-            - kafka
-        networks:
-            - social
+    langfuse-postgres:
+        image: postgres:16-alpine
+        container_name: langfuse-postgres
         environment:
-            - USER_URL=user:5619
-            - POST_URL=post:5611
-            - NEWSFEED_URL=newsfeed:5612
-
-    message:
-        build:
-            context: .
-            dockerfile: message-service/Dockerfile
+            - POSTGRES_DB=langfuse
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=postgres
+        ports:
+            - "5432:5432"
         networks:
             - social
-        ports:
-            - "8081:8081"
-
-    newsfeed:
-        build:
-            context: .
-            dockerfile: newsfeed-service/Dockerfile
-        ports:
-            - "5612:5612"
-        environment:
-            - DATABASE_URL=root:root@tcp(mysql:3306)/network?parseTime=true
-            - KAFKA_BROKER=kafka:29092
-            - REDIS_URL=redis:6379 # Add this line to point to the Redis service
-            - USER_URL=user:5619
-            - NEWSFEED_URL=newsfeed:5612
-        networks:
-            - social
-        depends_on:
-            - mysql
-            - kafka
-            - redis
-
-    post:
-        build:
-            context: .
-            dockerfile: post-service/Dockerfile
-        ports:
-            - "5611:5611"
-        environment:
-            - DATABASE_URL=root:root@tcp(mysql:3306)/network?parseTime=true
-            - KAFKA_BROKER=kafka:29092
-            - POST_URL=post:5611
-        networks:
-            - social
-        depends_on:
-            - mysql
-            - kafka
-            - redis
-
-    user:
-        build:
-            context: .
-            dockerfile: user-service/Dockerfile
-        ports:
-            - "5619:5619"
-        environment:
-            - DATABASE_URL=root:root@tcp(mysql:3306)/network?parseTime=true
-            - USER_URL=user:5619
-            - REDIS_URL=redis:6379
-            - ELASTIC_SEARCH_URL=http://elasticsearch:9200
-            - ELASTICSEARCH_USERNAME=elastic
-            - ELASTICSEARCH_PASSWORD=admin
-        depends_on:
-            - mysql
-            - redis
-            - elasticsearch
-        networks:
-            - social
-
-    user-service-migrate:
-        build:
-            context: .
-            dockerfile: user-service/Dockerfile
-        command: sh -c "/app/user-service migrate"
-        # or command: ["/app/user-service", "migrate"]
-        environment:
-            - DATABASE_URL=root:root@tcp(mysql:3306)/network?parseTime=true
-        depends_on:
-            - mysql
-            - redis
-            - elasticsearch
-        networks:
-            - social
-        
-    frontend:
-        image: nginx:alpine
-        container_name: frontend
-        ports:
-            - "3001:80"
         volumes:
-            - ./web:/usr/share/nginx/html:ro
+            - langfuse-postgres-data:/var/lib/postgresql/data
+
+    langfuse-clickhouse:
+        image: clickhouse/clickhouse-server:24.8
+        container_name: langfuse-clickhouse
+        environment:
+            - CLICKHOUSE_DB=default
+            - CLICKHOUSE_USER=default
+            - CLICKHOUSE_PASSWORD=clickhouse
+        ports:
+            - "8123:8123"
+            - "9000:9000"
+        networks:
+            - social
+        volumes:
+            - langfuse-clickhouse-data:/var/lib/clickhouse
+
+    langfuse-minio:
+        image: minio/minio:RELEASE.2024-10-02T17-50-41Z
+        container_name: langfuse-minio
+        command: server /data --console-address ":9001"
+        environment:
+            - MINIO_ROOT_USER=minio
+            - MINIO_ROOT_PASSWORD=minio123
+        ports:
+            - "9001:9001"
+            - "9002:9000"
+        networks:
+            - social
+        volumes:
+            - langfuse-minio-data:/data
+
+    langfuse-worker:
+        image: langfuse/langfuse-worker:latest
+        container_name: langfuse-worker
+        depends_on:
+            - langfuse-postgres
+            - langfuse-clickhouse
+            - langfuse-minio
+        networks:
+            - social
+        environment:
+            - DATABASE_URL=postgresql://postgres:postgres@langfuse-postgres:5432/langfuse
+            - CLICKHOUSE_CLUSTER_ENABLED=false
+            - CLICKHOUSE_URL=http://langfuse-clickhouse:8123
+            - CLICKHOUSE_MIGRATION_URL=clickhouse://langfuse-clickhouse:9000
+            - CLICKHOUSE_USER=default
+            - CLICKHOUSE_PASSWORD=clickhouse
+            - REDIS_HOST=redis
+            - REDIS_PORT=6379
+            - SALT=change-me
+            - NEXTAUTH_SECRET=Optqq_opuZ7Zc4tR9NZwEB8rb9IOqbAyO99hNiiF9jA
+            - AUTH_SECRET=nIsoyWSgX00UrmDrTcNexFW0qj4pBu2Go5uPDNedc1k
+            - ENCRYPTION_KEY=5d40991a51f84e0e0c48fc388dabd81f8aa6b5c3597bb03b887b0f1a77e00ca9
+            - LANGFUSE_INIT_ORG_ID=org_123
+            - LANGFUSE_INIT_ORG_NAME=Default Org
+            - LANGFUSE_INIT_PROJECT_ID=proj_123
+            - LANGFUSE_INIT_PROJECT_NAME=Default Project
+            - LANGFUSE_INIT_PROJECT_PUBLIC_KEY=pk-lf-change-me
+            - LANGFUSE_INIT_PROJECT_SECRET_KEY=sk-lf-change-me
+            - LANGFUSE_S3_EVENT_UPLOAD_BUCKET=langfuse
+            - LANGFUSE_S3_EVENT_UPLOAD_REGION=us-east-1
+            - LANGFUSE_S3_EVENT_UPLOAD_ACCESS_KEY_ID=minio
+            - LANGFUSE_S3_EVENT_UPLOAD_SECRET_ACCESS_KEY=minio123
+            - LANGFUSE_S3_EVENT_UPLOAD_ENDPOINT=http://langfuse-minio:9000
+            - LANGFUSE_S3_EVENT_UPLOAD_FORCE_PATH_STYLE=true
+
+    langfuse-web:
+        image: langfuse/langfuse:latest
+        container_name: langfuse-web
+        ports:
+            - "3000:3000"
+        depends_on:
+            - langfuse-postgres
+            - langfuse-clickhouse
+            - langfuse-minio
+            - langfuse-worker
+        networks:
+            - social
+        environment:
+            - DATABASE_URL=postgresql://postgres:postgres@langfuse-postgres:5432/langfuse
+            - CLICKHOUSE_CLUSTER_ENABLED=false
+            - CLICKHOUSE_URL=http://langfuse-clickhouse:8123
+            - CLICKHOUSE_MIGRATION_URL=clickhouse://langfuse-clickhouse:9000
+            - CLICKHOUSE_USER=default
+            - CLICKHOUSE_PASSWORD=clickhouse
+            - REDIS_HOST=redis
+            - REDIS_PORT=6379
+            - NEXTAUTH_URL=http://localhost:3000
+            - NEXTAUTH_SECRET=Optqq_opuZ7Zc4tR9NZwEB8rb9IOqbAyO99hNiiF9jA
+            - AUTH_SECRET=nIsoyWSgX00UrmDrTcNexFW0qj4pBu2Go5uPDNedc1k
+            - SALT=change-me
+            - ENCRYPTION_KEY=5d40991a51f84e0e0c48fc388dabd81f8aa6b5c3597bb03b887b0f1a77e00ca9
+            - MINIO_ROOT_USER=minio
+            - MINIO_ROOT_PASSWORD=minio123
+            - MINIO_ENDPOINT=langfuse-minio:9000
+            - MINIO_SSL=false
+            - LANGFUSE_S3_EVENT_UPLOAD_BUCKET=langfuse
+            - LANGFUSE_S3_EVENT_UPLOAD_REGION=us-east-1
+            - LANGFUSE_S3_EVENT_UPLOAD_ACCESS_KEY_ID=minio
+            - LANGFUSE_S3_EVENT_UPLOAD_SECRET_ACCESS_KEY=minio123
+            - LANGFUSE_S3_EVENT_UPLOAD_ENDPOINT=http://langfuse-minio:9000
+            - LANGFUSE_S3_EVENT_UPLOAD_FORCE_PATH_STYLE=true
+            - LANGFUSE_INIT_ORG_ID=org_123
+            - LANGFUSE_INIT_ORG_NAME=Default Org
+            - LANGFUSE_INIT_PROJECT_ID=proj_123
+            - LANGFUSE_INIT_PROJECT_NAME=Default Project
+            - LANGFUSE_INIT_PROJECT_PUBLIC_KEY=pk-lf-change-me
+            - LANGFUSE_INIT_PROJECT_SECRET_KEY=sk-lf-change-me
+
+    # http:
+    #     build:
+    #         context: .
+    #         dockerfile: http_gateway/Dockerfile
+    #     ports:
+    #         - "8080:8080"
+    #     depends_on:
+    #         - newsfeed
+    #         - post
+    #         - user
+    #         - message
+    #         - mysql
+    #         - redis
+    #         - kafka
+    #     networks:
+    #         - social
+    #     environment:
+    #         - USER_URL=user:5619
+    #         - POST_URL=post:5611
+    #         - NEWSFEED_URL=newsfeed:5612
+
+    # message:
+    #     build:
+    #         context: .
+    #         dockerfile: message-service/Dockerfile
+    #     networks:
+    #         - social
+    #     ports:
+    #         - "8081:8081"
+
+    # newsfeed:
+    #     build:
+    #         context: .
+    #         dockerfile: newsfeed-service/Dockerfile
+    #     ports:
+    #         - "5612:5612"
+    #     environment:
+    #         - DATABASE_URL=root:root@tcp(mysql:3306)/network?parseTime=true
+    #         - KAFKA_BROKER=kafka:29092
+    #         - REDIS_URL=redis:6379 # Add this line to point to the Redis service
+    #         - USER_URL=user:5619
+    #         - NEWSFEED_URL=newsfeed:5612
+    #     networks:
+    #         - social
+    #     depends_on:
+    #         - mysql
+    #         - kafka
+    #         - redis
+
+    # post:
+    #     build:
+    #         context: .
+    #         dockerfile: post-service/Dockerfile
+    #     ports:
+    #         - "5611:5611"
+    #     environment:
+    #         - DATABASE_URL=root:root@tcp(mysql:3306)/network?parseTime=true
+    #         - KAFKA_BROKER=kafka:29092
+    #         - POST_URL=post:5611
+    #     networks:
+    #         - social
+    #     depends_on:
+    #         - mysql
+    #         - kafka
+    #         - redis
+
+    # user:
+    #     build:
+    #         context: .
+    #         dockerfile: user-service/Dockerfile
+    #     ports:
+    #         - "5619:5619"
+    #     environment:
+    #         - DATABASE_URL=root:root@tcp(mysql:3306)/network?parseTime=true
+    #         - USER_URL=user:5619
+    #         - REDIS_URL=redis:6379
+    #         - ELASTIC_SEARCH_URL=http://elasticsearch:9200
+    #         - ELASTICSEARCH_USERNAME=elastic
+    #         - ELASTICSEARCH_PASSWORD=admin
+    #     depends_on:
+    #         - mysql
+    #         - redis
+    #         - elasticsearch
+    #     networks:
+    #         - social
+
+    # user-service-migrate:
+    #     build:
+    #         context: .
+    #         dockerfile: user-service/Dockerfile
+    #     command: sh -c "/app/user-service migrate"
+    #     # or command: ["/app/user-service", "migrate"]
+    #     environment:
+    #         - DATABASE_URL=root:root@tcp(mysql:3306)/network?parseTime=true
+    #     depends_on:
+    #         - mysql
+    #         - redis
+    #         - elasticsearch
+    #     networks:
+    #         - social
+        
+    # frontend:
+    #     image: nginx:alpine
+    #     container_name: frontend
+    #     ports:
+    #         - "3001:80"
+    #     volumes:
+    #         - ./web:/usr/share/nginx/html:ro
 
 volumes:
     esdata:
@@ -221,6 +343,12 @@ volumes:
     grafana-data: # Added volume for Grafana
         driver: local
     prometheus:
+        driver: local
+    langfuse-postgres-data:
+        driver: local
+    langfuse-clickhouse-data:
+        driver: local
+    langfuse-minio-data:
         driver: local
 
 networks:

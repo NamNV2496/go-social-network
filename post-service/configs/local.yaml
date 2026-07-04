@@ -15,4 +15,25 @@ database:
 logger:
   level: debug
 
+comment_rule:
+  mode: ai # options: trie, ai
+  ai:
+    enabled: true
+    endpoint: "http://localhost:1234/v1/chat/completions"
+    model: "qwen/qwen3-vl-4b"
+    api_key: ""
+    project_name: "test_project"
+    prompt_name: "test_prompt"
+  langfuse:
+    enabled: true
+    endpoint: "http://localhost:3000"
+    public_key: "pk-lf-76a7e93b-ef39-47b6-9c8c-2224c6a60c77"
+    secret_key: "sk-lf-3190eec3-32f7-47f4-91ca-41fd7a338a6e"
+    trace_name: "comment_rule_ai_check"
+  langfuse_trace:
+    endpoint: "http://localhost:3000"
+    public_key: "pk-lf-76a7e93b-ef39-47b6-9c8c-2224c6a60c77"
+    secret_key: "sk-lf-3190eec3-32f7-47f4-91ca-41fd7a338a6e"
+    trace_name: "comment_rule_ai_check"
+
 

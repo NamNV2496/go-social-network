@@ -19,6 +19,7 @@
     14. Nginx: for load balancing
     15. Post validator - "github.com/go-playground/validator/v10"
     16. Regex - "regexp"
+    17. Langfuse
 
 ![alt text](docs/flow.png)
 
@@ -32,6 +33,7 @@
     4. Access grafana: [http://localhost:3000/login](http://localhost:3000/login) (user: admin - password: admin)
     5. Access `localhost:3001` for web
     6. Access `localhost:3001/comment_rule.html` for comment-rule
+    7. Access `http://localhost:3000/` for langfuse
 
 ## Run on Local
 
@@ -208,4 +210,46 @@ import template by id or json
 
 - add CDC for new post
 - map reducing for postdata
+
+## Langfuse API keys (Public / Secret)
+
+If you run Langfuse locally (docker-compose) you'll need a project Public Key (PK) and Secret Key (SK) so the services can upload traces.
+
+Quick steps to get PK/SK:
+
+1. Open the Langfuse UI in your browser: http://localhost:3000
+2. Sign in (or create the initial admin user if you haven't).
+3. Go to your **Project** (top-left), then **Settings** → **API keys** (or **Project Settings** → **API Keys**).
+4. Create a new API key — the UI will show the **Public Key** and **Secret Key**. Copy both immediately (the secret is shown once).
+
+Where to set them
+
+- In the service config file: set under `comment_rule.langfuse` and `comment_rule.langfuse_trace` in `post-service/configs/local.yaml`.
+
+Example `local.yaml` snippet:
+
+```yaml
+comment_rule:
+    langfuse:
+        enabled: true
+        endpoint: http://localhost:3000
+        public_key: pk-xxxxxxxx
+        secret_key: sk-xxxxxxxx
+    langfuse_trace:
+        endpoint: http://localhost:3000
+        public_key: pk-xxxxxxxx
+        secret_key: sk-xxxxxxxx
+        trace_name: comment_rule_ai_check
+        verbose_dump: true
+```
+
+- Or provide via docker-compose/service env vars (example already present for Langfuse services):
+
+```yaml
+environment:
+    - LANGFUSE_INIT_PROJECT_PUBLIC_KEY=pk-xxxxxxxx
+    - LANGFUSE_INIT_PROJECT_SECRET_KEY=sk-xxxxxxxx
+```
+
+Note: keep the Secret Key private; do not check it into source control.
 

@@ -10,7 +10,6 @@ import (
 
 	"github.com/hashicorp/go-uuid"
 	"github.com/namnv2496/post-service/internal/domain"
-	"github.com/namnv2496/post-service/internal/entity"
 	postv1 "github.com/namnv2496/post-service/internal/handler/generated/post_core/v1"
 	"github.com/namnv2496/post-service/internal/pkg"
 	"github.com/namnv2496/post-service/internal/repository"
@@ -75,17 +74,17 @@ func (p *postService) AddPost(
 	}
 
 	// Create notification: best practice is to create notification to kafka
-	if err := p.notiClient.Notify(ctx, &entity.NotifyRequest{
-		UserId:      req.Post.UserId,
-		Application: "post",
-		Id:          1,
-		Data: map[string]string{
-			"user":      "namnv",
-			"following": "knm",
-		},
-	}); err != nil {
-		log.Println("Notification err: ", err)
-	}
+	// if err := p.notiClient.Notify(ctx, &entity.NotifyRequest{
+	// 	UserId:      req.Post.UserId,
+	// 	Application: "post",
+	// 	Id:          1,
+	// 	Data: map[string]string{
+	// 		"user":      "namnv",
+	// 		"following": "knm",
+	// 	},
+	// }); err != nil {
+	// 	log.Println("Notification err: ", err)
+	// }
 	return &postv1.CreatePostResponse{
 		PostId: uint64(id),
 	}, nil

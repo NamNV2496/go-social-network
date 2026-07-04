@@ -1,0 +1,10 @@
+clickhouse:
+  image: clickhouse/clickhouse-server:24.8
+  command: >
+    bash -c '
+      cat > /etc/clickhouse-server/config.d/langfuse.xml <<EOF
+      ...
+      EOF
+      &&
+      /entrypoint.sh
+    '

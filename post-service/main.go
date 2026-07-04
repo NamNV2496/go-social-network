@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net"
@@ -17,12 +18,14 @@ import (
 	"github.com/namnv2496/post-service/internal/controller"
 	postv1 "github.com/namnv2496/post-service/internal/handler/generated/post_core/v1"
 	"github.com/namnv2496/post-service/internal/pkg"
+	pkgLangfuse "github.com/namnv2496/post-service/internal/pkg/langfuse"
 	"github.com/namnv2496/post-service/internal/pkg/metric"
 	"github.com/namnv2496/post-service/internal/repository"
 	"github.com/namnv2496/post-service/internal/repository/database"
 	"github.com/namnv2496/post-service/internal/repository/mq/producer"
 	"github.com/namnv2496/post-service/internal/service"
 	validation "github.com/namnv2496/post-service/internal/validator"
+	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
 	"go.uber.org/fx"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health"
@@ -51,6 +54,21 @@ func execute() error {
 	return root.Execute()
 }
 
+func NewLangfuseClient(cfg configs.Config) *pkgLangfuse.Client {
+	return pkgLangfuse.NewClient(cfg.CommentRule)
+}
+
+func registerLangfuseShutdown(lc fx.Lifecycle, client *pkgLangfuse.Client) {
+	if client == nil {
+		return
+	}
+	lc.Append(fx.Hook{
+		OnStop: func(ctx context.Context) error {
+			return client.Shutdown(ctx)
+		},
+	})
+}
+
 func Invoke(invokers ...any) *fx.App {
 	conf, _ := configs.NewConfig()
 	log.Printf("[config]: %+v", conf)
@@ -62,6 +80,7 @@ func Invoke(invokers ...any) *fx.App {
 			// fx.Annotate(database.NewDatabaseConnection, fx.As(new(*gorm.DB))),
 			database.NewDatabaseConnection,
 			fx.Annotate(producer.NewClient, fx.As(new(producer.Client))),
+			NewLangfuseClient,
 
 			fx.Annotate(repository.NewLikeRepository, fx.As(new(repository.ILikeRepository))),
 			fx.Annotate(repository.NewLikeCountRepository, fx.As(new(repository.ILikeCountRepository))),
@@ -85,6 +104,7 @@ func Invoke(invokers ...any) *fx.App {
 		fx.Supply(
 			conf,
 		),
+		fx.Invoke(registerLangfuseShutdown),
 		fx.Invoke(invokers...),
 	)
 	return app
@@ -110,6 +130,7 @@ func startServer(
 
 	metric.InitPrometheus()
 	var opts = []grpc.ServerOption{
+		grpc.StatsHandler(otelgrpc.NewServerHandler()),
 		grpc.ChainUnaryInterceptor(
 			grpc_prometheus.UnaryServerInterceptor,
 			validator.UnaryServerInterceptor(),
