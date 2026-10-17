@@ -159,31 +159,8 @@ services:
             - langfuse-minio
         networks:
             - social
-        environment:
-            - DATABASE_URL=postgresql://postgres:postgres@langfuse-postgres:5432/langfuse
-            - CLICKHOUSE_CLUSTER_ENABLED=false
-            - CLICKHOUSE_URL=http://langfuse-clickhouse:8123
-            - CLICKHOUSE_MIGRATION_URL=clickhouse://langfuse-clickhouse:9000
-            - CLICKHOUSE_USER=default
-            - CLICKHOUSE_PASSWORD=clickhouse
-            - REDIS_HOST=redis
-            - REDIS_PORT=6379
-            - SALT=change-me
-            - NEXTAUTH_SECRET=Optqq_opuZ7Zc4tR9NZwEB8rb9IOqbAyO99hNiiF9jA
-            - AUTH_SECRET=nIsoyWSgX00UrmDrTcNexFW0qj4pBu2Go5uPDNedc1k
-            - ENCRYPTION_KEY=5d40991a51f84e0e0c48fc388dabd81f8aa6b5c3597bb03b887b0f1a77e00ca9
-            - LANGFUSE_INIT_ORG_ID=org_123
-            - LANGFUSE_INIT_ORG_NAME=Default Org
-            - LANGFUSE_INIT_PROJECT_ID=proj_123
-            - LANGFUSE_INIT_PROJECT_NAME=Default Project
-            - LANGFUSE_INIT_PROJECT_PUBLIC_KEY=pk-lf-change-me
-            - LANGFUSE_INIT_PROJECT_SECRET_KEY=sk-lf-change-me
-            - LANGFUSE_S3_EVENT_UPLOAD_BUCKET=langfuse
-            - LANGFUSE_S3_EVENT_UPLOAD_REGION=us-east-1
-            - LANGFUSE_S3_EVENT_UPLOAD_ACCESS_KEY_ID=minio
-            - LANGFUSE_S3_EVENT_UPLOAD_SECRET_ACCESS_KEY=minio123
-            - LANGFUSE_S3_EVENT_UPLOAD_ENDPOINT=http://langfuse-minio:9000
-            - LANGFUSE_S3_EVENT_UPLOAD_FORCE_PATH_STYLE=true
+        env_file:
+            - ./.env.langfuse
 
     langfuse-web:
         image: langfuse/langfuse:latest
@@ -197,36 +174,8 @@ services:
             - langfuse-worker
         networks:
             - social
-        environment:
-            - DATABASE_URL=postgresql://postgres:postgres@langfuse-postgres:5432/langfuse
-            - CLICKHOUSE_CLUSTER_ENABLED=false
-            - CLICKHOUSE_URL=http://langfuse-clickhouse:8123
-            - CLICKHOUSE_MIGRATION_URL=clickhouse://langfuse-clickhouse:9000
-            - CLICKHOUSE_USER=default
-            - CLICKHOUSE_PASSWORD=clickhouse
-            - REDIS_HOST=redis
-            - REDIS_PORT=6379
-            - NEXTAUTH_URL=http://localhost:3000
-            - NEXTAUTH_SECRET=Optqq_opuZ7Zc4tR9NZwEB8rb9IOqbAyO99hNiiF9jA
-            - AUTH_SECRET=nIsoyWSgX00UrmDrTcNexFW0qj4pBu2Go5uPDNedc1k
-            - SALT=change-me
-            - ENCRYPTION_KEY=5d40991a51f84e0e0c48fc388dabd81f8aa6b5c3597bb03b887b0f1a77e00ca9
-            - MINIO_ROOT_USER=minio
-            - MINIO_ROOT_PASSWORD=minio123
-            - MINIO_ENDPOINT=langfuse-minio:9000
-            - MINIO_SSL=false
-            - LANGFUSE_S3_EVENT_UPLOAD_BUCKET=langfuse
-            - LANGFUSE_S3_EVENT_UPLOAD_REGION=us-east-1
-            - LANGFUSE_S3_EVENT_UPLOAD_ACCESS_KEY_ID=minio
-            - LANGFUSE_S3_EVENT_UPLOAD_SECRET_ACCESS_KEY=minio123
-            - LANGFUSE_S3_EVENT_UPLOAD_ENDPOINT=http://langfuse-minio:9000
-            - LANGFUSE_S3_EVENT_UPLOAD_FORCE_PATH_STYLE=true
-            - LANGFUSE_INIT_ORG_ID=org_123
-            - LANGFUSE_INIT_ORG_NAME=Default Org
-            - LANGFUSE_INIT_PROJECT_ID=proj_123
-            - LANGFUSE_INIT_PROJECT_NAME=Default Project
-            - LANGFUSE_INIT_PROJECT_PUBLIC_KEY=pk-lf-change-me
-            - LANGFUSE_INIT_PROJECT_SECRET_KEY=sk-lf-change-me
+        env_file:
+            - ./.env.langfuse
 
     # http:
     #     build:

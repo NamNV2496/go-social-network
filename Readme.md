@@ -27,13 +27,14 @@
 
 ## Run by Docker
 
-    1. run `docker compose up`
-    2. Check status of services
-    3. Access prometheus: [http://localhost:9090/targets](http://localhost:9090/targets) to check is your service up successfully
-    4. Access grafana: [http://localhost:3000/login](http://localhost:3000/login) (user: admin - password: admin)
-    5. Access `localhost:3001` for web
-    6. Access `localhost:3001/comment_rule.html` for comment-rule
-    7. Access `http://localhost:3000/` for langfuse
+    1. Copy `.env.langfuse.example` to `.env.langfuse` and replace its placeholder secrets.
+    2. Run `docker compose up`
+    3. Check status of services
+    4. Access prometheus: [http://localhost:9090/targets](http://localhost:9090/targets) to check is your service up successfully
+    5. Access grafana: [http://localhost:3000/login](http://localhost:3000/login) (user: admin - password: admin)
+    6. Access `localhost:3001` for web
+    7. Access `localhost:3001/comment_rule.html` for comment-rule
+    8. Access `http://localhost:3000/` for langfuse
 
 ## Run on Local
 
@@ -252,4 +253,3 @@ environment:
 ```
 
 Note: keep the Secret Key private; do not check it into source control.
-
